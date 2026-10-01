@@ -1,0 +1,20 @@
+{
+  "name": "piano-web",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev --port 8087 --open",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "nuxt": "^4.5.2",
+    "tailwindcss": "^4.3.3",
+    "tone": "^15.1.22",
+    "vue": "^3.5.43",
+    "vue-router": "^5.3.1"
+  }
+}
