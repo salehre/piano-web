@@ -26,25 +26,82 @@ const playable = computed(() => new Set(keys.value.map((k) => k.note)))
 useKeyboardInput((note) => playable.value.has(note))
 
 const isActive = (note: string) => active.value.includes(note)
+
+// هر کلید جدا و با تأخیر و سرعت تصادفی خودش میاد
+function rand(seed: number) {
+  const x = Math.sin(seed * 12.9898) * 43758.5453
+  return x - Math.floor(x)
+}
+
+function riseStyle(seed: number) {
+  return {
+    animationDelay: `${Math.round(rand(seed + 1) * 800)}ms`,
+    animationDuration: `${Math.round(900 + rand(seed + 101) * 600)}ms`,
+  }
+}
+
+// کشیدن روی کلیدها (glissando): هر pointer (موس یا انگشت) نتی که الان زیرشه رو نگه می‌داره
+const held = new Map<number, string | null>()
+
+function noteAt(e: PointerEvent): string | null {
+  const el = document.elementFromPoint(e.clientX, e.clientY)
+  return el?.closest<HTMLElement>('[data-note]')?.dataset.note ?? null
+}
+
+function moveTo(id: number, note: string | null) {
+  const prev = held.get(id) ?? null
+  if (prev === note) return
+  if (prev) noteOff(prev)
+  if (note) noteOn(note)
+  held.set(id, note)
+}
+
+function onDown(e: PointerEvent) {
+  if (e.pointerType === 'mouse' && e.button !== 0) return
+  ;(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId)
+  held.set(e.pointerId, null)
+  moveTo(e.pointerId, noteAt(e))
+}
+
+function onMove(e: PointerEvent) {
+  if (!held.has(e.pointerId)) return
+  moveTo(e.pointerId, noteAt(e))
+}
+
+function onUp(e: PointerEvent) {
+  if (!held.has(e.pointerId)) return
+  moveTo(e.pointerId, null)
+  held.delete(e.pointerId)
+}
+
+onBeforeUnmount(() => {
+  for (const note of held.values()) if (note) noteOff(note)
+  held.clear()
+})
 </script>
 
 <template>
   <!-- کل کیبورد توی عرض صفحه جا می‌شه و اسکرول افقی نداره -->
   <div class="rounded-lg bg-stone-950 p-3 pb-4">
-    <div class="relative h-56 select-none sm:h-72">
+    <div
+      :key="type.keys"
+      class="relative h-56 touch-none select-none sm:h-72"
+      @pointerdown.prevent="onDown"
+      @pointermove="onMove"
+      @pointerup="onUp"
+      @pointercancel="onUp"
+    >
       <!-- کلیدهای سفید -->
       <div class="flex h-full">
         <button
-          v-for="k in whiteKeys"
+          v-for="(k, i) in whiteKeys"
           :key="k.note"
           type="button"
           :aria-label="k.note"
-          class="flex min-w-0 flex-1 touch-none items-end justify-center overflow-hidden rounded-b border border-stone-400 pb-3 text-[10px] font-medium text-stone-500 transition-colors duration-75 sm:text-xs"
+          class="key-rise flex min-w-0 flex-1 touch-none items-end justify-center overflow-hidden rounded-b border border-stone-400 pb-3 text-[10px] font-medium text-stone-500 transition-colors duration-75 sm:text-xs"
           :class="isActive(k.note) ? 'bg-key-active' : 'bg-stone-50'"
-          @pointerdown.prevent="noteOn(k.note)"
-          @pointerup="noteOff(k.note)"
-          @pointerleave="noteOff(k.note)"
-          @pointercancel="noteOff(k.note)"
+          :style="riseStyle(i)"
+          :data-note="k.note"
         >
           {{ noteLabels[k.note] ?? '' }}
         </button>
@@ -52,20 +109,35 @@ const isActive = (note: string) => active.value.includes(note)
 
       <!-- کلیدهای مشکی -->
       <button
-        v-for="k in blackKeys"
+        v-for="(k, i) in blackKeys"
         :key="k.note"
         type="button"
         :aria-label="k.note"
-        class="absolute top-0 flex h-[62%] touch-none items-end justify-center overflow-hidden rounded-b pb-2 text-[9px] font-medium text-stone-400 transition-colors duration-75 sm:text-[10px]"
+        class="key-rise absolute top-0 flex h-[62%] touch-none items-end justify-center overflow-hidden rounded-b pb-2 text-[9px] font-medium text-stone-400 transition-colors duration-75 sm:text-[10px]"
         :class="isActive(k.note) ? 'bg-key-active' : 'bg-stone-900'"
-        :style="{ left: `${k.left}%`, width: `${blackWidth}%` }"
-        @pointerdown.prevent="noteOn(k.note)"
-        @pointerup="noteOff(k.note)"
-        @pointerleave="noteOff(k.note)"
-        @pointercancel="noteOff(k.note)"
+        :style="{ left: `${k.left}%`, width: `${blackWidth}%`, ...riseStyle(i + 1000) }"
+        :data-note="k.note"
       >
         {{ noteLabels[k.note] ?? '' }}
       </button>
     </div>
   </div>
 </template>
+
+<style scoped>
+.key-rise {
+  animation: key-rise 1.2s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+@keyframes key-rise {
+  from {
+    transform: translateY(100vh);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .key-rise {
+    animation: none;
+  }
+}
+</style>

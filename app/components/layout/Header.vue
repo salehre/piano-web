@@ -4,7 +4,7 @@ const piano = usePianoType()
 
 <template>
   <header class="border-b border-stone-800 bg-stone-950">
-    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
+    <div class="mx-auto flex max-w-screen-2xl items-center justify-between px-6 py-3">
       <NuxtLink :to="{ path: '/', query: { keys: piano.keys } }" class="text-lg font-semibold">
         Web Piano
       </NuxtLink>
@@ -14,8 +14,8 @@ const piano = usePianoType()
 
         <NuxtLink
           to="/settings"
-          class="flex items-center gap-2 rounded-md border border-stone-700 px-3 py-2 text-sm hover:bg-stone-800"
-          active-class="bg-stone-800"
+          class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors hover:text-key-active"
+          active-class="text-key-active"
         >
           <svg class="size-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
             <path d="M3 5h8M15 5h2M3 10h2M9 10h8M3 15h10M17 15h0" stroke-linecap="round" />

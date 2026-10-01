@@ -2,7 +2,7 @@ export interface PianoType {
   keys: number
   from: string
   to: string
-  description: string
+  // description: string
 }
 
 export interface PianoKey {
@@ -12,15 +12,15 @@ export interface PianoKey {
 }
 
 export const PIANO_TYPES: PianoType[] = [
-  { keys: 25, from: 'C3', to: 'C5', description: 'Pocket-size controllers you can carry anywhere.' },
-  { keys: 37, from: 'C3', to: 'C6', description: 'Small desktop keyboards with three octaves.' },
-  { keys: 49, from: 'C2', to: 'C6', description: 'A common starter size with four octaves.' },
-  { keys: 61, from: 'C2', to: 'C7', description: 'Five octaves, popular for learning and for organs.' },
-  { keys: 76, from: 'E1', to: 'G7', description: 'Stage keyboards with a near-full range.' },
-  { keys: 88, from: 'A0', to: 'C8', description: 'The full piano, from the lowest to the highest note.' },
+  { keys: 25, from: 'C3', to: 'C5' },
+  { keys: 37, from: 'C3', to: 'C6' },
+  { keys: 49, from: 'C2', to: 'C6' },
+  { keys: 61, from: 'C2', to: 'C7' },
+  { keys: 76, from: 'E1', to: 'G7' },
+  { keys: 88, from: 'A0', to: 'C8' },
 ]
 
-export const DEFAULT_PIANO_KEYS = 61
+export const DEFAULT_PIANO_KEYS = 49
 
 const NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
 

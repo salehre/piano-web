@@ -2,10 +2,27 @@
 
 @theme {
   --color-key-active: #e0a526;
+
+  /* پالت قهوه‌ای پیانوی کلاسیک؛ جایگزین stone پیش‌فرض */
+  --color-stone-50: #faf5ee;   /* کلیدهای سفید (عاجی) */
+  --color-stone-100: #f4ebdd;
+  --color-stone-200: #eadbc8;
+  --color-stone-300: #d8c3a8;
+  --color-stone-400: #c4a98a;  /* متن ثانویه */
+  --color-stone-500: #8a6c52;
+  --color-stone-600: #6f523c;
+  --color-stone-700: #7a5238;  /* بوردرها */
+  --color-stone-800: #4a2c1d;  /* hover و چیپ‌ها */
+  --color-stone-900: #24140e;  /* منو و کلیدهای مشکی */
+  --color-stone-950: #170c07;  /* هدر و قاب کیبورد */
 }
 
 html,
 body {
-  background: #1c1917;
-  color: #e7e5e4;
+  min-height: 100%;
+}
+
+body {
+  color: #f1e6d6;
+  background-color: #170701;
 }

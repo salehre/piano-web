@@ -1,11 +1,12 @@
-import type { KeyBinding } from '~/utils/keyboard'
+import type { KeyBindings } from '~/utils/keyboard'
 
-const STORAGE_KEY = 'web-piano:key-bindings:v1'
+const STORAGE_KEY = 'web-piano:key-bindings:v2'
+const LEGACY_STORAGE_KEY = 'web-piano:key-bindings:v1'
 let loaded = false
 
-/** تنظیمات اینکه هر کلید کیبورد کامپیوتر کدوم نت پیانو رو بزنه */
+/** تنظیمات اینکه هر کلید کیبورد کامپیوتر کدوم نت پیانو رو بزنه (یک ردیف برای هر ۸۸ نت) */
 export const useKeyBindings = () => {
-  const bindings = useState<KeyBinding[]>('key-bindings', createDefaultBindings)
+  const bindings = useState<KeyBindings>('key-bindings', createDefaultBindings)
 
   function persist() {
     if (import.meta.server) return
@@ -21,28 +22,36 @@ export const useKeyBindings = () => {
     if (loaded) return
     loaded = true
     try {
-      const raw = localStorage.getItem(STORAGE_KEY)
-      if (!raw) return
-      const parsed: unknown = JSON.parse(raw)
-      if (Array.isArray(parsed)) bindings.value = parsed.filter(isValidBinding)
+      const current = localStorage.getItem(STORAGE_KEY)
+      if (current) {
+        const parsed = sanitizeBindings(JSON.parse(current))
+        if (parsed) bindings.value = parsed
+        return
+      }
+      // اگه تنظیمات نسخه‌ی قبلی (لیستی) ذخیره شده بود، یک بار تبدیلش می‌کنیم
+      const legacy = localStorage.getItem(LEGACY_STORAGE_KEY)
+      if (legacy) {
+        const migrated = migrateLegacyBindings(JSON.parse(legacy))
+        if (migrated) {
+          bindings.value = migrated
+          persist()
+        }
+      }
     } catch {
       // داده‌ی خراب: همون پیش‌فرض‌ها می‌مونن
     }
   }
   onMounted(load)
 
-  function addBinding() {
-    bindings.value = [...bindings.value, { id: createBindingId(), code: null, note: 'C4' }]
+  /** کلید کامپیوتر رو به یک نت وصل می‌کنه */
+  function setBinding(note: string, code: string) {
+    bindings.value = { ...bindings.value, [note]: code }
     persist()
   }
 
-  function updateBinding(id: string, patch: Partial<Omit<KeyBinding, 'id'>>) {
-    bindings.value = bindings.value.map((b) => (b.id === id ? { ...b, ...patch } : b))
-    persist()
-  }
-
-  function removeBinding(id: string) {
-    bindings.value = bindings.value.filter((b) => b.id !== id)
+  /** شورتکات یک نت رو خالی می‌کنه */
+  function clearBinding(note: string) {
+    bindings.value = { ...bindings.value, [note]: null }
     persist()
   }
 
@@ -53,19 +62,22 @@ export const useKeyBindings = () => {
 
   /** کد کلید → نت */
   const codeToNote = computed(
-    () => new Map(bindings.value.filter((b) => b.code).map((b) => [b.code as string, b.note])),
+    () =>
+      new Map(
+        Object.entries(bindings.value)
+          .filter((entry): entry is [string, string] => !!entry[1])
+          .map(([note, code]) => [code, note]),
+      ),
   )
 
-  /** نت → برچسب کلید(ها) برای نمایش روی پیانو */
+  /** نت → برچسب کلید برای نمایش روی پیانو */
   const noteLabels = computed(() => {
     const labels: Record<string, string> = {}
-    for (const b of bindings.value) {
-      if (!b.code) continue
-      const label = formatKeyCode(b.code)
-      labels[b.note] = labels[b.note] ? `${labels[b.note]} ${label}` : label
+    for (const [note, code] of Object.entries(bindings.value)) {
+      if (code) labels[note] = formatKeyCode(code)
     }
     return labels
   })
 
-  return { bindings, codeToNote, noteLabels, addBinding, updateBinding, removeBinding, resetBindings }
+  return { bindings, codeToNote, noteLabels, setBinding, clearBinding, resetBindings }
 }

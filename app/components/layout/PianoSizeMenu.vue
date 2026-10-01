@@ -25,13 +25,12 @@ onBeforeUnmount(() => {
   <div ref="root" class="relative">
     <button
       type="button"
-      class="flex items-center gap-2 rounded-md border border-stone-700 px-3 py-2 text-sm hover:bg-stone-800"
+      class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors hover:text-key-active"
       aria-haspopup="menu"
       :aria-expanded="open"
       @click="open = !open"
     >
       Piano sizes
-      <span class="text-stone-400">{{ piano.keys }} keys</span>
       <svg
         class="size-4 text-stone-400 transition-transform"
         :class="open ? 'rotate-180' : ''"
@@ -43,10 +42,11 @@ onBeforeUnmount(() => {
       </svg>
     </button>
 
+    <Transition name="menu">
     <ul
       v-if="open"
       role="menu"
-      class="absolute right-0 z-10 mt-2 w-80 overflow-hidden rounded-lg border border-stone-700 bg-stone-900 shadow-xl"
+      class="absolute right-0 z-10 mt-2 w-80 origin-top-right overflow-hidden rounded-xl bg-stone-900 shadow-2xl ring-1 ring-black/30"
     >
       <li v-for="t in PIANO_TYPES" :key="t.keys" role="none">
         <NuxtLink
@@ -60,9 +60,24 @@ onBeforeUnmount(() => {
             <span class="font-medium">{{ t.keys }} keys</span>
             <span class="text-xs text-stone-400">{{ t.from }} to {{ t.to }}</span>
           </span>
-          <span class="mt-0.5 block text-sm text-stone-400">{{ t.description }}</span>
+          <!-- <span class="mt-0.5 block text-sm text-stone-400">{{ t.description }}</span> -->
         </NuxtLink>
       </li>
     </ul>
+    </Transition>
   </div>
 </template>
+
+<style scoped>
+.menu-enter-active {
+  transition: opacity 0.15s ease-out, transform 0.15s ease-out;
+}
+.menu-leave-active {
+  transition: opacity 0.1s ease-in, transform 0.1s ease-in;
+}
+.menu-enter-from,
+.menu-leave-to {
+  opacity: 0;
+  transform: translateY(-6px) scale(0.97);
+}
+</style>

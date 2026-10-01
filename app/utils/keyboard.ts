@@ -1,18 +1,18 @@
 import { PIANO_TYPES, buildKeys } from './pianoTypes'
 
-export interface KeyBinding {
-  id: string
-  /** مقدار KeyboardEvent.code؛ مستقل از زبان کیبورد (فارسی/انگلیسی) */
-  code: string | null
-  /** نت پیانو، مثل C4 یا F#3 */
-  note: string
-}
+/** نت پیانو (مثل C4 یا F#3) → کد کلید کیبورد کامپیوتر؛ null یعنی هنوز تنظیم نشده */
+export type KeyBindings = Record<string, string | null>
 
 /** همه‌ی نت‌های ۸۸ کلید: A0 تا C8 */
 export const ALL_NOTES: string[] = buildKeys(PIANO_TYPES.find((t) => t.keys === 88)!).map((k) => k.note)
 
-/** نت‌ها گروه‌بندی‌شده بر اساس اکتاو (برای منوی انتخاب) */
-export const NOTE_GROUPS = ALL_NOTES.reduce<{ octave: number; notes: string[] }[]>((groups, note) => {
+export interface NoteGroup {
+  octave: number
+  notes: string[]
+}
+
+/** نت‌ها گروه‌بندی‌شده بر اساس اکتاو (برای صفحه‌ی تنظیمات) */
+export const NOTE_GROUPS = ALL_NOTES.reduce<NoteGroup[]>((groups, note) => {
   const octave = Number(note.slice(-1))
   const last = groups[groups.length - 1]
   if (last && last.octave === octave) last.notes.push(note)
@@ -49,21 +49,47 @@ const DEFAULTS: [code: string, note: string][] = [
   ['KeyP', 'D#5'], ['Semicolon', 'E5'],
 ]
 
-export function createDefaultBindings(): KeyBinding[] {
-  return DEFAULTS.map(([code, note]) => ({ id: `default-${code}`, code, note }))
+/** یک ردیف برای هر ۸۸ نت؛ فقط نت‌های پیش‌فرض مقدار دارن و بقیه null (خالی) هستن */
+export function createDefaultBindings(): KeyBindings {
+  const bindings: KeyBindings = Object.fromEntries(ALL_NOTES.map((note) => [note, null]))
+  for (const [code, note] of DEFAULTS) bindings[note] = code
+  return bindings
 }
 
-export function createBindingId(): string {
-  return `b-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`
+/**
+ * داده‌ی ذخیره‌شده (نسخه‌ی جدید: آبجکت نت → کد) رو به یک KeyBindings سالم تبدیل می‌کنه.
+ * نت‌های ناشناخته، کدهای نامعتبر و کدهای تکراری نادیده گرفته می‌شن.
+ */
+export function sanitizeBindings(value: unknown): KeyBindings | null {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null
+  const raw = value as Record<string, unknown>
+  const result: KeyBindings = Object.fromEntries(ALL_NOTES.map((note) => [note, null]))
+  const used = new Set<string>()
+  for (const note of ALL_NOTES) {
+    const code = raw[note]
+    if (typeof code === 'string' && code && !used.has(code)) {
+      result[note] = code
+      used.add(code)
+    }
+  }
+  return result
 }
 
-export function isValidBinding(v: unknown): v is KeyBinding {
-  if (!v || typeof v !== 'object') return false
-  const b = v as Record<string, unknown>
-  return (
-    typeof b.id === 'string' &&
-    (b.code === null || typeof b.code === 'string') &&
-    typeof b.note === 'string' &&
-    ALL_NOTES.includes(b.note)
-  )
+/**
+ * مهاجرت از فرمت قدیمی (آرایه‌ای از { id, code, note }).
+ * اگه چند شورتکات برای یک نت بود، فقط اولی نگه داشته می‌شه.
+ */
+export function migrateLegacyBindings(value: unknown): KeyBindings | null {
+  if (!Array.isArray(value)) return null
+  const result: KeyBindings = Object.fromEntries(ALL_NOTES.map((note) => [note, null]))
+  const used = new Set<string>()
+  for (const item of value) {
+    if (!item || typeof item !== 'object') continue
+    const { code, note } = item as Record<string, unknown>
+    if (typeof code !== 'string' || !code || typeof note !== 'string') continue
+    if (!(note in result) || result[note] !== null || used.has(code)) continue
+    result[note] = code
+    used.add(code)
+  }
+  return result
 }

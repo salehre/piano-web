@@ -1,28 +1,24 @@
 <script setup lang="ts">
-const { bindings, addBinding, updateBinding, removeBinding, resetBindings } = useKeyBindings()
+const { bindings, setBinding, clearBinding, resetBindings } = useKeyBindings()
 
 useHead({ title: 'Settings | Web Piano' })
 
-// خطای هر ردیف (مثلاً کلید تکراری)
+// خطای هر نت (مثلاً کلید تکراری)
 const errors = ref<Record<string, string>>({})
 
-function setCode(id: string, code: string) {
-  const clash = bindings.value.find((b) => b.code === code && b.id !== id)
+function setCode(note: string, code: string) {
+  const clash = Object.entries(bindings.value).find(([n, c]) => c === code && n !== note)
   if (clash) {
-    errors.value[id] = `${formatKeyCode(code)} already plays ${clash.note}. Remove or change that shortcut first.`
+    errors.value[note] = `${formatKeyCode(code)} already plays ${clash[0]}. Clear that shortcut first.`
     return
   }
-  delete errors.value[id]
-  updateBinding(id, { code })
+  delete errors.value[note]
+  setBinding(note, code)
 }
 
-function setNote(id: string, note: string) {
-  updateBinding(id, { note })
-}
-
-function remove(id: string) {
-  delete errors.value[id]
-  removeBinding(id)
+function clear(note: string) {
+  delete errors.value[note]
+  clearBinding(note)
 }
 
 function reset() {
@@ -30,10 +26,15 @@ function reset() {
   errors.value = {}
   resetBindings()
 }
+
+/** تعداد نت‌های تنظیم‌شده‌ی هر اکتاو */
+function assignedCount(notes: string[]) {
+  return notes.filter((n) => bindings.value[n]).length
+}
 </script>
 
 <template>
-  <main class="mx-auto max-w-3xl px-6 py-8">
+  <main class="mx-auto max-w-5xl px-6 py-8">
     <h1 class="text-2xl font-semibold">Settings</h1>
 
     <section class="mt-8" aria-labelledby="shortcuts-title">
@@ -41,43 +42,41 @@ function reset() {
         <div class="max-w-md">
           <h2 id="shortcuts-title" class="text-lg font-medium">Keyboard shortcuts</h2>
           <p class="mt-1 text-sm text-stone-400">
-            Choose which key on your computer plays each piano key. Shortcuts for notes outside the
-            selected piano size are ignored. Keys are matched by position, so they work with any keyboard language.
+            All 88 piano keys are listed by octave. Click a field, then press the computer key you want for that
+            note. Shortcuts for notes outside the selected piano size are ignored. Keys are matched by position, so
+            they work with any keyboard language.
           </p>
         </div>
 
-        <div class="flex gap-2">
-          <button
-            type="button"
-            class="rounded-md border border-stone-700 px-3 py-2 text-sm hover:bg-stone-800"
-            @click="reset"
-          >
-            Reset to defaults
-          </button>
-          <button
-            type="button"
-            class="rounded-md bg-key-active px-3 py-2 text-sm font-medium text-stone-950"
-            @click="addBinding"
-          >
-            Add shortcut
-          </button>
-        </div>
+        <button
+          type="button"
+          class="rounded-md border border-stone-700 px-3 py-2 text-sm hover:bg-stone-800"
+          @click="reset"
+        >
+          Reset to defaults
+        </button>
       </div>
 
-      <ul v-if="bindings.length" class="mt-6 divide-y divide-stone-800 border-y border-stone-800">
-        <SettingsKeyBindingRow
-          v-for="b in bindings"
-          :key="b.id"
-          :binding="b"
-          :error="errors[b.id]"
-          @update:code="setCode(b.id, $event)"
-          @update:note="setNote(b.id, $event)"
-          @remove="remove(b.id)"
-        />
-      </ul>
-      <p v-else class="mt-6 text-sm text-stone-400">
-        No shortcuts yet. Add one to play a piano key from your keyboard.
-      </p>
+      <div class="mt-6 space-y-8">
+        <section v-for="g in NOTE_GROUPS" :key="g.octave" :aria-labelledby="`octave-${g.octave}`">
+          <div class="flex items-baseline justify-between border-b border-stone-800 pb-2">
+            <h3 :id="`octave-${g.octave}`" class="text-base font-medium">Octave {{ g.octave }}</h3>
+            <span class="text-xs text-stone-500">{{ assignedCount(g.notes) }} / {{ g.notes.length }} set</span>
+          </div>
+
+          <ul class="grid grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] gap-x-6">
+            <SettingsKeyBindingRow
+              v-for="note in g.notes"
+              :key="note"
+              :note="note"
+              :code="bindings[note] ?? null"
+              :error="errors[note]"
+              @update:code="setCode(note, $event)"
+              @clear="clear(note)"
+            />
+          </ul>
+        </section>
+      </div>
     </section>
   </main>
 </template>
