@@ -6,6 +6,20 @@ let sampler: ToneNS.Sampler | null = null
 
 const SAMPLE_BASE_URL = 'https://tonejs.github.io/audio/salamander/'
 
+// نمونه‌صداهای Salamander برای کل ۸۸ کلید: A0 تا C8
+// (Tone.js بقیه‌ی نت‌ها رو از نزدیک‌ترین نمونه می‌سازه)
+function buildSampleUrls(): Record<string, string> {
+  const urls: Record<string, string> = { A0: 'A0.mp3' }
+  for (let o = 1; o <= 7; o++) {
+    urls[`C${o}`] = `C${o}.mp3`
+    urls[`D#${o}`] = `Ds${o}.mp3`
+    urls[`F#${o}`] = `Fs${o}.mp3`
+    urls[`A${o}`] = `A${o}.mp3`
+  }
+  urls.C8 = 'C8.mp3'
+  return urls
+}
+
 export const usePiano = () => {
   const status = useState<'idle' | 'loading' | 'ready' | 'error'>('piano-status', () => 'idle')
   const active = useState<string[]>('piano-active', () => [])
@@ -20,13 +34,7 @@ export const usePiano = () => {
 
       await new Promise<void>((resolve, reject) => {
         sampler = new Tone!.Sampler({
-          urls: {
-            A1: 'A1.mp3', C2: 'C2.mp3', 'D#2': 'Ds2.mp3', 'F#2': 'Fs2.mp3',
-            A2: 'A2.mp3', C3: 'C3.mp3', 'D#3': 'Ds3.mp3', 'F#3': 'Fs3.mp3',
-            A3: 'A3.mp3', C4: 'C4.mp3', 'D#4': 'Ds4.mp3', 'F#4': 'Fs4.mp3',
-            A4: 'A4.mp3', C5: 'C5.mp3', 'D#5': 'Ds5.mp3', 'F#5': 'Fs5.mp3',
-            A5: 'A5.mp3', C6: 'C6.mp3',
-          },
+          urls: buildSampleUrls(),
           release: 1,
           baseUrl: SAMPLE_BASE_URL,
           onload: () => resolve(),
