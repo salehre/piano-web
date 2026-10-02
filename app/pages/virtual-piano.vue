@@ -3,8 +3,20 @@ const {
   status, init,
   recording, playing, saving, canDownload, recordedCount, timerMs,
   startRecording, stopRecording, play, stopPlayback, clearRecording, downloadRecording,
+  volume, setVolume,
 } = usePiano()
 const piano = usePianoType()
+
+// آیکون بلندگو: قطع و وصل کردن صدا
+let lastVolume = 0.8
+function toggleMute() {
+  if (volume.value > 0) {
+    lastVolume = volume.value
+    setVolume(0)
+  } else {
+    setVolume(lastVolume)
+  }
+}
 
 // تایمر به‌صورت دقیقه:ثانیه.صدم‌ثانیه
 const timer = computed(() => {
@@ -36,6 +48,48 @@ useHead({ title: computed(() => `${piano.value.keys}-key piano | Web Piano`) })
       <div class="flex flex-wrap items-center gap-3">
         <LayoutPianoSizeMenu />
 
+        <div v-if="status === 'ready'" class="flex items-center gap-2">
+          <button
+              type="button"
+              class="grid size-8 place-items-center rounded-lg text-stone-300 transition-colors hover:text-key-active"
+              :aria-label="volume > 0 ? 'Mute' : 'Unmute'"
+              @click="toggleMute"
+          >
+            <svg class="size-4" viewBox="0 0 20 20" aria-hidden="true">
+              <path d="M3 8v4h3l4 3.5v-11L6 8H3z" fill="currentColor" />
+              <path
+                  v-if="volume === 0"
+                  d="M13 8l4 4m0-4-4 4"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+              />
+              <template v-else>
+                <path d="M13 7.5a3.5 3.5 0 0 1 0 5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                <path
+                    v-if="volume > 0.5"
+                    d="M15 5.5a6.5 6.5 0 0 1 0 9"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                />
+              </template>
+            </svg>
+          </button>
+          <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              :value="volume"
+              class="h-1 w-24 cursor-pointer accent-key-active"
+              aria-label="Volume"
+              @input="setVolume(Number(($event.target as HTMLInputElement).value))"
+          >
+        </div>
+
         <button
             v-if="status !== 'ready'"
             type="button"
@@ -58,38 +112,38 @@ useHead({ title: computed(() => `${piano.value.keys}-key piano | Web Piano`) })
     </ClientOnly>
 
     <!-- ضبط‌کننده: زیر پیانو -->
-    <section v-if="status === 'ready'" class="flex max-w-xl items-stretch gap-2">
-      <div class="flex h-16 flex-1 items-center gap-3 rounded-xl bg-stone-950/40 px-3">
+    <section v-if="status === 'ready'" class="flex w-fit items-stretch gap-2">
+      <div class="flex h-14 items-center gap-2.5 rounded-xl border border-stone-700/70 bg-stone-950/40 px-2.5">
         <!-- ضبط -->
         <button
             type="button"
-            class="grid size-10 shrink-0 place-items-center rounded-full bg-stone-800/70 transition-colors hover:bg-stone-800 disabled:opacity-40"
+            class="grid size-9 shrink-0 place-items-center rounded-full bg-stone-800/70 transition-colors hover:bg-stone-800 disabled:opacity-40"
             :disabled="recording || playing || saving"
             aria-label="Record"
             @click="startRecording"
         >
-          <span class="size-3.5 rounded-full bg-red-500" :class="recording ? 'animate-pulse' : ''" />
+          <span class="size-3 rounded-full bg-red-500" :class="recording ? 'animate-pulse' : ''" />
         </button>
 
         <!-- موقع ضبط: توقف؛ بعد از توقف: پخش -->
         <button
             v-if="recording"
             type="button"
-            class="grid size-10 shrink-0 place-items-center rounded-full bg-stone-800/70 transition-colors hover:bg-stone-800"
+            class="grid size-9 shrink-0 place-items-center rounded-full bg-stone-800/70 transition-colors hover:bg-stone-800"
             aria-label="Stop recording"
             @click="stopRecording"
         >
-          <span class="size-3.5 rounded-sm bg-stone-100" />
+          <span class="size-3 rounded-sm bg-stone-100" />
         </button>
         <button
-            v-else-if="recordedCount > 0"
+            v-else
             type="button"
-            class="grid size-10 shrink-0 place-items-center rounded-full bg-stone-800/70 transition-colors hover:bg-stone-800 disabled:opacity-40"
-            :disabled="saving"
+            class="grid size-9 shrink-0 place-items-center rounded-full bg-stone-800/70 transition-colors hover:bg-stone-800 disabled:opacity-40"
+            :disabled="saving || recordedCount === 0"
             :aria-label="playing ? 'Stop playback' : 'Play recording'"
             @click="playing ? stopPlayback() : play()"
         >
-          <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <svg class="size-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
             <path v-if="playing" d="M5 4h4v12H5zM11 4h4v12h-4z" />
             <path v-else d="M6 3.5v13l11-6.5z" />
           </svg>
@@ -97,45 +151,46 @@ useHead({ title: computed(() => `${piano.value.keys}-key piano | Web Piano`) })
 
         <!-- تایمر -->
         <span
-            v-if="recording || recordedCount > 0"
-            class="font-mono text-lg tabular-nums"
-            :class="recording ? 'text-red-400' : playing ? 'text-key-active' : 'text-stone-200'"
+            class="font-mono text-sm tabular-nums"
+            :class="recording ? 'text-red-400' : playing ? 'text-key-active' : recordedCount > 0 ? 'text-stone-200' : 'text-stone-500'"
         >
           {{ timer }}
         </span>
-        <span v-else class="text-sm text-stone-400">Record</span>
-        <div class="h-12 min-w-0 flex-1 rounded-lg bg-black/50 px-2 py-1.5">
+
+        <!-- نمایشگر طیف صدا -->
+        <div class="h-9 w-32 shrink-0 rounded-lg border border-stone-700/60 bg-black/50 px-1.5 py-1">
           <PianoVisualizer />
         </div>
       </div>
 
-      <!-- دانلود و پاک کردن: کنار باکس، زیر هم -->
-      <div v-if="recordedCount > 0 && !recording" class="flex h-16 w-28 flex-col gap-1">
+      <!-- دانلود و پاک کردن: فقط آیکون، زیر هم -->
+      <div v-if="recordedCount > 0 && !recording" class="flex h-14 flex-col gap-1">
         <button
             type="button"
-            class="flex flex-1 items-center gap-1.5 rounded-lg bg-stone-950/40 px-2.5 text-xs text-stone-300 transition-colors hover:text-key-active disabled:opacity-40"
+            class="grid w-8 flex-1 place-items-center rounded-lg bg-stone-950/40 text-stone-300 transition-colors hover:text-key-active disabled:opacity-40"
             :disabled="saving || !canDownload"
+            aria-label="Download recording"
+            title="Download"
             @click="downloadRecording"
         >
           <svg class="size-3.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
             <path d="M10 3v10m0 0-3.5-3.5M10 13l3.5-3.5M4 16h12" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
-<!--          Download-->
         </button>
         <button
             type="button"
-            class="flex flex-1 items-center gap-1.5 rounded-lg bg-stone-950/40 px-2.5 text-xs text-stone-300 transition-colors hover:text-key-active disabled:opacity-40"
+            class="grid w-8 flex-1 place-items-center rounded-lg bg-stone-950/40 text-stone-300 transition-colors hover:text-key-active disabled:opacity-40"
             :disabled="saving"
+            aria-label="Clear recording"
+            title="Clear"
             @click="clearRecording"
         >
           <svg class="size-3.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
             <path d="M5 5l10 10M15 5 5 15" stroke-linecap="round" />
           </svg>
-<!--          Clear-->
         </button>
       </div>
     </section>
-
     <Transition name="loading-fade">
       <div
           v-if="status === 'loading'"

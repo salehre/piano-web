@@ -2,57 +2,232 @@
 definePageMeta({ middleware: 'guest' })
 useHead({ title: 'Log in | Web Piano' })
 
+/**
+ * ورود و ثبت‌نام توی یک صفحه، فقط با موبایل:
+ *  phone → (حساب با رمز داره؟) password → ورود
+ *        → (حساب نداره)        code → newPassword → ورود
+ *  password → «Forgot password?» → code → newPassword → ورود
+ */
+type Step = 'phone' | 'password' | 'code' | 'newPassword'
+
 const route = useRoute()
-const { login } = useAuth()
+const { lookup, requestCode, verifyCode, setPassword, login } = useAuth()
 
-const form = reactive({ email: '', password: '' })
-const errors = reactive<{ email?: string; password?: string }>({})
-const formError = ref('')
+const step = ref<Step>('phone')
+const isReset = ref(false) // کد برای فراموشی رمزه، نه ثبت‌نام
+const form = reactive({ phone: '', password: '', code: '', newPassword: '' })
+const error = ref('')
 const submitting = ref(false)
+const devCode = ref('')
+const resendIn = ref(0)
 
-// اگه از صفحه‌ی محافظت‌شده اومده باشه، بعد از ورود همون‌جا برمی‌گرده
 const redirectTo = computed(() => getSafeRedirect(route.query.redirect))
-const registerLink = computed(() => ({
-  path: '/register',
-  query: route.query.redirect ? { redirect: route.query.redirect } : {},
-}))
+const formEl = ref<HTMLFormElement>()
+
+// ---------- تایمر ارسال مجدد کد ----------
+let timer: ReturnType<typeof setInterval> | undefined
+function startCooldown() {
+  clearInterval(timer)
+  resendIn.value = OTP_RESEND_SECONDS
+  timer = setInterval(() => {
+    resendIn.value--
+    if (resendIn.value <= 0) clearInterval(timer)
+  }, 1000)
+}
+onBeforeUnmount(() => clearInterval(timer))
+
+// رفتن به مرحله‌ی بعد و گذاشتن فوکوس روی فیلد
+async function goTo(next: Step) {
+  step.value = next
+  error.value = ''
+  await nextTick()
+  formEl.value?.querySelector('input')?.focus()
+}
+
+async function sendCode(reset: boolean) {
+  const result = await requestCode(form.phone)
+  if (!result.ok) {
+    error.value = result.error
+    return
+  }
+  isReset.value = reset
+  devCode.value = result.devCode ?? ''
+  form.code = ''
+  startCooldown()
+  await goTo('code')
+}
+
+// ---------- مراحل ----------
+async function submitPhone() {
+  const invalid = validatePhone(form.phone)
+  if (invalid) return void (error.value = invalid)
+  form.phone = normalizePhone(form.phone)
+
+  if (lookup(form.phone).hasPassword) {
+    form.password = ''
+    await goTo('password')
+  } else {
+    await sendCode(false)
+  }
+}
+
+async function submitPassword() {
+  if (!form.password) return void (error.value = 'Password is required.')
+  const result = await login({ phone: form.phone, password: form.password })
+  if (!result.ok) return void (error.value = result.error)
+  await navigateTo(redirectTo.value)
+}
+
+async function submitCode() {
+  if (form.code.length !== OTP_LENGTH) return void (error.value = `Enter the ${OTP_LENGTH}-digit code.`)
+  const result = await verifyCode(form.phone, form.code)
+  if (!result.ok) return void (error.value = result.error)
+  form.newPassword = ''
+  await goTo('newPassword')
+}
+
+async function submitNewPassword() {
+  const invalid = validatePassword(form.newPassword)
+  if (invalid) return void (error.value = invalid)
+  const result = await setPassword(form.phone, form.newPassword)
+  if (!result.ok) return void (error.value = result.error)
+  // کاربر جدید می‌ره پروفایلش رو کامل کنه
+  await navigateTo(result.isNew ? '/profile' : redirectTo.value)
+}
+
+const handlers: Record<Step, () => Promise<void>> = {
+  phone: submitPhone,
+  password: submitPassword,
+  code: submitCode,
+  newPassword: submitNewPassword,
+}
 
 async function submit() {
   if (submitting.value) return
-  formError.value = ''
-  errors.email = validateEmail(form.email) ?? undefined
-  errors.password = form.password ? undefined : 'Password is required.'
-  if (errors.email || errors.password) return
-
+  error.value = ''
   submitting.value = true
-  const result = await login(form)
-  submitting.value = false
-
-  if (!result.ok) {
-    formError.value = result.error
-    return
+  try {
+    await handlers[step.value]()
+  } finally {
+    submitting.value = false
   }
-  await navigateTo(redirectTo.value)
 }
+
+async function resend() {
+  if (resendIn.value > 0 || submitting.value) return
+  submitting.value = true
+  error.value = ''
+  await sendCode(isReset.value)
+  submitting.value = false
+}
+
+async function forgotPassword() {
+  if (submitting.value) return
+  submitting.value = true
+  error.value = ''
+  await sendCode(true)
+  submitting.value = false
+}
+
+// فقط رقم نگه می‌داره و وقتی کد کامل شد خودش ارسال می‌کنه
+watch(
+    () => form.code,
+    (value) => {
+      const digits = normalizeDigits(value).replace(/\D/g, '').slice(0, OTP_LENGTH)
+      if (digits !== value) form.code = digits
+      else if (digits.length === OTP_LENGTH && step.value === 'code') submit()
+    },
+)
+
+// تایپ‌کردن خطا رو پاک می‌کنه
+watch(form, () => {
+  error.value = ''
+})
+
+const copy = computed(() => {
+  switch (step.value) {
+    case 'phone':
+      return { title: 'Log in or sign up', hint: 'Enter your mobile number to continue.', button: 'Continue' }
+    case 'password':
+      return { title: 'Welcome back', hint: 'Enter your password to log in.', button: 'Log in' }
+    case 'code':
+      return { title: 'Enter the code', hint: `We sent a ${OTP_LENGTH}-digit code to ${form.phone}.`, button: 'Verify' }
+    default:
+      return {
+        title: isReset.value ? 'Choose a new password' : 'Choose a password',
+        hint: 'You will use it to log in next time.',
+        button: isReset.value ? 'Save and log in' : 'Create account',
+      }
+  }
+})
 </script>
 
 <template>
   <main class="mx-auto max-w-md px-6 py-12 sm:py-20">
-    <h1 class="text-2xl font-semibold">Log in</h1>
-    <p class="mt-1 text-sm text-stone-400">Welcome back. Log in to manage your profile.</p>
+    <h1 class="text-2xl font-semibold">{{ copy.title }}</h1>
+    <p class="mt-1 text-sm text-stone-400">{{ copy.hint }}</p>
 
-    <form class="mt-8 space-y-5" novalidate @submit.prevent="submit">
-      <p v-if="formError" class="rounded-md bg-red-950/60 px-3 py-2 text-sm text-red-300" role="alert">
-        {{ formError }}
-      </p>
-
-      <UiTextField v-model="form.email" label="Email" type="email" autocomplete="email" :error="errors.email" />
+    <form ref="formEl" class="mt-8 space-y-5" novalidate @submit.prevent="submit">
       <UiTextField
-          v-model="form.password"
+          v-if="step === 'phone'"
+          v-model="form.phone"
+          label="Mobile number"
+          type="tel"
+          inputmode="tel"
+          autocomplete="tel"
+          placeholder="09123456789"
+          :error="error"
+      />
+
+      <template v-else-if="step === 'password'">
+        <UiTextField
+            v-model="form.password"
+            label="Password"
+            type="password"
+            autocomplete="current-password"
+            :error="error"
+        />
+        <button
+            type="button"
+            class="text-sm text-key-active underline-offset-2 hover:underline disabled:opacity-60"
+            :disabled="submitting"
+            @click="forgotPassword"
+        >
+          Forgot your password? Log in with a code
+        </button>
+      </template>
+
+      <template v-else-if="step === 'code'">
+        <p v-if="devCode" class="rounded-md bg-stone-900 px-3 py-2 text-xs text-stone-300" role="status">
+          Dev mode: no SMS is sent. Your code is <span class="font-mono text-key-active">{{ devCode }}</span>
+        </p>
+        <UiTextField
+            v-model="form.code"
+            label="Verification code"
+            inputmode="numeric"
+            autocomplete="one-time-code"
+            :maxlength="OTP_LENGTH"
+            placeholder="123456"
+            :error="error"
+        />
+        <button
+            type="button"
+            class="text-sm text-key-active underline-offset-2 hover:underline disabled:text-stone-400 disabled:no-underline"
+            :disabled="resendIn > 0 || submitting"
+            @click="resend"
+        >
+          {{ resendIn > 0 ? `Resend code in ${resendIn}s` : 'Resend code' }}
+        </button>
+      </template>
+
+      <UiTextField
+          v-else
+          v-model="form.newPassword"
           label="Password"
           type="password"
-          autocomplete="current-password"
-          :error="errors.password"
+          autocomplete="new-password"
+          :hint="`At least ${PASSWORD_MIN} characters, with a letter and a number.`"
+          :error="error"
       />
 
       <button
@@ -60,13 +235,17 @@ async function submit() {
           class="w-full rounded-lg bg-key-active px-5 py-3 font-medium text-stone-950 transition-opacity hover:opacity-90 disabled:opacity-60"
           :disabled="submitting"
       >
-        {{ submitting ? 'Logging in…' : 'Log in' }}
+        {{ submitting ? 'Please wait…' : copy.button }}
+      </button>
+
+      <button
+          v-if="step === 'password' || step === 'code'"
+          type="button"
+          class="w-full text-sm text-stone-400 hover:text-key-active"
+          @click="goTo('phone')"
+      >
+        Use a different number
       </button>
     </form>
-
-    <p class="mt-6 text-sm text-stone-400">
-      Don't have an account?
-      <NuxtLink :to="registerLink" class="text-key-active underline-offset-2 hover:underline">Sign up</NuxtLink>
-    </p>
   </main>
 </template>

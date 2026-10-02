@@ -1,9 +1,9 @@
 <template>
   <header class="border-b border-stone-800 bg-stone-950">
-    <div class="mx-auto flex max-w-screen-2xl items-center justify-between px-6 py-3">
+    <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-3">
       <NuxtLink to="/" class="text-lg font-semibold">Web Piano</NuxtLink>
 
-      <nav class="flex items-center gap-2" aria-label="Main">
+      <nav class="-mr-3 flex items-center gap-2" aria-label="Main">
         <NuxtLink
             to="/"
             class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors hover:text-key-active"

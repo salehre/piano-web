@@ -5,6 +5,7 @@ let Tone: typeof ToneNS | null = null
 let sampler: ToneNS.Sampler | null = null
 let recorder: ToneNS.Recorder | null = null
 let analyser: ToneNS.Analyser | null = null
+let master: ToneNS.Volume | null = null
 
 // ضبط و پخش: رویدادهای نت با زمان (میلی‌ثانیه از شروع ضبط) + فایل صوتی برای دانلود
 interface RecEvent {
@@ -36,6 +37,11 @@ function buildSampleUrls(): Record<string, string> {
   return urls
 }
 
+// اسلایدر ۰ تا ۱ به دسی‌بل (مجذور مقدار، تا حس تغییر صدا یکنواخت‌تر باشه)
+function volumeToDb(v: number) {
+  return v <= 0.001 ? -100 : Math.max(-100, 40 * Math.log10(v))
+}
+
 export const usePiano = () => {
   const status = useState<'idle' | 'loading' | 'ready' | 'error'>('piano-status', () => 'idle')
   const active = useState<string[]>('piano-active', () => [])
@@ -48,6 +54,12 @@ export const usePiano = () => {
   const recordedMs = useState('piano-recorded-ms', () => 0)
   const timerMs = useState('piano-timer-ms', () => 0) // زمان زنده‌ی ضبط یا پخش
 
+  const volume = useCookie<number>('piano-volume', { default: () => 0.8, maxAge: 60 * 60 * 24 * 365 })
+  function setVolume(v: number) {
+    volume.value = Math.min(1, Math.max(0, v))
+    master?.volume.rampTo(volumeToDb(volume.value), 0.05)
+  }
+
   /** باید از داخل یک کلیک/لمس کاربر صدا زده بشه (محدودیت مرورگر برای صدا) */
   async function init() {
     if (status.value === 'ready' || status.value === 'loading') return
@@ -56,6 +68,8 @@ export const usePiano = () => {
       Tone = await import('tone')
       await Tone.start()
 
+      if (!master) master = new Tone!.Volume(volumeToDb(volume.value)).toDestination()
+
       await new Promise<void>((resolve, reject) => {
         sampler = new Tone!.Sampler({
           urls: buildSampleUrls(),
@@ -63,11 +77,11 @@ export const usePiano = () => {
           baseUrl: SAMPLE_BASE_URL,
           onload: () => resolve(),
           onerror: (e) => reject(e),
-        }).toDestination()
+        }).connect(master!)
       })
 
       analyser = new Tone!.Analyser({ type: 'fft', size: 1024, smoothing: 0.5 })
-      sampler?.connect(analyser)
+      master?.connect(analyser)
 
       // خروجی پیانو به ضبط‌کننده هم وصل می‌شه (اگه مرورگر پشتیبانی کنه)
       if (Tone!.Recorder.supported) {
@@ -215,6 +229,6 @@ export const usePiano = () => {
     status, active, init, noteOn, noteOff,
     recording, playing, saving, canDownload, recordedCount, recordedMs, timerMs,
     startRecording, stopRecording, play, stopPlayback, clearRecording, downloadRecording,
-    getSpectrum,
+    getSpectrum, volume, setVolume,
   }
 }

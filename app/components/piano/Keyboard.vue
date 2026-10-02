@@ -86,7 +86,9 @@ function moveTo(id: number, note: string | null) {
 
 function onDown(e: PointerEvent) {
   if (e.pointerType === 'mouse' && e.button !== 0) return
-      ;(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId)
+  const el = e.currentTarget as HTMLElement
+  el.focus({ preventScroll: true })
+  el.setPointerCapture(e.pointerId)
   held.set(e.pointerId, null)
   moveTo(e.pointerId, noteAt(e))
 }

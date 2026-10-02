@@ -1,6 +1,8 @@
 /** سطح‌های مهارت پیانو برای فرم پروفایل */
 export const PIANO_LEVELS = [
+    { value: 'never', label: 'Never played' },
     { value: 'beginner', label: 'Beginner' },
+    { value: 'late-beginner', label: 'Late beginner' },
     { value: 'intermediate', label: 'Intermediate' },
     { value: 'advanced', label: 'Advanced' },
     { value: 'professional', label: 'Professional' },
@@ -24,9 +26,11 @@ export interface UserProfile {
 /** رکورد کاربر همون‌طور که ذخیره می‌شه (فعلاً localStorage، بعداً جواب بک‌اند) */
 export interface StoredUser {
     id: string
-    email: string
+    /** شماره‌ی موبایل نرمال‌شده، مثل 09123456789 */
+    phone: string
     salt: string
-    passwordHash: string
+    /** تا وقتی کاربر رمز انتخاب نکرده null است */
+    passwordHash: string | null
     createdAt: string
     profile: UserProfile
 }
@@ -35,7 +39,13 @@ export interface StoredUser {
 export type AuthUser = Omit<StoredUser, 'salt' | 'passwordHash'>
 
 export const SESSION_COOKIE = 'piano-session'
-export const USERS_STORAGE_KEY = 'web-piano:users:v1'
+export const USERS_STORAGE_KEY = 'web-piano:users:v2' // v2: ورود با موبایل به‌جای ایمیل
+
+/** کد یک‌بارمصرف پیامکی */
+export const OTP_LENGTH = 6
+export const OTP_TTL_MS = 2 * 60 * 1000
+export const OTP_RESEND_SECONDS = 60
+export const OTP_MAX_ATTEMPTS = 5
 
 export const DISPLAY_NAME_MAX = 40
 export const BIO_MAX = 280
@@ -65,10 +75,26 @@ export function profileCompletion(p: UserProfile): number {
 
 // ---------- اعتبارسنجی؛ پیام خطا یا null ----------
 
-export function validateEmail(value: string): string | null {
-    const v = value.trim()
-    if (!v) return 'Email is required.'
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) return 'Enter a valid email address.'
+/** رقم‌های فارسی/عربی رو به انگلیسی تبدیل می‌کنه */
+export function normalizeDigits(value: string): string {
+    return value
+        .replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06f0))
+        .replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660))
+}
+
+/** شماره‌ی موبایل ایران رو به شکل 09xxxxxxxxx درمیاره (+98، 0098 و بدون صفر هم قبول) */
+export function normalizePhone(value: string): string {
+    const v = normalizeDigits(value).replace(/[\s\-()]/g, '')
+    if (v.startsWith('+98')) return `0${v.slice(3)}`
+    if (v.startsWith('0098')) return `0${v.slice(4)}`
+    if (/^98\d{10}$/.test(v)) return `0${v.slice(2)}`
+    if (/^9\d{9}$/.test(v)) return `0${v}`
+    return v
+}
+
+export function validatePhone(value: string): string | null {
+    if (!value.trim()) return 'Mobile number is required.'
+    if (!/^09\d{9}$/.test(normalizePhone(value))) return 'Enter a valid mobile number, e.g. 09123456789.'
     return null
 }
 

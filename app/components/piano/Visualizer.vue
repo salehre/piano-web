@@ -72,7 +72,7 @@ function draw() {
 
   g.clearRect(0, 0, width, height)
 
-  const gap = width > 240 ? 3 : 2
+  const gap = width > 240 ? 3 : width > 150 ? 2 : 1
   const barW = (width - gap * (BARS - 1)) / BARS
   const radius = Math.min(barW / 2, 2.5)
 

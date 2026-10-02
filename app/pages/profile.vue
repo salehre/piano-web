@@ -138,7 +138,7 @@ const selectClass =
           </div>
           <div>
             <h1 class="text-2xl font-semibold">{{ user.profile.displayName || 'Your profile' }}</h1>
-            <p class="text-sm text-stone-400">{{ user.email }}</p>
+            <p class="text-sm text-stone-400" dir="ltr">{{ user.phone }}</p>
           </div>
         </div>
 
@@ -227,8 +227,8 @@ const selectClass =
         <section aria-labelledby="account-title" class="space-y-2">
           <h2 id="account-title" class="border-b border-stone-800 pb-2 text-lg font-medium">Account</h2>
           <dl class="grid gap-x-6 gap-y-2 pt-2 text-sm sm:grid-cols-[8rem_1fr]">
-            <dt class="text-stone-400">Email</dt>
-            <dd>{{ user.email }}</dd>
+            <dt class="text-stone-400">Mobile</dt>
+            <dd dir="ltr">{{ user.phone }}</dd>
             <dt class="text-stone-400">Member since</dt>
             <dd>{{ memberSince }}</dd>
           </dl>

@@ -1,7 +1,5 @@
 <script setup lang="ts">
-const { user, isLoggedIn } = useAuth()
-
-const initial = computed(() => user.value?.profile.displayName.trim().charAt(0).toUpperCase() ?? '')
+const { isLoggedIn, initial } = useAuth()
 
 // لاگین‌نکرده: میدلور auth می‌فرستدش به /login?redirect=/profile (و از اونجا لینک ثبت‌نام)
 // لاگین‌کرده: مستقیم میره توی پروفایل و تنظیمات حساب

@@ -3,6 +3,7 @@ const props = defineProps<{
   label: string
   type?: string
   autocomplete?: string
+  inputmode?: 'text' | 'numeric' | 'tel' | 'email'
   error?: string
   hint?: string
   placeholder?: string
@@ -48,6 +49,7 @@ const fieldClass = computed(() => [
           v-model="model"
           :type="inputType"
           :autocomplete="autocomplete"
+          :inputmode="inputmode"
           :maxlength="maxlength"
           :placeholder="placeholder"
           :class="[fieldClass, isPassword ? 'pr-16' : '']"
