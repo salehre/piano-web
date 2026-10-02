@@ -51,7 +51,7 @@ onBeforeUnmount(() => {
       <li v-for="t in PIANO_TYPES" :key="t.keys" role="none">
         <NuxtLink
           role="menuitem"
-          :to="{ path: '/', query: { keys: t.keys } }"
+          :to="{ path: '/virtual-piano', query: { keys: t.keys } }"
           class="block px-4 py-3 hover:bg-stone-800"
           :class="t.keys === piano.keys ? 'bg-stone-800' : ''"
           @click="open = false"

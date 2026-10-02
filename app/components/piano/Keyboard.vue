@@ -12,11 +12,11 @@ const BLACK_RATIO = 0.583
 const blackWidth = computed(() => whiteWidth.value * BLACK_RATIO)
 
 const BLACK_OFFSET: Record<string, number> = {
-      'C#': -0.097,
-      'D#': 0.097,
-      'F#': -0.146,
-      'G#': 0,
-      'A#': 0.146,
+  'C#': -0.097,
+  'D#': 0.097,
+  'F#': -0.146,
+  'G#': 0,
+  'A#': 0.146,
 }
 
 // موقعیت هر کلید مشکی نسبت به کلیدهای سفید قبلی‌اش
@@ -27,9 +27,9 @@ const blackKeys = computed(() => {
     if (k.isBlack) {
       const offset = BLACK_OFFSET[k.note.replace(/-?\d+$/, '')] ?? 0
       result.push({
-            note: k.note,
-            left: (whitesBefore + offset) * whiteWidth.value - blackWidth.value / 2,
-            gap: (0.5 - offset / BLACK_RATIO) * 100,
+        note: k.note,
+        left: (whitesBefore + offset) * whiteWidth.value - blackWidth.value / 2,
+        gap: (0.5 - offset / BLACK_RATIO) * 100,
       })
     } else whitesBefore++
   }
@@ -255,7 +255,12 @@ onBeforeUnmount(() => {
   background: linear-gradient(to bottom, transparent 50%, rgb(255 255 255 / 0.06));
 }
 
-/* پنجه‌ی کلید: خاکستری با گوشه‌های پخ، برق گوشه‌ی راست و بازتاب فاصله‌ی بین کلیدهای سفید */
+/*
+  پنجه‌ی کلید: سطح خاکستری براق + برق گوشه‌ی راست + یک سایه‌ی نرم و محو
+  دقیقاً در موقعیت شکافِ واقعیِ بین کلیدهای سفید زیرین (--gap).
+  به‌جای یه خط تیزِ قهوه‌ای، اینجا یه بیضیِ باریک و کم‌رنگِ مشکی‌ـ‌محو
+  استفاده شده که بازتابِ طبیعیِ شکاف روی سطح لاکیِ کلید مشکی رو شبیه‌سازی می‌کنه.
+*/
 .key-black::after {
   content: '';
   position: absolute;
@@ -266,13 +271,7 @@ onBeforeUnmount(() => {
   min-height: 8px;
   clip-path: polygon(0 100%, 0 30%, 12% 0, 88% 0, 100% 30%, 100% 100%);
   background:
-      linear-gradient(
-          to right,
-          transparent calc(var(--gap) - var(--half-gap) * 3),
-          rgb(74 51 6 / 0.5) calc(var(--gap) - var(--half-gap)),
-          rgb(74 51 6 / 0.5) calc(var(--gap) + var(--half-gap)),
-          transparent calc(var(--gap) + var(--half-gap) * 3)
-      ),
+      radial-gradient(ellipse 6% 90% at var(--gap) 55%, rgb(0 0 0 / 0.4), transparent 75%),
       radial-gradient(circle at 100% 0, rgb(255 255 255 / 0.7) 0, transparent 40%),
       linear-gradient(to bottom, #70757a, #4a4d4f);
 }
@@ -289,13 +288,7 @@ onBeforeUnmount(() => {
 }
 .key-black.is-active::after {
   background:
-      linear-gradient(
-          to right,
-          transparent calc(var(--gap) - var(--half-gap) * 3),
-          rgb(0 0 0 / 0.5) calc(var(--gap) - var(--half-gap)),
-          rgb(0 0 0 / 0.5) calc(var(--gap) + var(--half-gap)),
-          transparent calc(var(--gap) + var(--half-gap) * 3)
-      ),
+      radial-gradient(ellipse 6% 90% at var(--gap) 55%, rgb(50 30 2 / 0.4), transparent 75%),
       linear-gradient(to bottom, #f0c25a, #b98a22);
 }
 

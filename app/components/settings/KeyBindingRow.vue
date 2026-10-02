@@ -39,9 +39,9 @@ function onKeydown(e: KeyboardEvent) {
         @keydown="onKeydown"
         @blur="capturing = false"
       >
-        <span v-if="capturing" class="text-key-active">Press a key…</span>
+        <span v-if="capturing" class="text-key-active">Press a key</span>
         <kbd v-else-if="code" class="font-sans">{{ formatKeyCode(code) }}</kbd>
-        <span v-else class="text-stone-500">Not set</span>
+        <span v-else class="text-stone-500">--</span>
       </button>
 
       <button

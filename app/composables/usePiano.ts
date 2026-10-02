@@ -3,6 +3,21 @@ import type * as ToneNS from 'tone'
 // این‌ها فقط سمت کلاینت ساخته می‌شن (SSR کاری باهاشون نداره)
 let Tone: typeof ToneNS | null = null
 let sampler: ToneNS.Sampler | null = null
+let recorder: ToneNS.Recorder | null = null
+
+// ضبط و پخش: رویدادهای نت با زمان (میلی‌ثانیه از شروع ضبط) + فایل صوتی برای دانلود
+interface RecEvent {
+  t: number
+  note: string
+  on: boolean
+  velocity: number
+}
+let recorded: RecEvent[] = []
+let audioBlob: Blob | null = null
+let recStart = 0
+let playStart = 0
+let playTimers: ReturnType<typeof setTimeout>[] = []
+let raf = 0
 
 const SAMPLE_BASE_URL = 'https://tonejs.github.io/audio/salamander/'
 
@@ -24,6 +39,14 @@ export const usePiano = () => {
   const status = useState<'idle' | 'loading' | 'ready' | 'error'>('piano-status', () => 'idle')
   const active = useState<string[]>('piano-active', () => [])
 
+  const recording = useState('piano-recording', () => false)
+  const playing = useState('piano-playing', () => false)
+  const saving = useState('piano-saving', () => false) // بعد از Stop، تا وقتی فایل صوتی آماده بشه
+  const canDownload = useState('piano-can-download', () => false)
+  const recordedCount = useState('piano-recorded-count', () => 0)
+  const recordedMs = useState('piano-recorded-ms', () => 0)
+  const timerMs = useState('piano-timer-ms', () => 0) // زمان زنده‌ی ضبط یا پخش
+
   /** باید از داخل یک کلیک/لمس کاربر صدا زده بشه (محدودیت مرورگر برای صدا) */
   async function init() {
     if (status.value === 'ready' || status.value === 'loading') return
@@ -41,6 +64,12 @@ export const usePiano = () => {
           onerror: (e) => reject(e),
         }).toDestination()
       })
+
+      // خروجی پیانو به ضبط‌کننده هم وصل می‌شه (اگه مرورگر پشتیبانی کنه)
+      if (Tone!.Recorder.supported) {
+        recorder = new Tone!.Recorder()
+        sampler?.connect(recorder)
+      }
       status.value = 'ready'
     } catch (err) {
       console.error(err)
@@ -54,6 +83,7 @@ export const usePiano = () => {
     if (active.value.includes(note)) return
     sampler.triggerAttack(note, Tone.now(), velocity)
     active.value = [...active.value, note]
+    if (recording.value) record({ t: performance.now() - recStart, note, on: true, velocity })
   }
 
   function noteOff(note: string) {
@@ -61,7 +91,119 @@ export const usePiano = () => {
     if (!active.value.includes(note)) return
     sampler.triggerRelease(note, Tone.now())
     active.value = active.value.filter((n) => n !== note)
+    if (recording.value) record({ t: performance.now() - recStart, note, on: false, velocity: 0 })
   }
 
-  return { status, active, init, noteOn, noteOff }
+  function record(e: RecEvent) {
+    recorded.push(e)
+    recordedCount.value = recorded.length
+  }
+
+  // تایمر زنده: موقع ضبط زمان سپری‌شده، موقع پخش جای فعلی پخش
+  function loop() {
+    if (recording.value) timerMs.value = performance.now() - recStart
+    else if (playing.value) timerMs.value = Math.min(performance.now() - playStart, recordedMs.value)
+    else return
+    raf = requestAnimationFrame(loop)
+  }
+  function startLoop() {
+    cancelAnimationFrame(raf)
+    raf = requestAnimationFrame(loop)
+  }
+
+  async function startRecording() {
+    if (status.value !== 'ready' || recording.value || saving.value) return
+    stopPlayback()
+    recorded = []
+    audioBlob = null
+    canDownload.value = false
+    recStart = performance.now()
+    // نت‌هایی که همین الان نگه داشته شدن هم از ثانیه‌ی صفر ثبت می‌شن
+    for (const n of active.value) recorded.push({ t: 0, note: n, on: true, velocity: 0.8 })
+    recordedCount.value = recorded.length
+    recordedMs.value = 0
+    timerMs.value = 0
+    recording.value = true
+    startLoop()
+    try {
+      await recorder?.start()
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  async function stopRecording() {
+    if (!recording.value) return
+    const t = performance.now() - recStart
+    // نت‌هایی که موقع توقف هنوز نگه داشته شدن، توی پخش همین‌جا رها می‌شن
+    for (const n of active.value) recorded.push({ t, note: n, on: false, velocity: 0 })
+    recordedMs.value = t
+    timerMs.value = t
+    recordedCount.value = recorded.length
+    recording.value = false
+
+    if (!recorder) return
+    saving.value = true
+    try {
+      // کمی صبر می‌کنیم تا ته صدای آخرین نت‌ها (release) هم ضبط بشه
+      await new Promise((r) => setTimeout(r, 600))
+      audioBlob = await recorder.stop()
+      canDownload.value = !!audioBlob && audioBlob.size > 0
+    } catch (err) {
+      console.error(err)
+    } finally {
+      saving.value = false
+    }
+  }
+
+  function play() {
+    if (recording.value || saving.value || recorded.length === 0) return
+    stopPlayback()
+    playing.value = true
+    playStart = performance.now()
+    timerMs.value = 0
+    startLoop()
+    for (const e of recorded) {
+      playTimers.push(setTimeout(() => (e.on ? noteOn(e.note, e.velocity) : noteOff(e.note)), e.t))
+    }
+    playTimers.push(setTimeout(stopPlayback, recordedMs.value + 400))
+  }
+
+  function stopPlayback() {
+    playTimers.forEach(clearTimeout)
+    playTimers = []
+    if (!playing.value) return
+    playing.value = false
+    timerMs.value = recordedMs.value
+    for (const n of [...active.value]) noteOff(n)
+  }
+
+  function clearRecording() {
+    if (saving.value) return
+    stopPlayback()
+    recorded = []
+    audioBlob = null
+    recordedCount.value = 0
+    recordedMs.value = 0
+    timerMs.value = 0
+    canDownload.value = false
+  }
+
+  function downloadRecording() {
+    if (!audioBlob) return
+    const type = audioBlob.type
+    const ext = type.includes('webm') ? 'webm' : type.includes('ogg') ? 'ogg' : type.includes('mp4') ? 'm4a' : 'audio'
+    const url = URL.createObjectURL(audioBlob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `piano-recording.${ext}`
+    a.click()
+    setTimeout(() => URL.revokeObjectURL(url), 1000)
+  }
+
+  return {
+    status, active, init, noteOn, noteOff,
+    recording, playing, saving, canDownload, recordedCount, recordedMs, timerMs,
+    startRecording, stopRecording, play, stopPlayback, clearRecording, downloadRecording,
+  }
 }
