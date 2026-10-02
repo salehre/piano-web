@@ -53,3 +53,8 @@ const features = [
     </section>
   </main>
 </template>
+<style>
+.a{
+  scale: none;
+}
+</style>

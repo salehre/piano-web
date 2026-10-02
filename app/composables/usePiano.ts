@@ -4,6 +4,7 @@ import type * as ToneNS from 'tone'
 let Tone: typeof ToneNS | null = null
 let sampler: ToneNS.Sampler | null = null
 let recorder: ToneNS.Recorder | null = null
+let analyser: ToneNS.Analyser | null = null
 
 // ضبط و پخش: رویدادهای نت با زمان (میلی‌ثانیه از شروع ضبط) + فایل صوتی برای دانلود
 interface RecEvent {
@@ -64,6 +65,9 @@ export const usePiano = () => {
           onerror: (e) => reject(e),
         }).toDestination()
       })
+
+      analyser = new Tone!.Analyser({ type: 'fft', size: 1024, smoothing: 0.5 })
+      sampler?.connect(analyser)
 
       // خروجی پیانو به ضبط‌کننده هم وصل می‌شه (اگه مرورگر پشتیبانی کنه)
       if (Tone!.Recorder.supported) {
@@ -189,6 +193,12 @@ export const usePiano = () => {
     canDownload.value = false
   }
 
+  /** طیف فرکانسی لحظه‌ای خروجی پیانو (برای نمایشگر) */
+  function getSpectrum() {
+    if (!analyser || !Tone) return null
+    return { data: analyser.getValue() as Float32Array, sampleRate: Tone.getContext().sampleRate }
+  }
+
   function downloadRecording() {
     if (!audioBlob) return
     const type = audioBlob.type
@@ -205,5 +215,6 @@ export const usePiano = () => {
     status, active, init, noteOn, noteOff,
     recording, playing, saving, canDownload, recordedCount, recordedMs, timerMs,
     startRecording, stopRecording, play, stopPlayback, clearRecording, downloadRecording,
+    getSpectrum,
   }
 }
