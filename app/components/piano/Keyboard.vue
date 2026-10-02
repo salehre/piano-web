@@ -2,7 +2,7 @@
 import type { PianoType } from '~/utils/pianoTypes'
 
 const props = defineProps<{ type: PianoType }>()
-const { active, noteOn, noteOff } = usePiano()
+const { active, status, noteOn, noteOff } = usePiano()
 const { noteLabels } = useKeyBindings()
 
 const keys = computed(() => buildKeys(props.type))
@@ -20,6 +20,19 @@ const blackKeys = computed(() => {
   }
   return result
 })
+
+// مرکز هر کلید به درصدِ عرض کیبورد (برای قرار دادن اسم نت بالای همون کلید)
+const centers = computed(() => {
+  const map: Record<string, number> = {}
+  whiteKeys.value.forEach((k, i) => {
+    map[k.note] = (i + 0.5) * whiteWidth.value
+  })
+  blackKeys.value.forEach((k) => {
+    map[k.note] = k.left + blackWidth.value / 2
+  })
+  return map
+})
+const pressedNotes = computed(() => active.value.filter((n) => n in centers.value))
 
 // فقط نت‌های داخل محدوده‌ی همین پیانو با کیبورد کامپیوتر نواخته می‌شن
 const playable = computed(() => new Set(keys.value.map((k) => k.note)))
@@ -81,7 +94,26 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <!-- کل کیبورد توی عرض صفحه جا می‌شه و اسکرول افقی نداره -->
+  <div class="flex flex-col gap-2">
+    <!-- باکس نمایش نت‌های فشرده‌شده؛ بعد از لود صداها ظاهر می‌شه -->
+    <div
+        class="h-12 rounded-lg bg-black px-3 transition-opacity duration-500"
+        :class="status === 'ready' ? 'opacity-100' : 'opacity-0'"
+        aria-hidden="true"
+    >
+      <div class="relative h-full">
+        <TransitionGroup name="note-label">
+          <span
+              v-for="n in pressedNotes"
+              :key="n"
+              class="pointer-events-none absolute top-1/2 -translate-x-1/2 -translate-y-1/2 text-sm font-semibold text-key-active"
+              :style="{ left: `${centers[n]}%` }"
+          >
+            {{ n }}
+          </span>
+        </TransitionGroup>
+      </div>
+    </div>
   <div class="rounded-lg bg-stone-950 p-3 pb-4">
     <div
       :key="type.keys"
@@ -94,13 +126,12 @@ onBeforeUnmount(() => {
       <!-- کلیدهای سفید -->
       <div class="flex h-full">
         <button
-          v-for="(k, i) in whiteKeys"
+          v-for="k in whiteKeys"
           :key="k.note"
           type="button"
           :aria-label="k.note"
-          class="key-rise flex min-w-0 flex-1 touch-none items-end justify-center overflow-hidden rounded-b border border-stone-400 pb-3 text-[10px] font-medium text-stone-500 transition-colors duration-75 sm:text-xs"
+          class="flex min-w-0 flex-1 touch-none items-end justify-center overflow-hidden rounded-b border border-stone-400 pb-3 text-[10px] font-medium text-stone-500 transition-colors duration-75 sm:text-xs"
           :class="isActive(k.note) ? 'bg-key-active' : 'bg-stone-50'"
-          :style="riseStyle(i)"
           :data-note="k.note"
         >
           {{ noteLabels[k.note] ?? '' }}
@@ -121,6 +152,7 @@ onBeforeUnmount(() => {
         {{ noteLabels[k.note] ?? '' }}
       </button>
     </div>
+   </div>
   </div>
 </template>
 
@@ -139,5 +171,14 @@ onBeforeUnmount(() => {
   .key-rise {
     animation: none;
   }
+}
+
+.note-label-enter-active,
+.note-label-leave-active {
+  transition: opacity 0.12s ease;
+}
+.note-label-enter-from,
+.note-label-leave-to {
+  opacity: 0;
 }
 </style>
