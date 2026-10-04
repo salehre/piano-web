@@ -1,5 +1,5 @@
 <template>
-  <header class="sticky top-0 z-40 border-b border-stone-800 bg-stone-950">
+  <header class="sticky top-0 z-40 border-b border-white/5 bg-stone-950/80 backdrop-blur-xl">
     <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-3">
       <NuxtLink to="/" class="text-lg font-semibold">Web Piano</NuxtLink>
 

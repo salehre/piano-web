@@ -42,7 +42,7 @@ function onBackdropClick(e: MouseEvent) {
 <template>
   <dialog
       ref="dialog"
-      class="m-auto w-[calc(100%-3rem)] max-w-sm rounded-2xl border border-stone-700 bg-stone-900 p-0 text-stone-100 shadow-xl backdrop:bg-black/60"
+      class="glass-card m-auto w-[calc(100%-3rem)] max-w-sm border-0 bg-transparent p-0 backdrop:bg-black/60"
       :aria-labelledby="titleId"
       :aria-describedby="message ? messageId : undefined"
       @close="open = false"

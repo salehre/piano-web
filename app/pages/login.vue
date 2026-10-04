@@ -199,7 +199,7 @@ const copy = computed(() => {
     />
 
     <section
-        class="w-full max-w-md rounded-3xl border border-stone-700/60 bg-stone-950/80 p-6 shadow-2xl shadow-black/50 backdrop-blur-md sm:p-8"
+        class="glass-card relative w-full max-w-md p-6 sm:p-8"
         aria-labelledby="login-title"
     >
       <header class="border-b border-stone-800 pb-5">

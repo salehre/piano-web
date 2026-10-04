@@ -152,7 +152,7 @@ function onLogout() {
         </button>
       </div>
 
-      <section class="mt-8 rounded-2xl bg-stone-950/40 p-5" aria-labelledby="completion-title">
+      <section class="glass-card relative mt-8 p-5" aria-labelledby="completion-title">
         <div class="flex items-baseline justify-between">
           <h2 id="completion-title" class="text-sm font-medium">Profile completion</h2>
           <span class="text-sm text-stone-400">{{ completion }}%</span>

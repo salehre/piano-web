@@ -7,25 +7,25 @@ const socials = [
   {
     name: 'Gmail',
     href: 'mailto:salehrezaeipoor123@gmail.com',
-    color: '#EA4335',
+    color: 'rgba(234, 67, 53, 0.4)',
     icon: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/>',
   },
   {
     name: 'Telegram',
     href: 'https://t.me/cringebutfun',
-    color: '#26A5E4',
+    color: 'rgba(38, 165, 228, 0.4)',
     icon: '<path d="m22 2-7 20-4-9-9-4 20-7Z"/><path d="M22 2 11 13"/>',
   },
   {
     name: 'GitHub',
     href: 'https://github.com/salehre',
-    color: '#F0F6FC',
+    color: 'rgba(240, 246, 252, 0.35)',
     icon: '<path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 15 3.48a13.38 13.38 0 0 0-7 0C4.27.65 3.09 1 3.09 1A5.07 5.07 0 0 0 3 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 7 18.13V22"/>',
   },
   {
     name: 'Reddit',
     href: 'https://www.reddit.com/user/salehrezaei/',
-    color: '#FF4500',
+    color: 'rgba(255, 69, 0, 0.4)',
     icon: '<path d="M12 8c-4.4 0-8 2-8 5.5S7.6 20 12 20s8-3 8-6.5S16.4 8 12 8Z"/><path d="m12 8 1-4 3 1M4 12l-1.5-1M20 12l1.5-1M9 13h.01M15 13h.01M9 16c1.8 1.4 4.2 1.4 6 0"/><circle cx="17" cy="5" r="1"/>',
   },
 ]
@@ -98,14 +98,14 @@ async function join() {
                 :aria-label="s.name"
                 :title="s.name"
                 :style="{ '--social-color': s.color }"
-                class="flex size-10 items-center justify-center rounded-full border border-stone-700 text-stone-300 transition-all hover:text-key-active hover:shadow-[0_0_12px_var(--social-color)]"
+                class="flex size-10 items-center justify-center rounded-full border border-stone-700 text-stone-300 transition-all hover:text-key-active hover:shadow-[0_0_14px_var(--social-color)]"
             >
               <svg
-                  class="size-5"
+                  class="size-4.5"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  stroke-width="1.6"
+                  stroke-width="1.4"
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   aria-hidden="true"

@@ -27,3 +27,75 @@ body {
   color: #f1e6d6;
   background-color: #170701;
 }
+
+:root {
+  scrollbar-color: #6f523c #170c07;
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #170c07;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 2px solid #170c07;
+  border-radius: 999px;
+  background: #6f523c;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #e0a526;
+}
+
+
+@layer components {
+  .glass-card {
+    --glass-radius: 28px;
+    isolation: isolate;
+    border-radius: var(--glass-radius);
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 21px -8px rgba(255, 255, 255, 0.3);
+  }
+
+  .glass-flat {
+    box-shadow: none;
+    text-shadow: none;
+  }
+
+  .glass-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: var(--glass-radius);
+    box-shadow: inset 0 0 6px -3px rgba(255, 255, 255, 0.7);
+    pointer-events: none;
+  }
+
+  .glass-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: var(--glass-radius);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    filter: url(#glass-distortion-08);
+    -webkit-filter: url(#glass-distortion-08);
+    isolation: isolate;
+    pointer-events: none;
+  }
+}
+
+@layer base {
+  button:not(:disabled):not(.key-white):not(.key-black),
+  [role='button']:not(:disabled) {
+    cursor: pointer;
+  }
+}

@@ -127,5 +127,10 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <canvas ref="canvas" class="block h-full w-full" aria-hidden="true" />
+  <!-- قاب شیشه‌ای کوچیک؛ اندازه‌اش رو صفحه‌ی بالادستی با class می‌ده (مثلاً h-9 w-32) -->
+  <div
+      class="rounded-xl bg-black/25 px-2 py-1 ring-1 ring-white/15 shadow-[inset_0_0_6px_-3px_rgba(255,255,255,0.7)]"
+  >
+    <canvas ref="canvas" class="block h-full w-full" aria-hidden="true" />
+  </div>
 </template>

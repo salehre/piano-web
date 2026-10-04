@@ -42,6 +42,53 @@ function volumeToDb(v: number) {
   return v <= 0.001 ? -100 : Math.max(-100, 40 * Math.log10(v))
 }
 
+// ضبط‌کننده‌ی مرورگر خروجی webm/ogg می‌ده (کانتینر ویدیویی)؛ برای دانلود، صدا رو به WAV تبدیل می‌کنیم
+function encodeWav(buf: AudioBuffer): Blob {
+  const ch = buf.numberOfChannels
+  const len = buf.length
+  const rate = buf.sampleRate
+  const dataSize = len * ch * 2
+  const view = new DataView(new ArrayBuffer(44 + dataSize))
+  const str = (o: number, t: string) => {
+    for (let i = 0; i < t.length; i++) view.setUint8(o + i, t.charCodeAt(i))
+  }
+
+  str(0, 'RIFF')
+  view.setUint32(4, 36 + dataSize, true)
+  str(8, 'WAVE')
+  str(12, 'fmt ')
+  view.setUint32(16, 16, true) // اندازه‌ی بلوک fmt
+  view.setUint16(20, 1, true) // PCM
+  view.setUint16(22, ch, true)
+  view.setUint32(24, rate, true)
+  view.setUint32(28, rate * ch * 2, true)
+  view.setUint16(32, ch * 2, true)
+  view.setUint16(34, 16, true) // ۱۶ بیت
+  str(36, 'data')
+  view.setUint32(40, dataSize, true)
+
+  const channels = Array.from({ length: ch }, (_, c) => buf.getChannelData(c))
+  let offset = 44
+  for (let i = 0; i < len; i++) {
+    for (let c = 0; c < ch; c++) {
+      const v = Math.max(-1, Math.min(1, channels[c]![i]!))
+      view.setInt16(offset, v < 0 ? v * 0x8000 : v * 0x7fff, true)
+      offset += 2
+    }
+  }
+  return new Blob([view], { type: 'audio/wav' })
+}
+
+async function toWav(blob: Blob): Promise<Blob> {
+  const ac = new AudioContext()
+  try {
+    const decoded = await ac.decodeAudioData(await blob.arrayBuffer())
+    return encodeWav(decoded)
+  } finally {
+    void ac.close()
+  }
+}
+
 export const usePiano = () => {
   const status = useState<'idle' | 'loading' | 'ready' | 'error'>('piano-status', () => 'idle')
   const active = useState<string[]>('piano-active', () => [])
@@ -166,6 +213,12 @@ export const usePiano = () => {
       // کمی صبر می‌کنیم تا ته صدای آخرین نت‌ها (release) هم ضبط بشه
       await new Promise((r) => setTimeout(r, 600))
       audioBlob = await recorder.stop()
+      // تبدیل به WAV؛ اگه نشد، همون فایل اصلی مرورگر می‌مونه
+      try {
+        audioBlob = await toWav(audioBlob)
+      } catch (err) {
+        console.error(err)
+      }
       canDownload.value = !!audioBlob && audioBlob.size > 0
     } catch (err) {
       console.error(err)
@@ -216,7 +269,7 @@ export const usePiano = () => {
   function downloadRecording() {
     if (!audioBlob) return
     const type = audioBlob.type
-    const ext = type.includes('webm') ? 'webm' : type.includes('ogg') ? 'ogg' : type.includes('mp4') ? 'm4a' : 'audio'
+    const ext = type.includes('wav') ? 'wav' : type.includes('webm') ? 'weba' : type.includes('ogg') ? 'ogg' : type.includes('mp4') ? 'm4a' : 'audio'
     const url = URL.createObjectURL(audioBlob)
     const a = document.createElement('a')
     a.href = url

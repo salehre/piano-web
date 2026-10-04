@@ -32,7 +32,7 @@ const features = [
     </section>
 
     <section class="grid gap-4 sm:grid-cols-3">
-      <div v-for="f in features" :key="f.title" class="rounded-2xl bg-stone-950/40 p-6">
+      <div v-for="f in features" :key="f.title" class="glass-card relative p-6">
         <h2 class="font-medium">{{ f.title }}</h2>
         <p class="mt-2 text-sm text-stone-400">{{ f.text }}</p>
       </div>
