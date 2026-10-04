@@ -126,7 +126,16 @@ function restart() {
 </script>
 
 <template>
-  <section class="rounded-2xl bg-stone-950/40 p-6 sm:p-8" aria-labelledby="finder-title">
+  <section class="relative isolate overflow-hidden rounded-2xl bg-stone-950 p-6 sm:p-8" aria-labelledby="finder-title">
+    <!-- تصویر پس‌زمینه + لایه‌ی تیره برای خوانایی متن -->
+    <img
+        src="/images/piano-finder-bg.jpg"
+        alt=""
+        aria-hidden="true"
+        class="absolute inset-0 -z-20 size-full object-cover object-center"
+    />
+    <div class="absolute inset-0 -z-10 bg-gradient-to-r from-stone-950/90 via-stone-950/80 to-stone-950/65" aria-hidden="true" />
+
     <h2 id="finder-title" class="text-xl font-semibold">Find your piano</h2>
     <p class="mt-1 text-sm text-stone-400">A few quick questions, then we'll suggest the right size and how to get started.</p>
 
@@ -160,7 +169,7 @@ function restart() {
             :role="current.multi ? 'checkbox' : 'radio'"
             :aria-checked="selected(current, o.value)"
             class="rounded-xl border px-4 py-3 text-left transition-colors hover:border-key-active hover:text-key-active"
-            :class="selected(current, o.value) ? 'border-key-active bg-key-active/10 text-key-active' : 'border-stone-700'"
+            :class="selected(current, o.value) ? 'border-key-active bg-key-active/10 text-key-active' : 'border-stone-700 bg-stone-950/50'"
             @click="choose(o.value)"
         >
           <!-- نوارهای سطح -->

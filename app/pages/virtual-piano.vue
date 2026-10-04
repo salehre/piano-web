@@ -99,11 +99,6 @@ useHead({ title: computed(() => `${piano.value.keys}-key piano | Web Piano`) })
         >
           {{ status === 'loading' ? 'Loading sounds…' : status === 'error' ? 'Retry loading' : 'Load piano' }}
         </button>
-
-        <span v-else class="text-sm text-stone-400">
-          Ready. Click the keys or use your keyboard.
-          <NuxtLink to="/settings" class="underline hover:text-stone-200">Change shortcuts</NuxtLink>
-        </span>
       </div>
     </section>
 

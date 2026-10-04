@@ -1,4 +1,4 @@
-/** سطح‌های مهارت پیانو برای فرم پروفایل */
+/** سطح‌های مهارت پیانو (برای PianoFinder) */
 export const PIANO_LEVELS = [
     { value: 'never', label: 'Never played' },
     { value: 'beginner', label: 'Beginner' },
@@ -10,16 +10,16 @@ export const PIANO_LEVELS = [
 
 export type PianoLevel = (typeof PIANO_LEVELS)[number]['value']
 
-/** سبک‌های موسیقی قابل انتخاب در پروفایل */
+/** سبک‌های موسیقی (برای PianoFinder) */
 export const FAVORITE_GENRES = ['Classical', 'Jazz', 'Pop', 'Rock', 'Film & game music', 'Folk', 'Other'] as const
 
 /** اطلاعاتی که کاربر خودش توی صفحه‌ی پروفایل تکمیل می‌کنه */
 export interface UserProfile {
     displayName: string
-    bio: string
+    /** کد ملی ۱۰ رقمی (انگلیسی)؛ خالی یعنی ثبت نشده */
+    nationalId: string
     country: string
-    level: PianoLevel | ''
-    favoriteGenre: string
+    address: string
     yearsPlaying: number | null
 }
 
@@ -48,11 +48,11 @@ export const OTP_RESEND_SECONDS = 60
 export const OTP_MAX_ATTEMPTS = 5
 
 export const DISPLAY_NAME_MAX = 40
-export const BIO_MAX = 280
+export const ADDRESS_MAX = 300
 export const PASSWORD_MIN = 8
 
 export function createEmptyProfile(displayName = ''): UserProfile {
-    return { displayName, bio: '', country: '', level: '', favoriteGenre: '', yearsPlaying: null }
+    return { displayName, nationalId: '', country: '', address: '', yearsPlaying: null }
 }
 
 export function toAuthUser(user: StoredUser): AuthUser {
@@ -64,13 +64,12 @@ export function toAuthUser(user: StoredUser): AuthUser {
 export function profileCompletion(p: UserProfile): number {
     const filled = [
         p.displayName.trim(),
-        p.bio.trim(),
+        p.nationalId.trim(),
         p.country.trim(),
-        p.level,
-        p.favoriteGenre,
+        p.address.trim(),
         p.yearsPlaying !== null ? 'y' : '',
     ].filter(Boolean).length
-    return Math.round((filled / 6) * 100)
+    return Math.round((filled / 5) * 100)
 }
 
 // ---------- اعتبارسنجی؛ پیام خطا یا null ----------
@@ -113,6 +112,19 @@ export function validateDisplayName(value: string): string | null {
     return null
 }
 
+/** کد ملی ایران: ۱۰ رقم + بررسی رقم کنترل. خالی مجازه (اختیاری). */
+export function validateNationalId(value: string): string | null {
+    const v = normalizeDigits(value).trim()
+    if (!v) return null
+    if (!/^\d{10}$/.test(v)) return 'National ID must be exactly 10 digits.'
+    if (/^(\d)\1{9}$/.test(v)) return 'Enter a valid National ID.'
+    const digits = v.split('').map(Number)
+    const sum = digits.slice(0, 9).reduce((acc, d, i) => acc + d * (10 - i), 0)
+    const r = sum % 11
+    const check = r < 2 ? r : 11 - r
+    return check === digits[9] ? null : 'Enter a valid National ID.'
+}
+
 /** فقط مسیرهای داخلی سایت برای redirect بعد از لاگین پذیرفته می‌شن */
 export function getSafeRedirect(value: unknown, fallback = '/'): string {
     if (typeof value !== 'string') return fallback
@@ -126,7 +138,21 @@ export function readUsers(): StoredUser[] {
     try {
         const raw = localStorage.getItem(USERS_STORAGE_KEY)
         const parsed = raw ? JSON.parse(raw) : []
-        return Array.isArray(parsed) ? parsed : []
+        if (!Array.isArray(parsed)) return []
+        // کاربرهای قدیمی (با bio/level/favoriteGenre) به شکل جدید پروفایل مهاجرت داده می‌شن
+        return parsed.map((u: StoredUser) => {
+            const p: Partial<UserProfile> = u.profile ?? {}
+            return {
+                ...u,
+                profile: {
+                    displayName: p.displayName ?? '',
+                    nationalId: p.nationalId ?? '',
+                    country: p.country ?? '',
+                    address: p.address ?? '',
+                    yearsPlaying: p.yearsPlaying ?? null,
+                },
+            }
+        })
     } catch {
         return []
     }

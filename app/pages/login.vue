@@ -21,6 +21,15 @@ const submitting = ref(false)
 const devCode = ref('')
 const resendIn = ref(0)
 
+// عکس پس‌زمینه: فایل رو بذار توی public/images/ و فقط اسمش رو همین‌جا عوض کن
+const BG_IMAGE = '/images/login-bg.jpg'
+const bgEl = ref<HTMLImageElement>()
+const bgFailed = ref(false) // عکس نبود → بدون آیکون خراب، فقط زمینه‌ی ساده
+onMounted(() => {
+  // اگه خطا قبل از hydrate اتفاق افتاده باشه، رویداد error رو از دست داده‌ایم
+  if (bgEl.value?.complete && bgEl.value.naturalWidth === 0) bgFailed.value = true
+})
+
 const redirectTo = computed(() => getSafeRedirect(route.query.redirect))
 const formEl = ref<HTMLFormElement>()
 
@@ -163,89 +172,124 @@ const copy = computed(() => {
 </script>
 
 <template>
-  <main class="mx-auto max-w-md px-6 py-12 sm:py-20">
-    <h1 class="text-2xl font-semibold">{{ copy.title }}</h1>
-    <p class="mt-1 text-sm text-stone-400">{{ copy.hint }}</p>
+  <main
+      class="relative isolate flex min-h-[calc(100dvh-3.8rem)] items-center justify-center overflow-hidden bg-stone-950 px-6 py-12"
+  >
+    <!--
+      عکس با ارتفاع کامل صفحه نشون داده می‌شه (بدون بزرگ‌نمایی cover) و دو طرفش محو می‌شه
+      تا با زمینه یکی بشه؛ روی عکس‌های عریض‌تر، کل عرض رو می‌گیره.
+    -->
+    <img
+        v-if="!bgFailed"
+        ref="bgEl"
+        :src="BG_IMAGE"
+        alt=""
+        aria-hidden="true"
+        class="login-bg absolute inset-y-0 left-1/2 -z-20 h-full w-auto max-w-none -translate-x-1/2 select-none"
+        @error="bgFailed = true"
+    />
+    <!-- لایه‌ی تیره روی عکس؛ اگه عکس نباشه فقط همین گرادینت دیده می‌شه -->
+    <div
+        class="absolute inset-0 -z-10 bg-gradient-to-b from-stone-950/40 via-stone-950/25 to-stone-950/70"
+        aria-hidden="true"
+    />
 
-    <form ref="formEl" class="mt-8 space-y-5" novalidate @submit.prevent="submit">
-      <UiTextField
-          v-if="step === 'phone'"
-          v-model="form.phone"
-          label="Mobile number"
-          type="tel"
-          inputmode="tel"
-          autocomplete="tel"
-          placeholder="09123456789"
-          :error="error"
-      />
+    <section
+        class="w-full max-w-md rounded-3xl border border-stone-700/60 bg-stone-950/80 p-6 shadow-2xl shadow-black/50 backdrop-blur-md sm:p-8"
+        aria-labelledby="login-title"
+    >
+      <header class="border-b border-stone-800 pb-5">
+        <h1 id="login-title" class="text-2xl font-semibold">{{ copy.title }}</h1>
+        <p class="mt-1.5 text-sm text-stone-400">{{ copy.hint }}</p>
+      </header>
 
-      <template v-else-if="step === 'password'">
+      <form ref="formEl" class="mt-6 space-y-5" novalidate @submit.prevent="submit">
         <UiTextField
-            v-model="form.password"
+            v-if="step === 'phone'"
+            v-model="form.phone"
+            label="Mobile number"
+            type="tel"
+            inputmode="tel"
+            autocomplete="tel"
+            placeholder="09123456789"
+            :error="error"
+        />
+
+        <template v-else-if="step === 'password'">
+          <UiTextField
+              v-model="form.password"
+              label="Password"
+              type="password"
+              autocomplete="current-password"
+              :error="error"
+          />
+          <button
+              type="button"
+              class="text-sm text-key-active underline-offset-2 hover:underline disabled:opacity-60"
+              :disabled="submitting"
+              @click="forgotPassword"
+          >
+            Forgot your password? Log in with a code
+          </button>
+        </template>
+
+        <template v-else-if="step === 'code'">
+          <p v-if="devCode" class="rounded-md bg-stone-900 px-3 py-2 text-xs text-stone-300" role="status">
+            Dev mode: no SMS is sent. Your code is <span class="font-mono text-key-active">{{ devCode }}</span>
+          </p>
+          <UiTextField
+              v-model="form.code"
+              label="Verification code"
+              inputmode="numeric"
+              autocomplete="one-time-code"
+              :maxlength="OTP_LENGTH"
+              placeholder="123456"
+              :error="error"
+          />
+          <button
+              type="button"
+              class="text-sm text-key-active underline-offset-2 hover:underline disabled:text-stone-400 disabled:no-underline"
+              :disabled="resendIn > 0 || submitting"
+              @click="resend"
+          >
+            {{ resendIn > 0 ? `Resend code in ${resendIn}s` : 'Resend code' }}
+          </button>
+        </template>
+
+        <UiTextField
+            v-else
+            v-model="form.newPassword"
             label="Password"
             type="password"
-            autocomplete="current-password"
+            autocomplete="new-password"
+            :hint="`At least ${PASSWORD_MIN} characters, with a letter and a number.`"
             :error="error"
         />
+
         <button
-            type="button"
-            class="text-sm text-key-active underline-offset-2 hover:underline disabled:opacity-60"
+            type="submit"
+            class="w-full rounded-lg bg-key-active px-5 py-3 font-medium text-stone-950 transition-opacity hover:opacity-90 disabled:opacity-60"
             :disabled="submitting"
-            @click="forgotPassword"
         >
-          Forgot your password? Log in with a code
+          {{ submitting ? 'Please wait…' : copy.button }}
         </button>
-      </template>
 
-      <template v-else-if="step === 'code'">
-        <p v-if="devCode" class="rounded-md bg-stone-900 px-3 py-2 text-xs text-stone-300" role="status">
-          Dev mode: no SMS is sent. Your code is <span class="font-mono text-key-active">{{ devCode }}</span>
-        </p>
-        <UiTextField
-            v-model="form.code"
-            label="Verification code"
-            inputmode="numeric"
-            autocomplete="one-time-code"
-            :maxlength="OTP_LENGTH"
-            placeholder="123456"
-            :error="error"
-        />
         <button
+            v-if="step === 'password' || step === 'code'"
             type="button"
-            class="text-sm text-key-active underline-offset-2 hover:underline disabled:text-stone-400 disabled:no-underline"
-            :disabled="resendIn > 0 || submitting"
-            @click="resend"
+            class="w-full text-sm text-stone-400 hover:text-key-active"
+            @click="goTo('phone')"
         >
-          {{ resendIn > 0 ? `Resend code in ${resendIn}s` : 'Resend code' }}
+          Use a different number
         </button>
-      </template>
-
-      <UiTextField
-          v-else
-          v-model="form.newPassword"
-          label="Password"
-          type="password"
-          autocomplete="new-password"
-          :hint="`At least ${PASSWORD_MIN} characters, with a letter and a number.`"
-          :error="error"
-      />
-
-      <button
-          type="submit"
-          class="w-full rounded-lg bg-key-active px-5 py-3 font-medium text-stone-950 transition-opacity hover:opacity-90 disabled:opacity-60"
-          :disabled="submitting"
-      >
-        {{ submitting ? 'Please wait…' : copy.button }}
-      </button>
-
-      <button
-          v-if="step === 'password' || step === 'code'"
-          type="button"
-          class="w-full text-sm text-stone-400 hover:text-key-active"
-          @click="goTo('phone')"
-      >
-        Use a different number
-      </button>
-    </form>
+      </form>
+    </section>
   </main>
 </template>
+
+<style scoped>
+.login-bg {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 18%, #000 82%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 18%, #000 82%, transparent);
+}
+</style>

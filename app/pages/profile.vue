@@ -34,6 +34,7 @@ const toProfile = (f: ProfileForm): UserProfile => ({
 const form = reactive<ProfileForm>(toForm(createEmptyProfile()))
 const errors = reactive<{ displayName?: string; nationalId?: string; yearsPlaying?: string }>({})
 const showLogoutConfirm = ref(false)
+const loggingOut = ref(false)
 const saving = ref(false)
 const saved = ref(false)
 const formError = ref('')
@@ -54,7 +55,7 @@ watch(
 watch(
     [ready, user],
     ([isReady, u]) => {
-      if (isReady && !u) navigateTo({ path: '/login', query: { redirect: '/profile' } })
+      if (isReady && !u && !loggingOut.value) navigateTo({ path: '/login', query: { redirect: '/profile' } })
     },
     { immediate: true },
 )
@@ -114,9 +115,12 @@ function revert() {
   formError.value = ''
 }
 
-async function onLogout() {
-  await navigateTo('/')
+// اول logout (تا کوکی تا وقتی صفحه mount هست پاک بشه)، بعد رفتن به خانه.
+// loggingOut جلوی ریدایرکت watch پایین به /login رو می‌گیره.
+function onLogout() {
+  loggingOut.value = true
   logout()
+  navigateTo('/')
 }
 </script>
 
