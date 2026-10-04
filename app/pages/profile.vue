@@ -9,33 +9,31 @@ const { user, ready, updateProfile, logout } = useAuth()
 /** فرم همه‌ی فیلدها رو رشته نگه می‌داره تا v-model ساده بمونه */
 interface ProfileForm {
   displayName: string
-  bio: string
+  nationalId: string
   country: string
-  level: string
-  favoriteGenre: string
+  address: string
   yearsPlaying: string
 }
 
 const toForm = (p: UserProfile): ProfileForm => ({
   displayName: p.displayName,
-  bio: p.bio,
+  nationalId: p.nationalId,
   country: p.country,
-  level: p.level,
-  favoriteGenre: p.favoriteGenre,
+  address: p.address,
   yearsPlaying: p.yearsPlaying === null ? '' : String(p.yearsPlaying),
 })
 
 const toProfile = (f: ProfileForm): UserProfile => ({
   displayName: f.displayName.trim(),
-  bio: f.bio.trim(),
+  nationalId: normalizeDigits(f.nationalId).trim(),
   country: f.country.trim(),
-  level: f.level as UserProfile['level'],
-  favoriteGenre: f.favoriteGenre,
+  address: f.address.trim(),
   yearsPlaying: f.yearsPlaying.trim() === '' ? null : Number(f.yearsPlaying),
 })
 
 const form = reactive<ProfileForm>(toForm(createEmptyProfile()))
-const errors = reactive<{ displayName?: string; yearsPlaying?: string }>({})
+const errors = reactive<{ displayName?: string; nationalId?: string; yearsPlaying?: string }>({})
+const showLogoutConfirm = ref(false)
 const saving = ref(false)
 const saved = ref(false)
 const formError = ref('')
@@ -90,8 +88,9 @@ async function save() {
   if (saving.value) return
   formError.value = ''
   errors.displayName = validateDisplayName(form.displayName) ?? undefined
+  errors.nationalId = validateNationalId(form.nationalId) ?? undefined
   errors.yearsPlaying = validateYears(form.yearsPlaying) ?? undefined
-  if (errors.displayName || errors.yearsPlaying) return
+  if (errors.displayName || errors.nationalId || errors.yearsPlaying) return
 
   saving.value = true
   const result = await updateProfile(toProfile(form))
@@ -110,6 +109,7 @@ function revert() {
   if (!baseline.value) return
   Object.assign(form, baseline.value)
   errors.displayName = undefined
+  errors.nationalId = undefined
   errors.yearsPlaying = undefined
   formError.value = ''
 }
@@ -118,9 +118,6 @@ async function onLogout() {
   await navigateTo('/')
   logout()
 }
-
-const selectClass =
-    'w-full rounded-md border border-stone-700 bg-stone-900 px-3 py-2 text-sm focus:border-key-active focus:outline-none focus:ring-2 focus:ring-key-active/40'
 </script>
 
 <template>
@@ -145,7 +142,7 @@ const selectClass =
         <button
             type="button"
             class="rounded-md border border-stone-700 px-3 py-2 text-sm hover:bg-stone-800"
-            @click="onLogout"
+            @click="showLogoutConfirm = true"
         >
           Log out
         </button>
@@ -182,38 +179,30 @@ const selectClass =
           />
 
           <UiTextField
-              v-model="form.bio"
-              label="Bio"
-              multiline
-              :rows="4"
-              :maxlength="BIO_MAX"
-              placeholder="Tell others a little about yourself and your music."
-              :hint="`${form.bio.length} / ${BIO_MAX}`"
+              v-model="form.nationalId"
+              label="National ID"
+              inputmode="numeric"
+              autocomplete="off"
+              :maxlength="10"
+              placeholder="10 digits"
+              :error="errors.nationalId"
           />
 
           <UiTextField v-model="form.country" label="Country" autocomplete="country-name" :maxlength="60" />
+
+          <UiTextField
+              v-model="form.address"
+              label="Address"
+              multiline
+              :rows="3"
+              autocomplete="street-address"
+              :maxlength="ADDRESS_MAX"
+              :hint="`${form.address.length} / ${ADDRESS_MAX}`"
+          />
         </section>
 
         <section aria-labelledby="piano-title" class="space-y-5">
           <h2 id="piano-title" class="border-b border-stone-800 pb-2 text-lg font-medium">Your piano</h2>
-
-          <div class="grid gap-5 sm:grid-cols-2">
-            <div>
-              <label for="level" class="mb-1.5 block text-sm font-medium">Skill level</label>
-              <select id="level" v-model="form.level" :class="selectClass">
-                <option value="">Not set</option>
-                <option v-for="l in PIANO_LEVELS" :key="l.value" :value="l.value">{{ l.label }}</option>
-              </select>
-            </div>
-
-            <div>
-              <label for="genre" class="mb-1.5 block text-sm font-medium">Favorite genre</label>
-              <select id="genre" v-model="form.favoriteGenre" :class="selectClass">
-                <option value="">Not set</option>
-                <option v-for="g in FAVORITE_GENRES" :key="g" :value="g">{{ g }}</option>
-              </select>
-            </div>
-          </div>
 
           <UiTextField
               v-model="form.yearsPlaying"
@@ -255,5 +244,14 @@ const selectClass =
         </div>
       </form>
     </template>
+
+    <UiConfirmDialog
+        v-model="showLogoutConfirm"
+        title="Log out?"
+        message="Are you sure you want to log out of your account?"
+        confirm-label="Log out"
+        cancel-label="Stay logged in"
+        @confirm="onLogout"
+    />
   </main>
 </template>
