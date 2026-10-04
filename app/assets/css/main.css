@@ -2,6 +2,7 @@
 
 @theme {
   --color-key-active: #e0a526;
+  --color-primary-400: #e2752f;
 
   /* پالت قهوه‌ای پیانوی کلاسیک؛ جایگزین stone پیش‌فرض */
   --color-stone-50: #faf5ee;   /* کلیدهای سفید (عاجی) */
