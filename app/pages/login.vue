@@ -1,5 +1,5 @@
 <script setup lang="ts">
-definePageMeta({ middleware: 'guest' })
+definePageMeta({ middleware: 'guest', layout: false })
 useHead({ title: 'Log in | Web Piano' })
 
 /**
@@ -22,7 +22,7 @@ const devCode = ref('')
 const resendIn = ref(0)
 
 // عکس پس‌زمینه: فایل رو بذار توی public/images/ و فقط اسمش رو همین‌جا عوض کن
-const BG_IMAGE = '/images/login-bg.jpg'
+const BG_IMAGE = '/images/download.webp'
 const bgEl = ref<HTMLImageElement>()
 const bgFailed = ref(false) // عکس نبود → بدون آیکون خراب، فقط زمینه‌ی ساده
 onMounted(() => {
@@ -173,22 +173,26 @@ const copy = computed(() => {
 
 <template>
   <main
-      class="relative isolate flex min-h-[calc(100dvh-3.8rem)] items-center justify-center overflow-hidden bg-stone-950 px-6 py-12"
+      class="relative isolate flex min-h-[100dvh] items-center justify-center overflow-hidden bg-stone-950 px-6 py-12"
   >
-    <!--
-      عکس با ارتفاع کامل صفحه نشون داده می‌شه (بدون بزرگ‌نمایی cover) و دو طرفش محو می‌شه
-      تا با زمینه یکی بشه؛ روی عکس‌های عریض‌تر، کل عرض رو می‌گیره.
-    -->
+    <!-- لایه‌ی پشتی: همان عکس، بزرگ‌شده و تار، فقط برای پر کردن فضای خالی دور عکس اصلی -->
+    <div
+        v-if="!bgFailed"
+        class="absolute inset-0 -z-30 scale-110 bg-cover bg-center blur-2xl"
+        :style="{ backgroundImage: `url(${BG_IMAGE})` }"
+        aria-hidden="true"
+    />
+    <!-- عکس اصلی بدون زوم و بدون برش (object-contain)؛ اگه خواستی دوباره تمام‌صفحه بشه، object-cover بذار -->
     <img
         v-if="!bgFailed"
         ref="bgEl"
         :src="BG_IMAGE"
         alt=""
         aria-hidden="true"
-        class="login-bg absolute inset-y-0 left-1/2 -z-20 h-full w-auto max-w-none -translate-x-1/2 select-none"
+        class="absolute inset-0 -z-20 h-full w-full select-none object-cover object-center"
         @error="bgFailed = true"
     />
-    <!-- لایه‌ی تیره روی عکس؛ اگه عکس نباشه فقط همین گرادینت دیده می‌شه -->
+    <!-- لایه‌ی تیره روی عکس؛ اگه عکس نبود فقط همین گرادینت دیده می‌شه -->
     <div
         class="absolute inset-0 -z-10 bg-gradient-to-b from-stone-950/40 via-stone-950/25 to-stone-950/70"
         aria-hidden="true"
@@ -286,10 +290,3 @@ const copy = computed(() => {
     </section>
   </main>
 </template>
-
-<style scoped>
-.login-bg {
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 18%, #000 82%, transparent);
-  mask-image: linear-gradient(to right, transparent, #000 18%, #000 82%, transparent);
-}
-</style>

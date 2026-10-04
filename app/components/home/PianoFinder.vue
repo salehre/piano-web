@@ -129,7 +129,7 @@ function restart() {
   <section class="relative isolate overflow-hidden rounded-2xl bg-stone-950 p-6 sm:p-8" aria-labelledby="finder-title">
     <!-- تصویر پس‌زمینه + لایه‌ی تیره برای خوانایی متن -->
     <img
-        src="/images/piano-finder-bg.jpg"
+        src="/images/piano-finder-bg.webp"
         alt=""
         aria-hidden="true"
         class="absolute inset-0 -z-20 size-full object-cover object-center"
