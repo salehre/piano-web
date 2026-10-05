@@ -108,7 +108,7 @@ useHead({ title: computed(() => `${piano.value.keys}-key piano | Web Piano`) })
 
     <!-- ضبط‌کننده: زیر پیانو -->
     <section v-if="status === 'ready'" class="flex w-fit items-stretch gap-2">
-      <div class="glass-card relative flex h-14 items-center gap-2.5 rounded-xl px-2.5 [--glass-radius:0.95rem]">
+      <div class="glass-card relative flex h-14 items-center gap-2.5 rounded-2xl px-2.5 [--glass-radius:0.95rem]">
         <!-- ضبط -->
         <button
             type="button"
@@ -117,7 +117,7 @@ useHead({ title: computed(() => `${piano.value.keys}-key piano | Web Piano`) })
             aria-label="Record"
             @click="startRecording"
         >
-          <span class="size-3 rounded-full bg-red-500" :class="recording ? 'animate-pulse' : ''" />
+          <span class="size-3 rounded-full bg-red-400" :class="recording ? 'animate-pulse' : ''" />
         </button>
 
         <!-- موقع ضبط: توقف؛ بعد از توقف: پخش -->
@@ -192,7 +192,7 @@ useHead({ title: computed(() => `${piano.value.keys}-key piano | Web Piano`) })
           aria-live="polite"
       >
         <div class="loader" />
-        <span class="text-sm font-medium text-stone-200">Loading sounds…</span>
+        <span class="text-sm font-medium text-stone-200">Loading sounds</span>
       </div>
     </Transition>
   </main>

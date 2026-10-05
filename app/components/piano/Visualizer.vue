@@ -77,9 +77,9 @@ function draw() {
   const radius = Math.min(barW / 2, 2.5)
 
   const grad = g.createLinearGradient(0, height, 0, 0)
-  grad.addColorStop(0, '#8a5a12')
-  grad.addColorStop(0.55, '#e0a526')
-  grad.addColorStop(1, '#f6d27f')
+  grad.addColorStop(0, '#6f523c')
+  grad.addColorStop(0.55, '#c4a98a')
+  grad.addColorStop(1, '#F5E6C8')
 
   for (let i = 0; i < BARS; i++) {
     const lv = levels[i]!
@@ -98,7 +98,7 @@ function draw() {
     const pk = peaks[i]!
     if (pk > 0.06) {
       g.globalAlpha = 0.9
-      g.fillStyle = '#f6d27f'
+      g.fillStyle = '#F5E6C8'
       g.fillRect(x, Math.max(0, height - pk * height - 4), barW, 2)
     }
   }

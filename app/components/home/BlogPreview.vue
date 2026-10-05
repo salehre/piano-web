@@ -18,12 +18,20 @@ const latest = BLOG_POSTS.slice(0, 3)
       <li v-for="p in latest" :key="p.slug">
         <NuxtLink
           :to="`/blog/${p.slug}`"
-          class="flex h-full flex-col rounded-2xl border border-stone-800 bg-stone-950/40 p-5 transition-colors hover:border-stone-700 hover:bg-stone-950/70"
+          class="glass-card group flex h-full flex-col overflow-hidden rounded-4xl transition-all duration-300 hover:-translate-y-1 hover:bg-white/5 hover:shadow-[0_20px_40px_-20px_rgba(245,230,200,0.3)]"
         >
-          <span class="text-xs font-medium uppercase tracking-wide text-key-active">{{ p.tag }}</span>
-          <h3 class="mt-2 font-medium">{{ p.title }}</h3>
-          <p class="mt-2 flex-1 text-sm text-stone-400">{{ p.excerpt }}</p>
-          <p class="mt-4 text-xs text-stone-500">{{ formatBlogDate(p.date) }} · {{ p.readMinutes }} min read</p>
+          <img
+            :src="p.image"
+            alt=""
+            loading="lazy"
+            class="aspect-video w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+          />
+          <div class="flex flex-1 flex-col p-5">
+            <span class="text-xs font-medium uppercase tracking-wide text-key-active">{{ p.tag }}</span>
+            <h3 class="mt-2 font-medium">{{ p.title }}</h3>
+            <p class="mt-2 flex-1 text-sm text-stone-400">{{ p.excerpt }}</p>
+            <p class="mt-4 text-xs text-stone-500">{{ formatBlogDate(p.date) }} · {{ p.readMinutes }} min read</p>
+          </div>
         </NuxtLink>
       </li>
     </ul>

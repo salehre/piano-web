@@ -81,10 +81,10 @@ async function join() {
 </script>
 
 <template>
-  <footer class="border-t border-stone-800 bg-stone-950">
-    <div class="mx-auto grid max-w-5xl gap-10 px-6 py-12 sm:grid-cols-2 lg:grid-cols-[1.2fr_0.8fr_1.4fr]">
+  <footer class="border-t border-white/5 bg-stone-950">
+    <div class="mx-auto grid max-w-5xl grid-cols-1 gap-8 px-4 py-10 sm:grid-cols-2 sm:gap-10 sm:px-6 sm:py-12 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)_minmax(0,1.4fr)]">
       <!-- برند و شبکه‌های اجتماعی -->
-      <div>
+      <div class="min-w-0">
         <NuxtLink to="/" class="text-lg font-semibold">Web Piano</NuxtLink>
         <p class="mt-2 max-w-xs text-sm text-stone-400">
           A piano that lives in your browser. Follow us for new sounds, tips and updates.
@@ -99,7 +99,7 @@ async function join() {
                 :aria-label="s.name"
                 :title="s.name"
                 :style="{ '--social-color': s.color }"
-                class="flex size-10 items-center justify-center rounded-full border border-stone-700 text-stone-300 transition-all hover:text-key-active hover:shadow-[0_0_14px_var(--social-color)]"
+                class="flex size-10 items-center justify-center rounded-full border border-white/5 text-stone-300 transition-all hover:text-key-active hover:shadow-[0_0_14px_var(--social-color)]"
             >
               <svg
                   class="size-4.5"
@@ -118,7 +118,7 @@ async function join() {
       </div>
 
       <!-- لینک‌ها -->
-      <nav aria-label="Footer">
+      <nav class="min-w-0" aria-label="Footer">
         <h2 class="text-sm font-medium uppercase tracking-wide text-stone-400">Explore</h2>
         <ul class="mt-4 space-y-2">
           <li v-for="l in links" :key="l.to">
@@ -130,7 +130,7 @@ async function join() {
       </nav>
 
       <!-- باشگاه مشتریان -->
-      <section aria-labelledby="club-title" class="sm:col-span-2 lg:col-span-1">
+      <section aria-labelledby="club-title" class="min-w-0 sm:col-span-2 lg:col-span-1">
         <h2 id="club-title" class="text-sm font-medium uppercase tracking-wide text-stone-400">
           {{ CLUB_NAME }}
         </h2>
@@ -159,7 +159,7 @@ async function join() {
                 :aria-invalid="!!error"
                 :aria-describedby="error ? 'club-email-error' : undefined"
                 :class="[
-                'w-full rounded-md border bg-stone-900 px-3 py-2 text-sm placeholder:text-stone-500 focus:outline-none focus:ring-2',
+                'w-full min-w-0 rounded-md border bg-stone-900 px-3 py-2 text-sm placeholder:text-stone-500 focus:outline-none focus:ring-2',
                 error
                   ? 'border-red-400 focus:ring-red-400/40'
                   : 'border-stone-700 focus:border-key-active focus:ring-key-active/40',
@@ -167,7 +167,7 @@ async function join() {
             />
             <button
                 type="submit"
-                class="shrink-0 rounded-md bg-key-active px-5 py-2 text-sm font-medium text-stone-950 transition-opacity hover:opacity-90 disabled:opacity-60"
+                class="w-full shrink-0 rounded-md bg-key-active px-5 py-2 text-sm font-medium text-stone-950 transition-opacity hover:opacity-90 disabled:opacity-60 sm:w-auto"
                 :disabled="submitting"
             >
               Join the club
@@ -178,10 +178,10 @@ async function join() {
       </section>
     </div>
 
-    <div class="border-t border-stone-800">
-      <div class="mx-auto flex max-w-5xl flex-col gap-2 px-6 py-4 text-xs text-stone-500 sm:flex-row sm:items-center sm:justify-between">
-        <p>© {{ year }} Web Piano. All rights reserved.</p>
-        <p class="sm:text-right">Powered by Saleh Rezaei</p>
+    <div class="border-t border-white/5">
+      <div class="mx-auto flex max-w-5xl flex-col gap-2 px-4 py-4 text-xs text-stone-500 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+        <p class="min-w-0">© {{ year }} Web Piano. All rights reserved.</p>
+        <p class="min-w-0 sm:text-right">Powered by Saleh Rezaei</p>
       </div>
     </div>
   </footer>

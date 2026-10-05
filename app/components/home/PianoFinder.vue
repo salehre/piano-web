@@ -161,14 +161,15 @@ function restart() {
       <h3 ref="heading" tabindex="-1" class="mt-1 text-lg font-medium outline-none">{{ current.title }}</h3>
       <p v-if="current.subtitle" class="mt-0.5 text-sm text-stone-400">{{ current.subtitle }}</p>
 
-      <div class="mt-4 grid gap-3" :class="current.cols" :role="current.multi ? 'group' : 'radiogroup'" :aria-label="current.title">
+      <!-- گزینه‌ها: توی موبایل دوتا دوتا کنار هم، از sm به بالا طبق cols هر سؤال -->
+      <div class="mt-4 grid grid-cols-2 gap-3" :class="current.cols" :role="current.multi ? 'group' : 'radiogroup'" :aria-label="current.title">
         <button
             v-for="o in current.options"
             :key="o.value"
             type="button"
             :role="current.multi ? 'checkbox' : 'radio'"
             :aria-checked="selected(current, o.value)"
-            class="rounded-xl border px-4 py-3 text-left transition-colors hover:border-key-active hover:text-key-active"
+            class="rounded-xl border px-4 py-3 text-left transition-all hover:bg-key-active/10 hover:text-key-active hover:shadow-[0_0_16px_-4px_rgba(245,230,200,0.35)]"
             :class="selected(current, o.value) ? 'border-key-active bg-key-active/10 text-key-active' : 'border-stone-700 bg-stone-950/50'"
             @click="choose(o.value)"
         >

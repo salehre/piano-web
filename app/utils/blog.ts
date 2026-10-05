@@ -10,6 +10,7 @@ export interface BlogPost {
   date: string // YYYY-MM-DD
   readMinutes: number
   tag: string
+  image: string // مسیر عکس داخل public، مثلا /images/xxx.webp
   content: BlogBlock[]
 }
 
@@ -22,6 +23,7 @@ export const BLOG_POSTS: BlogPost[] = [
     date: '2026-09-28',
     readMinutes: 4,
     tag: 'Beginners',
+    image: '/images/piano-finder-bg.webp',
     content: [
       {
         type: 'p',
@@ -56,6 +58,7 @@ export const BLOG_POSTS: BlogPost[] = [
     date: '2026-09-21',
     readMinutes: 5,
     tag: 'Guides',
+    image: '/images/piano-finder-bg.webp',
     content: [
       {
         type: 'p',
@@ -85,6 +88,7 @@ export const BLOG_POSTS: BlogPost[] = [
     date: '2026-09-14',
     readMinutes: 3,
     tag: 'Tips',
+    image: '/images/download.webp',
     content: [
       {
         type: 'p',
@@ -114,6 +118,7 @@ export const BLOG_POSTS: BlogPost[] = [
     date: '2026-09-07',
     readMinutes: 4,
     tag: 'Practice',
+    image: '/images/download.webp',
     content: [
       {
         type: 'p',
