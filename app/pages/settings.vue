@@ -9,7 +9,7 @@ const errors = ref<Record<string, string>>({})
 function setCode(note: string, code: string) {
   const clash = Object.entries(bindings.value).find(([n, c]) => c === code && n !== note)
   if (clash) {
-    errors.value[note] = `${formatKeyCode(code)} already plays ${clash[0]}. Clear that shortcut first.`
+    errors.value[note] = `${formatKeyCode(code)} already plays ${clash[0]}.`
     return
   }
   delete errors.value[note]
@@ -21,8 +21,9 @@ function clear(note: string) {
   clearBinding(note)
 }
 
+const showResetConfirm = ref(false)
+
 function reset() {
-  if (!window.confirm('Reset all shortcuts to the defaults?')) return
   errors.value = {}
   resetBindings()
 }
@@ -51,7 +52,7 @@ function assignedCount(notes: string[]) {
         <button
           type="button"
           class="rounded-md border border-stone-700 px-3 py-2 text-sm hover:bg-stone-800"
-          @click="reset"
+          @click="showResetConfirm = true"
         >
           Reset to defaults
         </button>
@@ -78,5 +79,14 @@ function assignedCount(notes: string[]) {
         </section>
       </div>
     </section>
+
+    <UiConfirmDialog
+      v-model="showResetConfirm"
+      title="Reset all shortcuts?"
+      message="All your custom keyboard shortcuts will be replaced with the defaults. This can't be undone."
+      confirm-label="Reset"
+      cancel-label="Cancel"
+      @confirm="reset"
+    />
   </main>
 </template>

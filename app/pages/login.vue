@@ -173,7 +173,7 @@ const copy = computed(() => {
 
 <template>
   <main
-      class="relative isolate flex min-h-[100dvh] items-center justify-center overflow-hidden bg-stone-950 px-6 py-12"
+      class="relative isolate flex min-h-dvh items-center justify-center overflow-hidden bg-stone-950 px-6 py-12"
   >
     <!-- لایه‌ی پشتی: همان عکس، بزرگ‌شده و تار، فقط برای پر کردن فضای خالی دور عکس اصلی -->
     <div
@@ -194,7 +194,7 @@ const copy = computed(() => {
     />
     <!-- لایه‌ی تیره روی عکس؛ اگه عکس نبود فقط همین گرادینت دیده می‌شه -->
     <div
-        class="absolute inset-0 -z-10 bg-gradient-to-b from-stone-950/40 via-stone-950/25 to-stone-950/70"
+        class="absolute inset-0 -z-10 bg-linear-to-b from-stone-950/40 via-stone-950/25 to-stone-950/70"
         aria-hidden="true"
     />
 

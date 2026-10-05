@@ -25,9 +25,9 @@ const features = [
         >
           Play virtual piano
         </NuxtLink>
-        <NuxtLink to="/settings" class="rounded-lg px-5 py-3 text-stone-200 transition-colors hover:text-key-active">
+        <!-- <NuxtLink to="/settings" class="rounded-lg px-5 py-3 text-stone-200 transition-colors hover:text-key-active">
           Keyboard shortcuts
-        </NuxtLink>
+        </NuxtLink> -->
       </div>
     </section>
 
@@ -39,6 +39,10 @@ const features = [
     </section>
 
     <HomePianoFinder />
+
+    <HomeFaq />
+
+    <HomeBlogPreview />
 
     <!-- <section>
       <h2 class="text-sm font-medium uppercase tracking-wide text-stone-400">Pick a size</h2>

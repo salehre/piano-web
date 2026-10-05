@@ -33,6 +33,7 @@ const socials = [
 const links = [
   { label: 'Home', to: '/' },
   { label: 'Virtual Piano', to: '/virtual-piano' },
+  { label: 'Blog', to: '/blog' },
   { label: 'Settings', to: '/settings' },
 ]
 

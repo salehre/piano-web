@@ -24,6 +24,14 @@
         </NuxtLink>
 
         <NuxtLink
+            to="/blog"
+            class="rounded-lg px-3 py-2 text-sm transition-colors hover:text-key-active"
+            active-class="text-key-active"
+        >
+          Blog
+        </NuxtLink>
+
+        <NuxtLink
             to="/settings"
             class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors hover:text-key-active"
             active-class="text-key-active"
