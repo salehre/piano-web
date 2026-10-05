@@ -26,6 +26,9 @@ body {
 body {
   color: #f1e6d6;
   background-color: #170701;
+  background-image:
+    radial-gradient(ellipse at 18% 8%, rgba(92, 47, 22, 0.349), transparent 48%),
+    linear-gradient(135deg, #1a0b05 0%, #170701 55%, #190a04 100%);
 }
 
 :root {

@@ -17,14 +17,14 @@ function toggle(i: number) {
       <li
         v-for="(item, i) in FAQ_ITEMS"
         :key="item.question"
-        class="rounded-2xl border border-stone-800 bg-stone-950/40 transition-colors"
-        :class="openIndex === i ? 'border-stone-700 bg-stone-950/70' : 'hover:border-stone-700'"
+        class="glass-card relative transition-shadow duration-300"
+        :class="openIndex === i ? 'ring-1 ring-key-active/30' : ''"
       >
         <h3>
           <button
             :id="`${uid}-btn-${i}`"
             type="button"
-            class="flex w-full items-center justify-between gap-4 rounded-2xl px-5 py-4 text-left font-medium focus-visible:outline-2 focus-visible:outline-key-active"
+            class="flex w-full items-center justify-between gap-4 rounded-[28px] px-6 py-4 text-left font-medium focus-visible:outline-2 focus-visible:outline-key-active"
             :aria-expanded="openIndex === i"
             :aria-controls="`${uid}-panel-${i}`"
             @click="toggle(i)"
@@ -55,7 +55,7 @@ function toggle(i: number) {
           :class="openIndex === i ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'"
         >
           <div class="overflow-hidden">
-            <p class="px-5 pb-5 text-sm leading-relaxed text-stone-300" :inert="openIndex !== i">
+            <p class="px-6 pb-5 text-sm leading-relaxed text-stone-300" :inert="openIndex !== i">
               {{ item.answer }}
             </p>
           </div>
