@@ -12,6 +12,7 @@ const props = withDefaults(
 const emit = defineEmits<{ confirm: [] }>()
 const open = defineModel<boolean>({ default: false })
 
+const { cue } = useUiSounds()
 const dialog = ref<HTMLDialogElement | null>(null)
 const titleId = useId()
 const messageId = useId()
@@ -20,8 +21,10 @@ const messageId = useId()
 watch(open, (isOpen) => {
   const el = dialog.value
   if (!el) return
-  if (isOpen && !el.open) el.showModal()
-  else if (!isOpen && el.open) el.close()
+  if (isOpen && !el.open) {
+    el.showModal()
+    cue('open')
+  } else if (!isOpen && el.open) el.close()
 })
 
 function cancel() {
@@ -33,9 +36,19 @@ function confirm() {
   emit('confirm')
 }
 
+// بسته شدن با Esc: دیالوگ بومی بسته شده ولی v-model هنوز true است
+// (بستن با دکمه‌ها صداشون رو خودشون می‌زنن، پس اینجا دوباره پخش نمی‌شه)
+function onNativeClose() {
+  if (!open.value) return
+  open.value = false
+  cue('close')
+}
+
 // کلیک روی خود لایه‌ی تیره (نه محتوای دیالوگ) = انصراف
 function onBackdropClick(e: MouseEvent) {
-  if (e.target === dialog.value) cancel()
+  if (e.target !== dialog.value) return
+  cancel()
+  cue('close')
 }
 </script>
 
@@ -45,7 +58,7 @@ function onBackdropClick(e: MouseEvent) {
       class="glass-card m-auto w-[calc(100%-3rem)] max-w-sm p-0 backdrop:bg-black/60"
       :aria-labelledby="titleId"
       :aria-describedby="message ? messageId : undefined"
-      @close="open = false"
+      @close="onNativeClose"
       @click="onBackdropClick"
   >
     <div class="p-6">
@@ -57,6 +70,7 @@ function onBackdropClick(e: MouseEvent) {
             type="button"
             class="rounded-lg border border-stone-700 px-4 py-2 text-sm hover:bg-stone-800"
             autofocus
+            data-cuelume-close
             @click="cancel"
         >
           {{ cancelLabel }}
@@ -64,6 +78,8 @@ function onBackdropClick(e: MouseEvent) {
         <button
             type="button"
             class="rounded-lg bg-red-500 px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
+            data-cuelume-close
+            data-cuelume-emphasis="strong"
             @click="confirm"
         >
           {{ confirmLabel }}

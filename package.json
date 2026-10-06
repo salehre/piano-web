@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
+    "cuelume": "^0.2.4",
     "nuxt": "^4.5.2",
     "tailwindcss": "^4.3.3",
     "tone": "^15.1.22",

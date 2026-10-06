@@ -94,6 +94,8 @@ onBeforeUnmount(() => {
           type="button"
           class="grid size-7 shrink-0 place-items-center rounded-full text-stone-400 transition-colors hover:text-key-active"
           aria-label="Dismiss"
+          data-cuelume-close
+          data-cuelume-emphasis="subtle"
           @click="hide"
       >
         <svg class="size-4" viewBox="0 0 20 20" aria-hidden="true">

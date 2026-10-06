@@ -1,14 +1,24 @@
 <script setup lang="ts">
 const piano = usePianoType()
+const { cue } = useUiSounds()
 
 const open = ref(false)
 const root = ref<HTMLElement | null>(null)
 
+function toggle() {
+  open.value = !open.value
+  cue(open.value ? 'open' : 'close', { emphasis: 'subtle' })
+}
+function closeMenu() {
+  if (!open.value) return
+  open.value = false
+  cue('close', { emphasis: 'subtle' })
+}
 function onDocClick(e: MouseEvent) {
-  if (root.value && !root.value.contains(e.target as Node)) open.value = false
+  if (root.value && !root.value.contains(e.target as Node)) closeMenu()
 }
 function onEsc(e: KeyboardEvent) {
-  if (e.key === 'Escape') open.value = false
+  if (e.key === 'Escape') closeMenu()
 }
 
 onMounted(() => {
@@ -28,7 +38,7 @@ onBeforeUnmount(() => {
       class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors hover:text-key-active"
       aria-haspopup="menu"
       :aria-expanded="open"
-      @click="open = !open"
+      @click="toggle"
     >
       Piano sizes
       <svg
@@ -54,6 +64,8 @@ onBeforeUnmount(() => {
           :to="{ path: '/virtual-piano', query: { keys: t.keys } }"
           class="block px-4 py-3 hover:bg-stone-800"
           :class="t.keys === piano.keys ? 'bg-stone-800' : ''"
+          data-cuelume-select
+          data-cuelume-emphasis="subtle"
           @click="open = false"
         >
           <span class="flex items-baseline justify-between">

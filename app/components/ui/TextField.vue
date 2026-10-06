@@ -40,6 +40,7 @@ const fieldClass = computed(() => [
           :maxlength="maxlength"
           :placeholder="placeholder"
           :class="fieldClass"
+          data-cuelume-type
           :aria-invalid="!!error"
           :aria-describedby="error || hint ? `${id}-msg` : undefined"
       />
@@ -53,6 +54,7 @@ const fieldClass = computed(() => [
           :maxlength="maxlength"
           :placeholder="placeholder"
           :class="[fieldClass, isPassword ? 'pr-16' : '']"
+          data-cuelume-type
           :aria-invalid="!!error"
           :aria-describedby="error || hint ? `${id}-msg` : undefined"
       />
@@ -62,6 +64,8 @@ const fieldClass = computed(() => [
           type="button"
           class="absolute inset-y-0 right-0 px-3 text-xs text-stone-400 hover:text-stone-100"
           :aria-pressed="reveal"
+          data-cuelume-toggle
+          data-cuelume-emphasis="subtle"
           @click="reveal = !reveal"
       >
         {{ reveal ? 'Hide' : 'Show' }}

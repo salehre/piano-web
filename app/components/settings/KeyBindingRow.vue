@@ -35,6 +35,8 @@ function onKeydown(e: KeyboardEvent) {
         class="w-20 shrink-0 truncate rounded-md border px-2 py-1.5 text-center text-sm"
         :class="capturing ? 'border-key-active ring-2 ring-key-active/40' : 'border-stone-700 hover:bg-stone-800'"
         :aria-label="`Computer key for ${note}. Click, then press a key.`"
+        data-cuelume-tap
+        data-cuelume-emphasis="subtle"
         @click="capturing = true"
         @keydown="onKeydown"
         @blur="capturing = false"
@@ -50,6 +52,8 @@ function onKeydown(e: KeyboardEvent) {
         :class="{ invisible: !code }"
         :tabindex="code ? 0 : -1"
         :aria-label="`Clear shortcut for ${note}`"
+        data-cuelume-tap
+        data-cuelume-emphasis="subtle"
         @click="emit('clear')"
       >
         Clear

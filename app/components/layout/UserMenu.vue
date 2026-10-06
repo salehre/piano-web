@@ -13,6 +13,7 @@ const label = computed(() => (isLoggedIn.value ? 'Open your profile' : 'Log in o
       active-class="text-key-active"
       :aria-label="label"
       :title="label"
+      data-cuelume-navigate
   >
     <span
         v-if="isLoggedIn && initial"
