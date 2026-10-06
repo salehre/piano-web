@@ -38,6 +38,8 @@ function assignedCount(notes: string[]) {
   <main class="mx-auto max-w-5xl px-6 py-8">
     <h1 class="text-2xl font-semibold">Settings</h1>
 
+    <SettingsMidiPanel class="mt-8" />
+
     <section class="mt-8" aria-labelledby="shortcuts-title">
       <div class="flex flex-wrap items-start justify-between gap-4">
         <div class="max-w-md">

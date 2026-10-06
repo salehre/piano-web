@@ -11,7 +11,7 @@ useHead({ title: 'Blog | Web Piano' })
       <li v-for="p in BLOG_POSTS" :key="p.slug">
         <NuxtLink
           :to="`/blog/${p.slug}`"
-          class="glass-card group flex h-full flex-col overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:bg-white/5 hover:shadow-[0_20px_40px_-20px_rgba(245,230,200,0.3)]"
+          class="glass-card group flex h-full flex-col overflow-hidden rounded-4xl transition-all duration-300 hover:-translate-y-1 hover:bg-white/5 hover:shadow-[0_20px_40px_-20px_rgba(245,230,200,0.3)]"
         >
           <img
             :src="p.image"
