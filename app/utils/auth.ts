@@ -42,7 +42,7 @@ export const SESSION_COOKIE = 'piano-session'
 export const USERS_STORAGE_KEY = 'web-piano:users:v2' // v2: ورود با موبایل به‌جای ایمیل
 
 /** کد یک‌بارمصرف پیامکی */
-export const OTP_LENGTH = 6
+export const OTP_LENGTH = 5
 export const OTP_TTL_MS = 2 * 60 * 1000
 export const OTP_RESEND_SECONDS = 60
 export const OTP_MAX_ATTEMPTS = 5
@@ -93,7 +93,7 @@ export function normalizePhone(value: string): string {
 
 export function validatePhone(value: string): string | null {
     if (!value.trim()) return 'Mobile number is required.'
-    if (!/^09\d{9}$/.test(normalizePhone(value))) return 'Enter a valid mobile number, e.g. 09123456789.'
+    if (!/^09\d{9}$/.test(normalizePhone(value))) return 'Enter a valid mobile number.'
     return null
 }
 

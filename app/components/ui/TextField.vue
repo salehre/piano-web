@@ -53,7 +53,7 @@ const fieldClass = computed(() => [
           :inputmode="inputmode"
           :maxlength="maxlength"
           :placeholder="placeholder"
-          :class="[fieldClass, isPassword ? 'pr-16' : '']"
+          :class="[fieldClass, isPassword ? 'pr-11' : '']"
           data-cuelume-type
           :aria-invalid="!!error"
           :aria-describedby="error || hint ? `${id}-msg` : undefined"
@@ -62,13 +62,29 @@ const fieldClass = computed(() => [
       <button
           v-if="isPassword"
           type="button"
-          class="absolute inset-y-0 right-0 px-3 text-xs text-stone-400 hover:text-stone-100"
+          class="absolute inset-y-0 right-0 flex w-11 items-center justify-center text-stone-400 hover:text-stone-100"
+          :aria-label="reveal ? 'Hide password' : 'Show password'"
           :aria-pressed="reveal"
           data-cuelume-toggle
           data-cuelume-emphasis="subtle"
           @click="reveal = !reveal"
       >
-        {{ reveal ? 'Hide' : 'Show' }}
+        <!-- eye (نمایش) -->
+        <svg v-if="!reveal" xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+             aria-hidden="true">
+          <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z" />
+          <circle cx="12" cy="12" r="3" />
+        </svg>
+        <!-- eye-off (مخفی) -->
+        <svg v-else xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+             aria-hidden="true">
+          <path d="M9.9 5.2A9.9 9.9 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3.2 4.1" />
+          <path d="M6.6 6.6A17 17 0 0 0 2 12s3.6 7 10 7a9.7 9.7 0 0 0 4.4-1" />
+          <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2" />
+          <path d="m3 3 18 18" />
+        </svg>
       </button>
     </div>
 

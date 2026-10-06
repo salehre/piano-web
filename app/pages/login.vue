@@ -15,11 +15,14 @@ const { lookup, requestCode, verifyCode, setPassword, login } = useAuth()
 
 const step = ref<Step>('phone')
 const isReset = ref(false) // کد برای فراموشی رمزه، نه ثبت‌نام
-const form = reactive({ phone: '', password: '', code: '', newPassword: '' })
+const form = reactive({ phone: '', password: '', code: '', newPassword: '', confirmPassword: '' })
+const MISMATCH_ERROR = 'Passwords do not match.'
 const error = ref('')
 const submitting = ref(false)
 const devCode = ref('')
 const resendIn = ref(0)
+const codeOk = ref(false) // کد درست بود؛ انیمیشن موفقیت تا رفتن به مرحله‌ی بعد
+const otpEl = ref<{ shake: () => void; focus: () => void }>()
 
 // عکس پس‌زمینه: فایل رو بذار توی public/images/ و فقط اسمش رو همین‌جا عوض کن
 const BG_IMAGE = '/images/download.webp'
@@ -45,11 +48,14 @@ function startCooldown() {
 }
 onBeforeUnmount(() => clearInterval(timer))
 
-// رفتن به مرحله‌ی بعد و گذاشتن فوکوس روی فیلد
+// رفتن به مرحله‌ی بعد؛ فوکوس بعد از تموم شدن انیمیشن مرحله (focusFirst) انجام می‌شه
 async function goTo(next: Step) {
   step.value = next
   error.value = ''
-  await nextTick()
+  codeOk.value = false
+}
+
+function focusFirst() {
   formEl.value?.querySelector('input')?.focus()
 }
 
@@ -60,6 +66,7 @@ async function sendCode(reset: boolean) {
     return
   }
   isReset.value = reset
+  codeOk.value = false
   devCode.value = result.devCode ?? ''
   form.code = ''
   startCooldown()
@@ -90,14 +97,27 @@ async function submitPassword() {
 async function submitCode() {
   if (form.code.length !== OTP_LENGTH) return void (error.value = `Enter the ${OTP_LENGTH}-digit code.`)
   const result = await verifyCode(form.phone, form.code)
-  if (!result.ok) return void (error.value = result.error)
+  if (!result.ok) {
+    // کد اشتباه: لرزش، پاک‌کردن باکس‌ها و برگشت فوکوس به اولین باکس
+    error.value = result.error
+    form.code = ''
+    otpEl.value?.shake()
+    await nextTick()
+    otpEl.value?.focus()
+    return
+  }
+  // کد درست: انیمیشن موفقیت، بعد رفتن به مرحله‌ی بعد
+  codeOk.value = true
+  await new Promise((resolve) => setTimeout(resolve, 700))
   form.newPassword = ''
+  form.confirmPassword = ''
   await goTo('newPassword')
 }
 
 async function submitNewPassword() {
   const invalid = validatePassword(form.newPassword)
   if (invalid) return void (error.value = invalid)
+  if (form.newPassword !== form.confirmPassword) return void (error.value = MISMATCH_ERROR)
   const result = await setPassword(form.phone, form.newPassword)
   if (!result.ok) return void (error.value = result.error)
   // کاربر جدید می‌ره پروفایلش رو کامل کنه
@@ -144,14 +164,20 @@ watch(
     (value) => {
       const digits = normalizeDigits(value).replace(/\D/g, '').slice(0, OTP_LENGTH)
       if (digits !== value) form.code = digits
-      else if (digits.length === OTP_LENGTH && step.value === 'code') submit()
+      else if (digits) {
+        error.value = ''
+        if (digits.length === OTP_LENGTH && step.value === 'code') submit()
+      }
     },
 )
 
-// تایپ‌کردن خطا رو پاک می‌کنه
-watch(form, () => {
-  error.value = ''
-})
+// تایپ‌کردن خطا رو پاک می‌کنه (کد جداست: ورودیش توی watch بالا مدیریت می‌شه تا بعد از کد اشتباه، خطا نپره)
+watch(
+    () => [form.phone, form.password, form.newPassword, form.confirmPassword],
+    () => {
+      error.value = ''
+    },
+)
 
 const copy = computed(() => {
   switch (step.value) {
@@ -208,69 +234,82 @@ const copy = computed(() => {
       </header>
 
       <form ref="formEl" class="mt-6 space-y-5" novalidate @submit.prevent="submit">
-        <UiTextField
-            v-if="step === 'phone'"
-            v-model="form.phone"
-            label="Mobile number"
-            type="tel"
-            inputmode="tel"
-            autocomplete="tel"
-            placeholder="09123456789"
-            :error="error"
-        />
+        <Transition name="step" mode="out-in" @after-enter="focusFirst">
+          <div :key="step" class="space-y-5">
+            <UiTextField
+                v-if="step === 'phone'"
+                v-model="form.phone"
+                label="Mobile number"
+                type="tel"
+                inputmode="tel"
+                :maxlength="11"
+                autocomplete="tel"
+                placeholder="09123456789"
+                :error="error"
+            />
 
-        <template v-else-if="step === 'password'">
-          <UiTextField
-              v-model="form.password"
-              label="Password"
-              type="password"
-              autocomplete="current-password"
-              :error="error"
-          />
-          <button
-              type="button"
-              class="text-sm text-key-active underline-offset-2 hover:underline disabled:opacity-60"
-              :disabled="submitting"
-              @click="forgotPassword"
-          >
-            Forgot your password? Log in with a code
-          </button>
-        </template>
+            <template v-else-if="step === 'password'">
+              <UiTextField
+                  v-model="form.password"
+                  label="Password"
+                  type="password"
+                  autocomplete="current-password"
+                  :error="error"
+              />
+              <button
+                  type="button"
+                  class="text-sm text-key-active underline-offset-2 hover:underline disabled:opacity-60"
+                  :disabled="submitting"
+                  @click="forgotPassword"
+              >
+                Forgot your password? Log in with a code
+              </button>
+            </template>
 
-        <template v-else-if="step === 'code'">
-          <p v-if="devCode" class="rounded-md bg-stone-900 px-3 py-2 text-xs text-stone-300" role="status">
-            Dev mode: no SMS is sent. Your code is <span class="font-mono text-key-active">{{ devCode }}</span>
-          </p>
-          <UiTextField
-              v-model="form.code"
-              label="Verification code"
-              inputmode="numeric"
-              autocomplete="one-time-code"
-              :maxlength="OTP_LENGTH"
-              placeholder="123456"
-              :error="error"
-          />
-          <button
-              type="button"
-              class="text-sm text-key-active underline-offset-2 hover:underline disabled:text-stone-400 disabled:no-underline"
-              :disabled="resendIn > 0 || submitting"
-              @click="resend"
-          >
-            {{ resendIn > 0 ? `Resend code in ${resendIn}s` : 'Resend code' }}
-          </button>
-        </template>
+            <template v-else-if="step === 'code'">
+              <p v-if="devCode" class="rounded-md bg-stone-900 px-3 py-2 text-xs text-stone-300" role="status">
+                Dev mode: no SMS is sent. Your code is <span class="font-mono text-key-active">{{ devCode }}</span>
+              </p>
+              <UiOtpInput
+                  ref="otpEl"
+                  v-model="form.code"
+                  label="Verification code"
+                  :length="OTP_LENGTH"
+                  :error="error"
+                  :success="codeOk"
+              />
+              <button
+                  type="button"
+                  class="text-sm text-key-active underline-offset-2 hover:underline disabled:text-stone-400 disabled:no-underline"
+                  :disabled="resendIn > 0 || submitting"
+                  @click="resend"
+              >
+                {{ resendIn > 0 ? `Resend code in ${resendIn}s` : 'Resend code' }}
+              </button>
+            </template>
 
-        <UiTextField
-            v-else
-            v-model="form.newPassword"
-            label="Password"
-            type="password"
-            autocomplete="new-password"
-            :hint="`At least ${PASSWORD_MIN} characters, with a letter and a number.`"
-            :error="error"
-        />
+            <template v-else>
+              <UiTextField
+                  v-model="form.newPassword"
+                  label="Password"
+                  type="password"
+                  autocomplete="new-password"
+                  :hint="`At least ${PASSWORD_MIN} characters, with a letter and a number.`"
+                  :error="error === MISMATCH_ERROR ? '' : error"
+              />
+              <UiTextField
+                  v-model="form.confirmPassword"
+                  label="Confirm password"
+                  type="password"
+                  autocomplete="new-password"
+                  :error="error === MISMATCH_ERROR ? error : ''"
+              />
+            </template>
+          </div>
+        </Transition>
 
         <button
+            v-if="step !== 'code'"
             type="submit"
             class="w-full rounded-lg bg-key-active px-5 py-3 font-medium text-stone-950 transition-opacity hover:opacity-90 disabled:opacity-60"
             :disabled="submitting"
@@ -290,3 +329,25 @@ const copy = computed(() => {
     </section>
   </main>
 </template>
+
+<style scoped>
+.step-enter-active,
+.step-leave-active {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.step-enter-from {
+  opacity: 0;
+  transform: translateX(16px);
+}
+.step-leave-to {
+  opacity: 0;
+  transform: translateX(-16px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .step-enter-active,
+  .step-leave-active {
+    transition: none;
+  }
+}
+</style>
