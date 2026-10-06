@@ -9,6 +9,8 @@ const { user, ready, updateProfile, logout } = useAuth()
 /** فرم همه‌ی فیلدها رو رشته نگه می‌داره تا v-model ساده بمونه */
 interface ProfileForm {
   displayName: string
+  email: string
+  avatar: string
   nationalId: string
   country: string
   address: string
@@ -17,6 +19,8 @@ interface ProfileForm {
 
 const toForm = (p: UserProfile): ProfileForm => ({
   displayName: p.displayName,
+  email: p.email,
+  avatar: p.avatar,
   nationalId: p.nationalId,
   country: p.country,
   address: p.address,
@@ -25,6 +29,8 @@ const toForm = (p: UserProfile): ProfileForm => ({
 
 const toProfile = (f: ProfileForm): UserProfile => ({
   displayName: f.displayName.trim(),
+  email: f.email.trim(),
+  avatar: f.avatar,
   nationalId: normalizeDigits(f.nationalId).trim(),
   country: f.country.trim(),
   address: f.address.trim(),
@@ -32,7 +38,7 @@ const toProfile = (f: ProfileForm): UserProfile => ({
 })
 
 const form = reactive<ProfileForm>(toForm(createEmptyProfile()))
-const errors = reactive<{ displayName?: string; nationalId?: string; yearsPlaying?: string }>({})
+const errors = reactive<{ displayName?: string; email?: string; nationalId?: string; yearsPlaying?: string }>({})
 const showLogoutConfirm = ref(false)
 const loggingOut = ref(false)
 const saving = ref(false)
@@ -85,13 +91,81 @@ function validateYears(value: string): string | null {
   return null
 }
 
+// ---------- عکس پروفایل ----------
+const fileInput = ref<HTMLInputElement | null>(null)
+const avatarError = ref('')
+
+function pickAvatar() {
+  fileInput.value?.click()
+}
+
+/** عکس انتخاب‌شده رو وسط‌چین و مربع می‌کنه و به JPEG کوچیک تبدیل می‌کنه تا توی localStorage جا بشه */
+function resizeToAvatar(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file)
+    const img = new Image()
+    img.onload = () => {
+      URL.revokeObjectURL(url)
+      const side = Math.min(img.naturalWidth, img.naturalHeight)
+      const canvas = document.createElement('canvas')
+      canvas.width = canvas.height = AVATAR_SIZE
+      const ctx = canvas.getContext('2d')
+      if (!ctx) return reject(new Error('canvas'))
+      ctx.drawImage(
+          img,
+          (img.naturalWidth - side) / 2,
+          (img.naturalHeight - side) / 2,
+          side,
+          side,
+          0,
+          0,
+          AVATAR_SIZE,
+          AVATAR_SIZE,
+      )
+      resolve(canvas.toDataURL('image/jpeg', 0.85))
+    }
+    img.onerror = () => {
+      URL.revokeObjectURL(url)
+      reject(new Error('load'))
+    }
+    img.src = url
+  })
+}
+
+async function onAvatarChange(e: Event) {
+  const input = e.target as HTMLInputElement
+  const file = input.files?.[0]
+  input.value = '' // تا انتخاب دوباره‌ی همون فایل هم change بده
+  if (!file) return
+  avatarError.value = ''
+  if (!file.type.startsWith('image/')) {
+    avatarError.value = 'Please choose an image file.'
+    return
+  }
+  if (file.size > AVATAR_MAX_FILE_BYTES) {
+    avatarError.value = 'Image is too large (max 5 MB).'
+    return
+  }
+  try {
+    form.avatar = await resizeToAvatar(file)
+  } catch {
+    avatarError.value = 'Could not read that image. Try another one.'
+  }
+}
+
+function removeAvatar() {
+  form.avatar = ''
+  avatarError.value = ''
+}
+
 async function save() {
   if (saving.value) return
   formError.value = ''
   errors.displayName = validateDisplayName(form.displayName) ?? undefined
+  errors.email = validateEmail(form.email) ?? undefined
   errors.nationalId = validateNationalId(form.nationalId) ?? undefined
   errors.yearsPlaying = validateYears(form.yearsPlaying) ?? undefined
-  if (errors.displayName || errors.nationalId || errors.yearsPlaying) return
+  if (errors.displayName || errors.email || errors.nationalId || errors.yearsPlaying) return
 
   saving.value = true
   const result = await updateProfile(toProfile(form))
@@ -110,8 +184,10 @@ function revert() {
   if (!baseline.value) return
   Object.assign(form, baseline.value)
   errors.displayName = undefined
+  errors.email = undefined
   errors.nationalId = undefined
   errors.yearsPlaying = undefined
+  avatarError.value = ''
   formError.value = ''
 }
 
@@ -131,15 +207,56 @@ function onLogout() {
     <template v-else>
       <div class="flex flex-wrap items-center justify-between gap-4">
         <div class="flex items-center gap-4">
-          <div
-              class="flex size-14 items-center justify-center rounded-full bg-key-active text-xl font-semibold text-stone-950"
-              aria-hidden="true"
-          >
-            {{ user.profile.displayName.trim().charAt(0).toUpperCase() || '?' }}
+          <div class="relative shrink-0">
+            <img
+                v-if="form.avatar"
+                :src="form.avatar"
+                alt="Your profile photo"
+                class="size-20 rounded-full object-cover"
+            />
+            <div
+                v-else
+                class="flex size-20 items-center justify-center rounded-full bg-key-active text-3xl font-semibold text-stone-950"
+                aria-hidden="true"
+            >
+              {{ user.profile.displayName.trim().charAt(0).toUpperCase() || '?' }}
+            </div>
+
+            <button
+                type="button"
+                class="absolute -bottom-1 -right-1 flex size-8 items-center justify-center rounded-full border border-stone-700 bg-stone-900 text-stone-200 shadow transition-colors hover:border-key-active hover:text-key-active focus:outline-none focus-visible:ring-2 focus-visible:ring-key-active/60"
+                aria-label="Change profile photo"
+                title="Change profile photo"
+                @click="pickAvatar"
+            >
+              <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                   stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
+              </svg>
+            </button>
+
+            <input
+                ref="fileInput"
+                type="file"
+                accept="image/*"
+                class="hidden"
+                tabindex="-1"
+                aria-hidden="true"
+                @change="onAvatarChange"
+            />
           </div>
           <div>
             <h1 class="text-2xl font-semibold">{{ user.profile.displayName || 'Your profile' }}</h1>
             <p class="text-sm text-stone-400" dir="ltr">{{ user.phone }}</p>
+            <button
+                v-if="form.avatar"
+                type="button"
+                class="mt-1 text-xs text-stone-400 hover:text-key-active"
+                @click="removeAvatar"
+            >
+              Remove photo
+            </button>
+            <p v-if="avatarError" class="mt-1 text-xs text-red-400" role="alert">{{ avatarError }}</p>
           </div>
         </div>
 
@@ -174,35 +291,49 @@ function onLogout() {
         <section aria-labelledby="about-title" class="space-y-5">
           <h2 id="about-title" class="border-b border-stone-800 pb-2 text-lg font-medium">About you</h2>
 
-          <UiTextField
-              v-model="form.displayName"
-              label="Name"
-              autocomplete="nickname"
-              :maxlength="DISPLAY_NAME_MAX"
-              :error="errors.displayName"
-          />
+          <div class="grid gap-5 sm:grid-cols-2">
+            <UiTextField
+                v-model="form.displayName"
+                label="Name"
+                autocomplete="nickname"
+                :maxlength="DISPLAY_NAME_MAX"
+                :error="errors.displayName"
+            />
 
-          <UiTextField
-              v-model="form.nationalId"
-              label="National ID"
-              inputmode="numeric"
-              autocomplete="off"
-              :maxlength="10"
-              placeholder="10 digits"
-              :error="errors.nationalId"
-          />
+            <UiTextField
+                v-model="form.email"
+                label="Email"
+                type="email"
+                inputmode="email"
+                autocomplete="email"
+                :maxlength="EMAIL_MAX"
+                placeholder="you@example.com"
+                :error="errors.email"
+            />
 
-          <UiTextField v-model="form.country" label="Country" autocomplete="country-name" :maxlength="60" />
+            <UiTextField v-model="form.country" label="Country" autocomplete="country-name" :maxlength="60" />
 
-          <UiTextField
-              v-model="form.address"
-              label="Address"
-              multiline
-              :rows="3"
-              autocomplete="street-address"
-              :maxlength="ADDRESS_MAX"
-              :hint="`${form.address.length} / ${ADDRESS_MAX}`"
-          />
+            <UiTextField
+                v-model="form.nationalId"
+                label="National ID"
+                inputmode="numeric"
+                autocomplete="off"
+                :maxlength="10"
+                placeholder="10 digits"
+                :error="errors.nationalId"
+            />
+
+            <UiTextField
+                v-model="form.address"
+                label="Address"
+                multiline
+                :rows="3"
+                autocomplete="street-address"
+                :maxlength="ADDRESS_MAX"
+                :hint="`${form.address.length} / ${ADDRESS_MAX}`"
+                class="sm:col-span-2"
+            />
+          </div>
         </section>
 
         <section aria-labelledby="piano-title" class="space-y-5">

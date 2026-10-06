@@ -16,6 +16,10 @@ export const FAVORITE_GENRES = ['Classical', 'Jazz', 'Pop', 'Rock', 'Film & game
 /** اطلاعاتی که کاربر خودش توی صفحه‌ی پروفایل تکمیل می‌کنه */
 export interface UserProfile {
     displayName: string
+    /** ایمیل (اختیاری)؛ خالی یعنی ثبت نشده */
+    email: string
+    /** عکس پروفایل به‌صورت data URL (JPEG فشرده)؛ خالی یعنی عکسی انتخاب نشده */
+    avatar: string
     /** کد ملی ۱۰ رقمی (انگلیسی)؛ خالی یعنی ثبت نشده */
     nationalId: string
     country: string
@@ -49,10 +53,14 @@ export const OTP_MAX_ATTEMPTS = 5
 
 export const DISPLAY_NAME_MAX = 40
 export const ADDRESS_MAX = 300
+export const EMAIL_MAX = 100
+/** عکس پروفایل قبل از ذخیره به مربع AVATAR_SIZE × AVATAR_SIZE کوچک می‌شه */
+export const AVATAR_SIZE = 256
+export const AVATAR_MAX_FILE_BYTES = 5 * 1024 * 1024
 export const PASSWORD_MIN = 8
 
 export function createEmptyProfile(displayName = ''): UserProfile {
-    return { displayName, nationalId: '', country: '', address: '', yearsPlaying: null }
+    return { displayName, email: '', avatar: '', nationalId: '', country: '', address: '', yearsPlaying: null }
 }
 
 export function toAuthUser(user: StoredUser): AuthUser {
@@ -64,12 +72,13 @@ export function toAuthUser(user: StoredUser): AuthUser {
 export function profileCompletion(p: UserProfile): number {
     const filled = [
         p.displayName.trim(),
+        p.email.trim(),
         p.nationalId.trim(),
         p.country.trim(),
         p.address.trim(),
         p.yearsPlaying !== null ? 'y' : '',
     ].filter(Boolean).length
-    return Math.round((filled / 5) * 100)
+    return Math.round((filled / 6) * 100)
 }
 
 // ---------- اعتبارسنجی؛ پیام خطا یا null ----------
@@ -112,6 +121,15 @@ export function validateDisplayName(value: string): string | null {
     return null
 }
 
+/** ایمیل اختیاری: خالی مجازه، ولی اگه پر شد باید فرمت درست داشته باشه */
+export function validateEmail(value: string): string | null {
+    const v = value.trim()
+    if (!v) return null
+    if (v.length > EMAIL_MAX) return `Email must be at most ${EMAIL_MAX} characters.`
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) return 'Enter a valid email address.'
+    return null
+}
+
 /** کد ملی ایران: ۱۰ رقم + بررسی رقم کنترل. خالی مجازه (اختیاری). */
 export function validateNationalId(value: string): string | null {
     const v = normalizeDigits(value).trim()
@@ -146,6 +164,8 @@ export function readUsers(): StoredUser[] {
                 ...u,
                 profile: {
                     displayName: p.displayName ?? '',
+                    email: p.email ?? '',
+                    avatar: p.avatar ?? '',
                     nationalId: p.nationalId ?? '',
                     country: p.country ?? '',
                     address: p.address ?? '',
