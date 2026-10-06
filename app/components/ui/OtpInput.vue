@@ -36,7 +36,7 @@ function onFocus(index: number) {
 function onInput(index: number, e: Event) {
   const el = e.target as HTMLInputElement
   const typed = clean(el.value)
-  el.value = digits.value[index]
+  el.value = digits.value[index] ?? ''
   if (!typed) return
   model.value = (model.value.slice(0, index) + typed + model.value.slice(index + typed.length)).slice(0, props.length)
   nextTick(() => focusAt(index + typed.length))

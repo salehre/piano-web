@@ -224,12 +224,12 @@ function onLogout() {
 
             <button
                 type="button"
-                class="absolute -bottom-1 -right-1 flex size-8 items-center justify-center rounded-full border border-stone-700 bg-stone-900 text-stone-200 shadow transition-colors hover:border-key-active hover:text-key-active focus:outline-none focus-visible:ring-2 focus-visible:ring-key-active/60"
+                class="absolute -bottom-1 -right-1 flex size-7 items-center justify-center rounded-full border border-stone-700 bg-stone-900 text-stone-200 shadow transition-colors hover:border-key-active hover:text-key-active focus:outline-none focus-visible:ring-2 focus-visible:ring-key-active/60"
                 aria-label="Change profile photo"
                 title="Change profile photo"
                 @click="pickAvatar"
             >
-              <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+              <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
                    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
               </svg>
