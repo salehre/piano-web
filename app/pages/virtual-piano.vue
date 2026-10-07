@@ -112,7 +112,7 @@ useHead({ title: () => t('piano.title', { keys: n(piano.value.keys) }) })
     </div>
 
     <!-- ضبط‌کننده: زیر پیانو -->
-    <section v-if="status === 'ready'" dir="ltr" class="flex w-fit items-stretch gap-2">
+    <section v-if="status === 'ready'" dir="ltr" class="mr-auto flex w-fit items-stretch gap-2">
       <div class="glass-card relative flex h-14 items-center gap-2.5 rounded-2xl px-2.5 [--glass-radius:0.95rem]">
         <!-- ضبط -->
         <button
@@ -158,7 +158,7 @@ useHead({ title: () => t('piano.title', { keys: n(piano.value.keys) }) })
         </span>
 
         <!-- نمایشگر طیف صدا -->
-        <PianoVisualizer class="h-9 w-32 shrink-0" />
+        <PianoVisualizer dir="ltr" class="h-9 w-32 shrink-0" />
       </div>
 
       <!-- دانلود و پاک کردن: فقط آیکون، زیر هم -->
