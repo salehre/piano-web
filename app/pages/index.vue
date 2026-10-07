@@ -41,7 +41,7 @@ const features = ['sound', 'play', 'shortcuts'] as const
 
     <HomeBlogPreview />
 
-    <!-- <section>
+    <section>
       <h2 class="text-sm font-medium uppercase tracking-wide text-stone-400">Pick a size</h2>
       <div class="mt-4 flex flex-wrap gap-2">
         <NuxtLink
@@ -53,7 +53,7 @@ const features = ['sound', 'play', 'shortcuts'] as const
           {{ t.keys }} keys
         </NuxtLink>
       </div>
-    </section> -->
+    </section>
   </main>
 </template>
 <style>

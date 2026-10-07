@@ -1,0 +1,611 @@
+{
+  "auth": {
+    "login": {
+      "steps": {
+        "phone": {
+          "title": "Log in or sign up",
+          "hint": "Enter your mobile number to continue.",
+          "button": "Continue"
+        },
+        "password": {
+          "title": "Welcome back",
+          "hint": "Enter your password to log in.",
+          "button": "Log in"
+        },
+        "code": {
+          "title": "Enter the code",
+          "hint": "We sent a {length}-digit code to {phone}.",
+          "button": "Verify"
+        },
+        "newPassword": {
+          "title": "Choose a password",
+          "hint": "You will use it to log in next time.",
+          "button": "Create account"
+        },
+        "resetPassword": {
+          "title": "Choose a new password",
+          "hint": "You will use it to log in next time.",
+          "button": "Save and log in"
+        }
+      },
+      "mobileLabel": "Mobile number",
+      "passwordLabel": "Password",
+      "confirmLabel": "Confirm password",
+      "passwordHint": "At least {min} characters, with a letter and a number.",
+      "forgot": "Forgot your password? Log in with a code",
+      "devMode": "Dev mode: no SMS is sent. Your code is {code}",
+      "codeLabel": "Verification code",
+      "resendIn": "Resend code in {seconds}s",
+      "resend": "Resend code",
+      "differentNumber": "Use a different number"
+    },
+    "profile": {
+      "loading": "Loading your profile…",
+      "defaultName": "Your profile",
+      "photoAlt": "Your profile photo",
+      "changePhoto": "Change profile photo",
+      "removePhoto": "Remove photo",
+      "logout": "Log out",
+      "completion": "Profile completion",
+      "fillRest": "Fill in the rest of the fields below to complete it.",
+      "complete": "Your profile is complete.",
+      "sections": {
+        "about": "About you",
+        "piano": "Your piano",
+        "account": "Account"
+      },
+      "fields": {
+        "name": "Name",
+        "email": "Email",
+        "country": "Country",
+        "nationalId": "National ID",
+        "nationalIdPlaceholder": "10 digits",
+        "address": "Address",
+        "yearsPlaying": "Years playing",
+        "yearsHint": "Leave empty if you'd rather not say.",
+        "mobile": "Mobile",
+        "memberSince": "Member since"
+      },
+      "actions": {
+        "save": "Save changes",
+        "saving": "Saving…",
+        "discard": "Discard changes",
+        "saved": "Profile saved."
+      },
+      "avatar": {
+        "notImage": "Please choose an image file.",
+        "tooLarge": "Image is too large (max {max} MB).",
+        "unreadable": "Could not read that image. Try another one."
+      },
+      "logoutDialog": {
+        "title": "Log out?",
+        "message": "Are you sure you want to log out of your account?",
+        "confirm": "Log out",
+        "cancel": "Stay logged in"
+      }
+    },
+    "validation": {
+      "phoneRequired": "Mobile number is required.",
+      "phoneInvalid": "Enter a valid mobile number.",
+      "passwordRequired": "Password is required.",
+      "passwordMin": "Password must be at least {min} characters.",
+      "passwordMix": "Use at least one letter and one number.",
+      "passwordMismatch": "Passwords do not match.",
+      "nameRequired": "Name is required.",
+      "nameMin": "Name must be at least {min} characters.",
+      "nameMax": "Name must be at most {max} characters.",
+      "emailMax": "Email must be at most {max} characters.",
+      "emailInvalid": "Enter a valid email address.",
+      "nationalIdLength": "National ID must be exactly {length} digits.",
+      "nationalIdInvalid": "Enter a valid National ID.",
+      "yearsRange": "Enter a whole number between {min} and {max}.",
+      "codeRequired": "Enter the {length}-digit code."
+    },
+    "errors": {
+      "waitResend": "Please wait {seconds}s before requesting a new code.",
+      "requestCodeFirst": "Request a new code first.",
+      "codeExpired": "This code has expired. Request a new one.",
+      "tooManyAttempts": "Too many wrong attempts. Request a new code.",
+      "wrongCode": "Wrong code. Try again.",
+      "verificationExpired": "Your phone verification expired. Please start again.",
+      "savePassword": "Could not save your password.",
+      "login": "Could not log in.",
+      "incorrectPassword": "Incorrect password.",
+      "notLoggedIn": "You are not logged in.",
+      "saveProfile": "Could not save your profile.",
+      "secureContext": "A secure connection is required (use HTTPS or localhost)."
+    }
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Tips, guides and ideas to help you enjoy and improve your piano playing.",
+    "back": "Back to blog",
+    "minRead": "{n} min read",
+    "notFound": "Post not found",
+    "cta": {
+      "title": "Ready to play?",
+      "text": "Put it into practice on the virtual piano. No install needed.",
+      "button": "Play virtual piano"
+    },
+    "tags": {
+      "beginners": "Beginners",
+      "guides": "Guides",
+      "tips": "Tips",
+      "practice": "Practice"
+    },
+    "posts": {
+      "startLearning": {
+        "title": "How to start learning piano online",
+        "excerpt": "You do not need a real piano to begin. Here is a simple plan for your first weeks.",
+        "content": [
+          {
+            "type": "p",
+            "text": "Starting piano can feel intimidating, but the first steps are small. With a virtual piano in your browser you can build finger familiarity, ear training and rhythm before you ever buy an instrument."
+          },
+          {
+            "type": "h2",
+            "text": "Learn the layout first"
+          },
+          {
+            "type": "p",
+            "text": "The keyboard repeats the same pattern of white and black keys. Black keys come in groups of two and three, and the white key just before a group of two is always C. Once you can find C, you can find every other note."
+          },
+          {
+            "type": "h2",
+            "text": "Practice a little every day"
+          },
+          {
+            "type": "ul",
+            "items": [
+              "Ten to fifteen focused minutes beat one long session per week.",
+              "Start with one hand, slowly, and only add speed when it feels easy.",
+              "Say the note names out loud as you play them.",
+              "Finish each session with something you enjoy, even if it is simple."
+            ]
+          },
+          {
+            "type": "h2",
+            "text": "Try recording yourself"
+          },
+          {
+            "type": "p",
+            "text": "Recording a short phrase and listening back is one of the fastest ways to notice uneven rhythm or wrong notes. It also lets you track your progress over the weeks."
+          }
+        ]
+      },
+      "choosingKeys": {
+        "title": "25, 49, 61 or 88 keys? Choosing the right piano size",
+        "excerpt": "More keys are not always better. Here is how to pick a size that fits your music.",
+        "content": [
+          {
+            "type": "p",
+            "text": "A full piano has 88 keys, spanning seven octaves plus a few extra notes, from A0 to C8. Smaller keyboards simply cut off the lowest and highest octaves."
+          },
+          {
+            "type": "h2",
+            "text": "What each size is good for"
+          },
+          {
+            "type": "ul",
+            "items": [
+              "25 and 37 keys: quick melodies and simple ideas, easiest on small screens.",
+              "49 keys: a comfortable all-round choice for beginners and for most pop and film melodies.",
+              "61 keys: five octaves, enough for many songs with both hands.",
+              "76 and 88 keys: needed for a lot of classical repertoire that uses the extreme low and high notes."
+            ]
+          },
+          {
+            "type": "h2",
+            "text": "Let the music decide"
+          },
+          {
+            "type": "p",
+            "text": "Look at the lowest and highest notes in the pieces you want to play. If they fit in five octaves, a 61-key layout is plenty. If you are not sure, the piano finder on the home page can suggest a size from your goals and level."
+          }
+        ]
+      },
+      "customShortcuts": {
+        "title": "Make your computer keyboard feel like a piano",
+        "excerpt": "Custom shortcuts help you play faster and more comfortably. Here is how to set them up.",
+        "content": [
+          {
+            "type": "p",
+            "text": "Playing with the computer keyboard is fast, but only if the layout feels natural to your hands. That is why every note in Web Piano can be mapped to any key you like."
+          },
+          {
+            "type": "h2",
+            "text": "Setting your own shortcuts"
+          },
+          {
+            "type": "ul",
+            "items": [
+              "Open Settings and find the octave you want to change.",
+              "Click the field next to a note, then press the key you want to use.",
+              "If a key is already taken, clear the other shortcut first.",
+              "Use Reset to defaults any time you want a fresh start."
+            ]
+          },
+          {
+            "type": "h2",
+            "text": "Design tips"
+          },
+          {
+            "type": "p",
+            "text": "Keep white notes on one row and the matching black notes on the row above, like a real keyboard. Group each octave under neighbouring keys so your fingers move in a predictable pattern."
+          }
+        ]
+      },
+      "earTraining": {
+        "title": "Five-minute ear training exercises you can do anywhere",
+        "excerpt": "Training your ear makes everything else easier. These short drills fit into any break.",
+        "content": [
+          {
+            "type": "p",
+            "text": "Ear training means learning to recognize notes, intervals and chords by sound. It speeds up learning songs and makes improvising more natural."
+          },
+          {
+            "type": "h2",
+            "text": "Three quick drills"
+          },
+          {
+            "type": "ul",
+            "items": [
+              "Hum then play: sing a note, then find it on the piano.",
+              "Up or down: play two notes and decide whether the second is higher or lower, then check.",
+              "Copy a melody: pick a tune you know and find it by ear, one note at a time."
+            ]
+          },
+          {
+            "type": "h2",
+            "text": "Make it a habit"
+          },
+          {
+            "type": "p",
+            "text": "Five minutes a day is enough. Keep the drills light and playful, and you will notice progress within a few weeks."
+          }
+        ]
+      }
+    }
+  },
+  "app": {
+    "name": "Web Piano"
+  },
+  "nav": {
+    "home": "Home",
+    "virtualPiano": "Virtual Piano",
+    "blog": "Blog",
+    "settings": "Settings",
+    "profile": "Profile",
+    "main": "Main",
+    "explore": "Explore",
+    "loginOrSignup": "Log in or sign up",
+    "openProfile": "Open your profile"
+  },
+  "language": {
+    "switchTo": "Switch language to {name}"
+  },
+  "ui": {
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "dismiss": "Dismiss",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "otpDigit": "Digit {index} of {total}",
+    "rotateToast": "Rotate your phone for a better experience.",
+    "pleaseWait": "Please wait…"
+  },
+  "footer": {
+    "description": "A piano that lives in your browser. Follow us for new sounds, tips and updates.",
+    "social": "Social media",
+    "nav": "Footer",
+    "clubName": "Web Piano Club",
+    "clubText": "Join the club for early access to new features, practice tips and member-only news.",
+    "emailLabel": "Email address",
+    "join": "Join the club",
+    "joined": "Welcome to the club! Thanks for joining.",
+    "invalidEmail": "Please enter a valid email address.",
+    "rights": "© {year} Web Piano. All rights reserved.",
+    "poweredBy": "Powered by Saleh Rezaei"
+  },
+  "finder": {
+    "title": "Find your piano",
+    "intro": "A few quick questions, then we'll suggest the right size and how to get started.",
+    "questionOf": "Question {current} of {total}",
+    "selectAll": "Select all that apply",
+    "back": "Back",
+    "continue": "Continue",
+    "startOver": "Start over",
+    "keysCount": "{n} keys",
+    "unsure": "I'm not sure",
+    "steps": {
+      "goals": {
+        "title": "What would you like to do?"
+      },
+      "level": {
+        "title": "How would you describe your piano level?"
+      },
+      "genres": {
+        "title": "What kind of music do you want to play?"
+      },
+      "input": {
+        "title": "How will you play here?",
+        "subtitle": "The size that feels good depends on your device"
+      },
+      "instrument": {
+        "title": "Do you have a piano or keyboard at home?",
+        "subtitle": "If you do, we can match its size so it feels familiar"
+      },
+      "instrumentKeys": {
+        "title": "How many keys does it have?"
+      }
+    },
+    "goals": {
+      "songs": "Play specific songs",
+      "theory": "Read music & learn theory",
+      "chords": "Learn chords & accompany singing",
+      "scales": "Practice scales & technique",
+      "improvise": "Improvise or compose",
+      "ear": "Train my ear",
+      "record": "Record my playing",
+      "teach": "I teach piano",
+      "fun": "Just play for fun"
+    },
+    "levels": {
+      "never": {
+        "label": "Never played",
+        "hint": "I've never touched a piano"
+      },
+      "beginner": {
+        "label": "Beginner",
+        "hint": "Learning the notes and simple songs"
+      },
+      "lateBeginner": {
+        "label": "Late beginner",
+        "hint": "Can play easy pieces with both hands"
+      },
+      "intermediate": {
+        "label": "Intermediate",
+        "hint": "Comfortable with most songs I practice"
+      },
+      "advanced": {
+        "label": "Advanced",
+        "hint": "Play complex pieces with confidence"
+      },
+      "professional": {
+        "label": "Professional",
+        "hint": "I perform or study music seriously"
+      }
+    },
+    "genres": {
+      "classical": "Classical",
+      "jazz": "Jazz",
+      "pop": "Pop",
+      "rock": "Rock",
+      "film": "Film & game music",
+      "folk": "Folk",
+      "other": "Other"
+    },
+    "inputs": {
+      "keyboard": {
+        "label": "Computer keyboard",
+        "hint": "Typing keys play the notes"
+      },
+      "mouse": {
+        "label": "Mouse or trackpad",
+        "hint": "Click and drag on the keys"
+      },
+      "tablet": {
+        "label": "Tablet touch screen",
+        "hint": "Tap the keys"
+      },
+      "phone": {
+        "label": "Phone touch screen",
+        "hint": "Small screen, small keys"
+      }
+    },
+    "instruments": {
+      "none": {
+        "label": "No, only this",
+        "hint": "The website is my main piano"
+      },
+      "digital": {
+        "label": "Digital piano or keyboard",
+        "hint": "We can match its size"
+      },
+      "acoustic": {
+        "label": "Acoustic piano",
+        "hint": "Upright or grand"
+      }
+    },
+    "sizeNotes": {
+      "s25": "Two octaves. Small and simple, good for trying out melodies.",
+      "s37": "Three octaves. Enough for easy songs with both hands.",
+      "s49": "Four octaves. A balanced size for learning and playing songs.",
+      "s61": "Five octaves. Most pop, rock and film pieces fit comfortably.",
+      "s76": "Over six octaves. Room for demanding repertoire.",
+      "s88": "The full range of a grand piano. Nothing is out of reach."
+    },
+    "result": {
+      "weRecommend": "We recommend",
+      "goodToKnow": "Good to know",
+      "alsoPoints": "Your answers also point to {keys} keys. {link} (keys outside your shortcuts need the mouse or touch).",
+      "trySize": "Try that size",
+      "play": "Play the {n}-key piano"
+    },
+    "reasons": {
+      "level": {
+        "never": "For a first-time player, three octaves is a friendly place to start.",
+        "beginner": "As a beginner, a mid-sized keyboard is plenty to learn on.",
+        "lateBeginner": "At your level, four to five octaves cover the pieces you are working on.",
+        "intermediate": "At your level, five octaves let you play most of what you practice.",
+        "advanced": "Advanced pieces often use a wide range, so you want more room.",
+        "professional": "As a professional, you will want the full range."
+      },
+      "genre": {
+        "classical": "Classical music travels across the whole keyboard, so a wider range helps.",
+        "fiveOctaves": "{genres} music fits comfortably in five octaves."
+      },
+      "goal": {
+        "improvise": "Improvising needs room to move around the keyboard.",
+        "teach": "Teaching means demonstrating across the whole range.",
+        "scales": "Scales over several octaves need a wider keyboard.",
+        "light": "For chords, ear training and playing for fun, five octaves is plenty."
+      },
+      "cap": {
+        "never": "Since you haven't played before, a smaller keyboard is less overwhelming.",
+        "early": "You're still early on, so there's no need for the largest keyboard yet."
+      },
+      "instrument": {
+        "acoustic": "An acoustic piano has 88 keys, so that layout would feel familiar.",
+        "digital": "Your keyboard has {n} keys, so that size would feel familiar."
+      },
+      "input": {
+        "keyboard": "About three octaves fit comfortably on computer keys; the rest needs the mouse.",
+        "tablet": "On a tablet, keys stay easy to tap up to about five octaves.",
+        "phone": "On a phone, keys get small quickly, so we kept it compact."
+      }
+    },
+    "tips": {
+      "shortcuts": "By default only C4 to E5 have computer-key shortcuts. Assign the rest of your keys in Settings.",
+      "openSettings": "Open settings",
+      "rotate": "Turn your phone sideways to make the keys wider.",
+      "noteNames": "Every note you press shows its name above the keyboard.",
+      "recorder": "Use the recorder under the piano to capture a take, play it back or download it."
+    }
+  },
+  "home": {
+    "hero": {
+      "line1": "A piano that lives",
+      "line2": "in your browser",
+      "text": "Play with real piano sounds using your mouse, touch screen, or computer keyboard. No install, no sign-up.",
+      "cta": "Play virtual piano"
+    },
+    "features": {
+      "sound": {
+        "title": "Real piano sound",
+        "text": "Recorded grand piano samples, loaded once and played instantly."
+      },
+      "play": {
+        "title": "Play your way",
+        "text": "Click, drag across the keys, touch the screen, or use your computer keyboard."
+      },
+      "shortcuts": {
+        "title": "Your shortcuts",
+        "text": "Map any note to any key and make the keyboard feel like yours."
+      }
+    }
+  },
+  "faq": {
+    "title": "Frequently asked questions",
+    "subtitle": "Quick answers to the things people ask most.",
+    "items": {
+      "install": {
+        "question": "Do I need to install anything or create an account?",
+        "answer": "No. Web Piano runs entirely in your browser, so you can open the Virtual Piano page and start playing right away. An account is optional."
+      },
+      "play": {
+        "question": "How can I play the piano?",
+        "answer": "You can click the keys with your mouse, drag across them for a glissando, tap them on a touch screen, or use your computer keyboard. Each computer key is mapped to a piano note."
+      },
+      "shortcuts": {
+        "question": "Can I change which computer key plays which note?",
+        "answer": "Yes. Open Settings, click the field next to any note, and press the key you want. Keys are matched by position, so shortcuts work with any keyboard language. You can also reset everything to the defaults."
+      },
+      "size": {
+        "question": "Which piano size should I choose?",
+        "answer": "Web Piano offers 25, 37, 49, 61, 76 and 88 keys. If you are just starting out, 49 or 61 keys is a comfortable choice. Use the piano finder on this page if you want a recommendation based on your goals and level."
+      },
+      "record": {
+        "question": "Can I record what I play?",
+        "answer": "Yes. On the Virtual Piano page, press record, play your piece, then stop. You can listen to the recording again, download it, or clear it and start over."
+      },
+      "noSound": {
+        "question": "Why is there no sound when I press a key?",
+        "answer": "Browsers only allow audio after you interact with the page, so click or tap the piano once first. Also check that your device is not muted and that the in-app volume is above zero."
+      },
+      "mobile": {
+        "question": "Does it work on my phone or tablet?",
+        "answer": "Yes. Touch is supported, so you can tap and slide across the keys. A larger screen or a smaller piano size makes the keys easier to hit."
+      }
+    }
+  },
+  "blogPreview": {
+    "title": "From the blog",
+    "subtitle": "Tips, guides and ideas to help you play better.",
+    "viewAll": "View all posts"
+  },
+  "piano": {
+    "title": "{keys}-key piano",
+    "range": "Range {from} to {to}",
+    "rangeShort": "{from} to {to}",
+    "keys": "{n} keys",
+    "sizes": "Piano sizes",
+    "volume": "Volume",
+    "mute": "Mute",
+    "unmute": "Unmute",
+    "loadPiano": "Load piano",
+    "loading": "Loading sounds…",
+    "retry": "Retry loading",
+    "loadingOverlay": "Loading sounds",
+    "recorder": {
+      "record": "Record",
+      "stopRecording": "Stop recording",
+      "play": "Play recording",
+      "stopPlayback": "Stop playback",
+      "download": "Download recording",
+      "downloadShort": "Download",
+      "clear": "Clear recording",
+      "clearShort": "Clear"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "shortcuts": {
+      "title": "Keyboard shortcuts",
+      "description": "All {total} piano keys are listed by octave. Click a field, then press the computer key you want for that note. Shortcuts for notes outside the selected piano size are ignored. Keys are matched by position, so they work with any keyboard language.",
+      "reset": "Reset to defaults",
+      "resetTitle": "Reset all shortcuts?",
+      "resetMessage": "All your custom keyboard shortcuts will be replaced with the defaults. This can't be undone.",
+      "resetConfirm": "Reset",
+      "resetCancel": "Cancel",
+      "octave": "Octave {n}",
+      "assigned": "{set} / {total} set",
+      "clash": "{key} already plays {note}."
+    },
+    "row": {
+      "keyAria": "Computer key for {note}. Click, then press a key.",
+      "pressKey": "Press a key",
+      "clear": "Clear",
+      "clearAria": "Clear shortcut for {note}"
+    },
+    "midi": {
+      "title": "MIDI keyboard",
+      "description": "Play the piano with a MIDI keyboard, a simulator, or a device you build yourself. Key presses are played with their real velocity.",
+      "connect": "Connect MIDI",
+      "tryAgain": "Try again",
+      "status": {
+        "idle": "Not connected yet.",
+        "requesting": "Waiting for your permission…",
+        "readyDevices": "Connected. Play a key on your MIDI device.",
+        "readyNone": "Connected, but no MIDI device was found. Plug one in or start a virtual MIDI port.",
+        "denied": "MIDI access is blocked. Allow it for this site in your browser settings, then reload the page.",
+        "unsupported": "This browser doesn't support Web MIDI. Try Chrome or Edge.",
+        "insecure": "Web MIDI only works on HTTPS or localhost.",
+        "error": "Could not start MIDI. Try again."
+      },
+      "listenTo": "Listen to",
+      "allDevices": "All devices",
+      "unknownDevice": "Unknown device",
+      "connected": "Connected",
+      "disconnected": "Disconnected",
+      "missingDevice": "The device you picked isn't connected right now, so nothing will play until it comes back or you choose “All devices”.",
+      "loadSounds": "Load piano sounds",
+      "loadingSounds": "Loading sounds…",
+      "testNote": "Play test note",
+      "lastNote": "Last note: {note}, velocity {velocity} from {source}",
+      "noNotes": "No notes received yet.",
+      "sourceTest": "test button",
+      "sourceAny": "a MIDI device"
+    }
+  }
+}
