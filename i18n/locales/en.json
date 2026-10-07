@@ -547,7 +547,15 @@
     "viewAll": "View all posts"
   },
   "piano": {
-    "title": "{keys}-key piano",
+    "title": "{name}",
+    "names": {
+      "25": "Mini (Portable Piano)",
+      "37": "Compact Piano",
+      "49": "Small MIDI Controller",
+      "61": "Standard (Synth-Action Piano)",
+      "76": "Extended (Workstation Piano)",
+      "88": "Full-Size (Weighted Piano)"
+    },
     "range": "Range {from} to {to}",
     "rangeShort": "{from} to {to}",
     "keys": "{n} keys",

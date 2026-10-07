@@ -223,7 +223,7 @@ function onLogout() {
 
             <button
                 type="button"
-                class="absolute -bottom-1 -end-1 flex size-7 items-center justify-center rounded-full border border-stone-700 bg-stone-900 text-stone-200 shadow transition-colors hover:border-key-active hover:text-key-active focus:outline-none focus-visible:ring-2 focus-visible:ring-key-active/60"
+                class="absolute -bottom-1 -inset-e-1 flex size-7 items-center justify-center rounded-full border border-stone-700 bg-stone-900 text-stone-200 shadow transition-colors hover:border-key-active hover:text-key-active focus:outline-none focus-visible:ring-2 focus-visible:ring-key-active/60"
                 :aria-label="t('auth.profile.changePhoto')"
                 :title="t('auth.profile.changePhoto')"
                 @click="pickAvatar"
@@ -352,11 +352,16 @@ function onLogout() {
 
         <section aria-labelledby="account-title" class="space-y-2">
           <h2 id="account-title" class="border-b border-stone-800 pb-2 text-lg font-medium">{{ t('auth.profile.sections.account') }}</h2>
-          <dl class="grid gap-x-6 gap-y-2 pt-2 text-sm sm:grid-cols-[8rem_1fr]">
-            <dt class="text-stone-400">{{ t('auth.profile.fields.mobile') }}</dt>
-            <dd dir="ltr">{{ user.phone }}</dd>
-            <dt class="text-stone-400">{{ t('auth.profile.fields.memberSince') }}</dt>
-            <dd>{{ memberSince }}</dd>
+          <dl class="flex items-center justify-center gap-8 pt-2 text-sm">
+            <div class="flex items-center gap-2">
+              <dt class="text-stone-400">{{ t('auth.profile.fields.mobile') }}</dt>
+              <dd dir="ltr" class="mt-1">{{ user.phone }}</dd>
+            </div>
+            <div class="h-8 w-px shrink-0 bg-stone-700" aria-hidden="true" />
+            <div class="flex items-center gap-2">
+              <dt class="text-stone-400">{{ t('auth.profile.fields.memberSince') }}</dt>
+              <dd>{{ memberSince }}</dd>
+            </div>
           </dl>
         </section>
 

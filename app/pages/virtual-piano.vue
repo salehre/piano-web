@@ -7,6 +7,7 @@ const {
 } = usePiano()
 const { t, n } = useI18n()
 const piano = usePianoType()
+const pianoName = computed(() => t(`piano.names.${piano.value.keys}`))
 
 // آیکون بلندگو: قطع و وصل کردن صدا
 let lastVolume = 0.8
@@ -35,14 +36,14 @@ onBeforeUnmount(() => {
   stopPlayback()
 })
 
-useHead({ title: () => t('piano.title', { keys: n(piano.value.keys) }) })
+useHead({ title: () => t('piano.title', { name: pianoName.value }) })
 </script>
 
 <template>
   <main class="mx-auto flex max-w-screen-2xl flex-col gap-6 px-6 py-8">
     <section class="flex flex-wrap items-center justify-between gap-4">
       <div>
-        <h1 class="text-2xl font-semibold">{{ t('piano.title', { keys: n(piano.keys) }) }}</h1>
+        <h1 class="text-2xl font-semibold">{{ t('piano.title', { name: pianoName }) }}</h1>
         <p class="mt-1 text-stone-400">{{ t('piano.range', { from: piano.from, to: piano.to }) }}</p>
       </div>
 
