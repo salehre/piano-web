@@ -48,6 +48,7 @@ const { t } = useI18n()
         </NuxtLink>
 
         <LayoutLanguageSwitcher />
+        <LayoutThemeSwitcher />
         <LayoutUserMenu />
       </nav>
     </div>

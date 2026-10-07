@@ -64,7 +64,7 @@ const selectedMissing = computed(
           <input
             type="radio"
             name="midi-device"
-            class="accent-[#F5E6C8]"
+            class="accent-key-active"
             :checked="selectedId === 'all'"
             @change="selectDevice('all')"
           />
@@ -80,7 +80,7 @@ const selectedMissing = computed(
           <input
             type="radio"
             name="midi-device"
-            class="accent-[#F5E6C8]"
+            class="accent-key-active"
             :checked="selectedId === d.id"
             @change="selectDevice(d.id)"
           />

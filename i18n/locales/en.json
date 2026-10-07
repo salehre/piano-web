@@ -284,6 +284,10 @@
   "language": {
     "switchTo": "Switch language to {name}"
   },
+  "theme": {
+    "switchToLight": "Switch to light theme",
+    "switchToDark": "Switch to dark theme"
+  },
   "ui": {
     "confirm": "Confirm",
     "cancel": "Cancel",

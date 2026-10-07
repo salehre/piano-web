@@ -284,6 +284,10 @@
   "language": {
     "switchTo": "تغییر زبان به {name}"
   },
+  "theme": {
+    "switchToLight": "تغییر به تم روشن",
+    "switchToDark": "تغییر به تم تیره"
+  },
   "ui": {
     "confirm": "تأیید",
     "cancel": "انصراف",

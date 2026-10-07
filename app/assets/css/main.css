@@ -118,3 +118,93 @@ body {
 html[lang|='fa'] * {
   letter-spacing: normal;
 }
+
+/* ==========================================================================
+   تم روشن (data-theme="light")
+   - key-active (کرم) می‌شه رنگ اصلی و بک‌گراند
+   - قهوه‌ای تیره (رنگ اصلی/بک‌گراندِ تم تیره) می‌شه رنگ دوم و رنگ دکمه‌ها
+   پالت stone برعکس می‌شه؛ برای همین کلاس‌هایی مثل bg-stone-950 (هدر، فوتر، ...)
+   خودکار کرمی می‌شن و text-stone-950 روی دکمه‌ها هم کرم می‌شه.
+   ========================================================================== */
+html[data-theme='light'] {
+  color-scheme: light;
+
+  --color-key-active: #4a2c1d; /* رنگ دکمه‌ها و هایلایت‌ها (قهوه‌ای) */
+
+  --color-stone-50: #170c07;
+  --color-stone-100: #24140e;
+  --color-stone-200: #3a2216;
+  --color-stone-300: #4a2c1d;
+  --color-stone-400: #6f523c;  /* متن ثانویه */
+  --color-stone-500: #8a6c52;
+  --color-stone-600: #c4a98a;
+  --color-stone-700: #d8c3a8;  /* بوردرها */
+  --color-stone-800: #eadbc8;  /* hover و چیپ‌ها */
+  --color-stone-900: #faf5ee;  /* منو و سطح‌های بالاآمده */
+  --color-stone-950: #F5E6C8;  /* بک‌گراند، هدر و فوتر */
+
+  scrollbar-color: #c4a98a #F5E6C8;
+}
+
+html[data-theme='light'] body {
+  color: #24140e;
+  background-color: #F5E6C8;
+  background-image:
+    radial-gradient(ellipse at 18% 8%, rgba(255, 255, 255, 0.55), transparent 48%),
+    linear-gradient(135deg, #f8ecd3 0%, #F5E6C8 55%, #efdcb8 100%);
+}
+
+html[data-theme='light'] ::-webkit-scrollbar-track {
+  background: #F5E6C8;
+}
+
+html[data-theme='light'] ::-webkit-scrollbar-thumb {
+  border-color: #F5E6C8;
+  background: #c4a98a;
+}
+
+html[data-theme='light'] ::-webkit-scrollbar-thumb:hover {
+  background: #4a2c1d;
+}
+
+html[data-theme='light'] .glass-card {
+  border-color: rgba(74, 44, 29, 0.14);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.55),
+    rgba(234, 219, 200, 0.45)
+  );
+  color: #24140e;
+  text-shadow: none;
+  box-shadow: 0 10px 24px -18px rgba(74, 44, 29, 0.45);
+}
+
+html[data-theme='light'] .glass-card::before {
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), inset 0 -1px 0 rgba(74, 44, 29, 0.08);
+}
+
+html[data-theme='light'] .glass-card::after {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* کلاس‌هایی که با سفید/مشکیِ ثابت نوشته شدن و روی کرم دیده نمی‌شن */
+html[data-theme='light'] .border-white\/5 {
+  border-color: rgba(74, 44, 29, 0.1);
+}
+
+html[data-theme='light'] .hover\:bg-white\/5:hover {
+  background-color: rgba(74, 44, 29, 0.06);
+}
+
+html[data-theme='light'] .ring-white\/15 {
+  --tw-ring-color: rgba(74, 44, 29, 0.2);
+}
+
+html[data-theme='light'] .bg-black\/25 {
+  background-color: rgba(74, 44, 29, 0.1);
+}
+
+html[data-theme='light'] .backdrop\:bg-black\/60::backdrop {
+  background-color: rgba(74, 44, 29, 0.45);
+}
