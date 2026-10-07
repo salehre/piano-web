@@ -2,7 +2,7 @@
 import type { UserProfile } from '~/utils/auth'
 
 definePageMeta({ middleware: 'auth' })
-const { t, n, d } = useI18n()
+const { t, n, d, locale } = useI18n()
 const tr = useTr()
 useHead({ title: () => t('nav.profile') })
 
@@ -316,7 +316,7 @@ function onLogout() {
             <UiTextField
                 v-model="form.nationalId"
                 :label="t('auth.profile.fields.nationalId')"
-                ltr
+                :ltr="locale === 'en'"
                 inputmode="numeric"
                 autocomplete="off"
                 :maxlength="10"

@@ -21,7 +21,9 @@ interface RawBlock {
 /** مقاله‌های بلاگ به زبان فعلی؛ صفحه‌ها فقط با این کار دارن و با tm/rt درگیر نمی‌شن */
 export function useBlog() {
   const { t, tm, rt, d, locale } = useI18n()
-  const text = (m: unknown) => rt(m as Parameters<typeof rt>[0])
+  // تا پیش از بارگذاری زبان انتخاب‌شده، tm() ممکن است موقتاً متن نداشته باشد.
+  const text = (m: unknown) =>
+    typeof m === 'string' ? rt(m as Parameters<typeof rt>[0]) : ''
 
   function localize(meta: BlogPostMeta): BlogPost {
     const base = `blog.posts.${meta.id}`

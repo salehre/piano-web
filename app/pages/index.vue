@@ -40,20 +40,6 @@ const features = ['sound', 'play', 'shortcuts'] as const
     <HomeFaq />
 
     <HomeBlogPreview />
-
-    <section>
-      <h2 class="text-sm font-medium uppercase tracking-wide text-stone-400">Pick a size</h2>
-      <div class="mt-4 flex flex-wrap gap-2">
-        <NuxtLink
-            v-for="t in PIANO_TYPES"
-            :key="t.keys"
-            :to="{ path: '/virtual-piano', query: { keys: t.keys } }"
-            class="rounded-full bg-stone-950/40 px-4 py-2 text-sm transition-colors hover:bg-stone-950/70 hover:text-key-active"
-        >
-          {{ t.keys }} keys
-        </NuxtLink>
-      </div>
-    </section>
   </main>
 </template>
 <style>
