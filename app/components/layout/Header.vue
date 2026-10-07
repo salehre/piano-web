@@ -10,13 +10,10 @@ const { t } = useI18n()
       <nav class="-me-3 flex items-center gap-2" :aria-label="t('nav.main')">
         <NuxtLink
             to="/"
-            class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors hover:text-key-active"
+            class="rounded-lg px-3 py-2 text-sm transition-colors hover:text-key-active"
             exact-active-class="text-key-active"
             data-cuelume-navigate
         >
-          <svg class="size-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-            <path d="M3 9.5 10 3l7 6.5M5 8.5V17h3.5v-4.5h3V17H15V8.5" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
           {{ t('nav.home') }}
         </NuxtLink>
 

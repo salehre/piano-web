@@ -138,7 +138,7 @@ function restart() {
 </script>
 
 <template>
-  <section class="relative isolate overflow-hidden rounded-2xl bg-stone-950 p-6 sm:p-8" aria-labelledby="finder-title">
+  <section class="piano-finder relative isolate overflow-hidden rounded-2xl bg-stone-950 p-6 text-stone-100 sm:p-8" aria-labelledby="finder-title">
     <!-- تصویر پس‌زمینه + لایه‌ی تیره برای خوانایی متن -->
     <img
         src="/images/piano-finder-bg.webp"
@@ -146,7 +146,7 @@ function restart() {
         aria-hidden="true"
         class="absolute inset-0 -z-20 size-full object-cover object-center"
     />
-    <div class="absolute inset-0 -z-10 bg-gradient-to-r from-stone-950/90 via-stone-950/80 to-stone-950/65" aria-hidden="true" />
+    <div class="finder-bg absolute inset-0 -z-10 bg-gradient-to-r from-stone-950/90 via-stone-950/80 to-stone-950/65" aria-hidden="true" />
 
     <h2 id="finder-title" class="text-xl font-semibold">{{ t('finder.title') }}</h2>
     <p class="mt-1 text-sm text-stone-400">{{ t('finder.intro') }}</p>

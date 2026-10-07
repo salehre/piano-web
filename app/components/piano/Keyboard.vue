@@ -123,7 +123,7 @@ onBeforeUnmount(() => {
           <span
               v-for="n in pressedNotes"
               :key="n"
-              class="pointer-events-none absolute top-1/2 -translate-x-1/2 -translate-y-1/2 text-sm font-semibold text-[#F5E6C8]"
+              class="pointer-events-none absolute top-1/2 -translate-x-1/2 -translate-y-1/2 text-sm font-semibold text-key"
               :style="{ left: `${centers[n]}%` }"
           >
             {{ n }}
