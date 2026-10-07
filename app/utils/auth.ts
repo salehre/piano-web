@@ -1,18 +1,3 @@
-/** سطح‌های مهارت پیانو (برای PianoFinder) */
-export const PIANO_LEVELS = [
-    { value: 'never', label: 'Never played' },
-    { value: 'beginner', label: 'Beginner' },
-    { value: 'late-beginner', label: 'Late beginner' },
-    { value: 'intermediate', label: 'Intermediate' },
-    { value: 'advanced', label: 'Advanced' },
-    { value: 'professional', label: 'Professional' },
-] as const
-
-export type PianoLevel = (typeof PIANO_LEVELS)[number]['value']
-
-/** سبک‌های موسیقی (برای PianoFinder) */
-export const FAVORITE_GENRES = ['Classical', 'Jazz', 'Pop', 'Rock', 'Film & game music', 'Folk', 'Other'] as const
-
 /** اطلاعاتی که کاربر خودش توی صفحه‌ی پروفایل تکمیل می‌کنه */
 export interface UserProfile {
     displayName: string
@@ -51,6 +36,7 @@ export const OTP_TTL_MS = 2 * 60 * 1000
 export const OTP_RESEND_SECONDS = 60
 export const OTP_MAX_ATTEMPTS = 5
 
+export const DISPLAY_NAME_MIN = 2
 export const DISPLAY_NAME_MAX = 40
 export const ADDRESS_MAX = 300
 export const EMAIL_MAX = 100
@@ -58,6 +44,7 @@ export const EMAIL_MAX = 100
 export const AVATAR_SIZE = 256
 export const AVATAR_MAX_FILE_BYTES = 5 * 1024 * 1024
 export const PASSWORD_MIN = 8
+export const YEARS_PLAYING_MAX = 80
 
 export function createEmptyProfile(displayName = ''): UserProfile {
     return { displayName, email: '', avatar: '', nationalId: '', country: '', address: '', yearsPlaying: null }
@@ -81,7 +68,8 @@ export function profileCompletion(p: UserProfile): number {
     return Math.round((filled / 6) * 100)
 }
 
-// ---------- اعتبارسنجی؛ پیام خطا یا null ----------
+// ---------- اعتبارسنجی؛ ارجاع به پیام خطا (MessageRef) یا null ----------
+// متن‌ها توی i18n/locales/*/auth.json زیر auth.validation هستن
 
 /** رقم‌های فارسی/عربی رو به انگلیسی تبدیل می‌کنه */
 export function normalizeDigits(value: string): string {
@@ -100,47 +88,47 @@ export function normalizePhone(value: string): string {
     return v
 }
 
-export function validatePhone(value: string): string | null {
-    if (!value.trim()) return 'Mobile number is required.'
-    if (!/^09\d{9}$/.test(normalizePhone(value))) return 'Enter a valid mobile number.'
+export function validatePhone(value: string): MessageRef | null {
+    if (!value.trim()) return msgRef('auth.validation.phoneRequired')
+    if (!/^09\d{9}$/.test(normalizePhone(value))) return msgRef('auth.validation.phoneInvalid')
     return null
 }
 
-export function validatePassword(value: string): string | null {
-    if (!value) return 'Password is required.'
-    if (value.length < PASSWORD_MIN) return `Password must be at least ${PASSWORD_MIN} characters.`
-    if (!/[A-Za-z]/.test(value) || !/\d/.test(value)) return 'Use at least one letter and one number.'
+export function validatePassword(value: string): MessageRef | null {
+    if (!value) return msgRef('auth.validation.passwordRequired')
+    if (value.length < PASSWORD_MIN) return msgRef('auth.validation.passwordMin', { min: PASSWORD_MIN })
+    if (!/[A-Za-z]/.test(value) || !/\d/.test(value)) return msgRef('auth.validation.passwordMix')
     return null
 }
 
-export function validateDisplayName(value: string): string | null {
+export function validateDisplayName(value: string): MessageRef | null {
     const v = value.trim()
-    if (!v) return 'Name is required.'
-    if (v.length < 2) return 'Name must be at least 2 characters.'
-    if (v.length > DISPLAY_NAME_MAX) return `Name must be at most ${DISPLAY_NAME_MAX} characters.`
+    if (!v) return msgRef('auth.validation.nameRequired')
+    if (v.length < DISPLAY_NAME_MIN) return msgRef('auth.validation.nameMin', { min: DISPLAY_NAME_MIN })
+    if (v.length > DISPLAY_NAME_MAX) return msgRef('auth.validation.nameMax', { max: DISPLAY_NAME_MAX })
     return null
 }
 
 /** ایمیل اختیاری: خالی مجازه، ولی اگه پر شد باید فرمت درست داشته باشه */
-export function validateEmail(value: string): string | null {
+export function validateEmail(value: string): MessageRef | null {
     const v = value.trim()
     if (!v) return null
-    if (v.length > EMAIL_MAX) return `Email must be at most ${EMAIL_MAX} characters.`
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) return 'Enter a valid email address.'
+    if (v.length > EMAIL_MAX) return msgRef('auth.validation.emailMax', { max: EMAIL_MAX })
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) return msgRef('auth.validation.emailInvalid')
     return null
 }
 
 /** کد ملی ایران: ۱۰ رقم + بررسی رقم کنترل. خالی مجازه (اختیاری). */
-export function validateNationalId(value: string): string | null {
+export function validateNationalId(value: string): MessageRef | null {
     const v = normalizeDigits(value).trim()
     if (!v) return null
-    if (!/^\d{10}$/.test(v)) return 'National ID must be exactly 10 digits.'
-    if (/^(\d)\1{9}$/.test(v)) return 'Enter a valid National ID.'
+    if (!/^\d{10}$/.test(v)) return msgRef('auth.validation.nationalIdLength', { length: 10 })
+    if (/^(\d)\1{9}$/.test(v)) return msgRef('auth.validation.nationalIdInvalid')
     const digits = v.split('').map(Number)
     const sum = digits.slice(0, 9).reduce((acc, d, i) => acc + d * (10 - i), 0)
     const r = sum % 11
     const check = r < 2 ? r : 11 - r
-    return check === digits[9] ? null : 'Enter a valid National ID.'
+    return check === digits[9] ? null : msgRef('auth.validation.nationalIdInvalid')
 }
 
 /** فقط مسیرهای داخلی سایت برای redirect بعد از لاگین پذیرفته می‌شن */
@@ -190,9 +178,12 @@ export function randomHex(byteLength = 16): string {
     return toHex(crypto.getRandomValues(new Uint8Array(byteLength)))
 }
 
+/** پیام خطای داخلی وقتی crypto.subtle نیست؛ useAuth اون رو به پیام ترجمه‌شده تبدیل می‌کنه */
+export const SECURE_CONTEXT_ERROR = 'SECURE_CONTEXT_REQUIRED'
+
 /** هش SHA-256 با salt. فقط برای دمو؛ وقتی بک‌اند اومد هش کردن سمت سرور انجام می‌شه. */
 export async function hashPassword(password: string, salt: string): Promise<string> {
-    if (!globalThis.crypto?.subtle) throw new Error('Secure context required (use HTTPS or localhost).')
+    if (!globalThis.crypto?.subtle) throw new Error(SECURE_CONTEXT_ERROR)
     const data = new TextEncoder().encode(`${salt}:${password}`)
     return toHex(new Uint8Array(await crypto.subtle.digest('SHA-256', data)))
 }

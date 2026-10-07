@@ -1,6 +1,6 @@
 import type { AuthUser, StoredUser, UserProfile } from '~/utils/auth'
 
-type Fail = { ok: false; error: string }
+type Fail = { ok: false; error: MessageRef }
 type Result<T = object> = ({ ok: true } & T) | Fail
 
 // کد پیامکی و «تأیید شماره» فقط توی حافظه‌ی همین تب نگه داشته می‌شن (نه storage)
@@ -15,7 +15,11 @@ interface PendingOtp {
 let pending: PendingOtp | null = null
 let verified: { phone: string; until: number } | null = null
 
-const fail = (error: string): Fail => ({ ok: false, error })
+const fail = (error: MessageRef): Fail => ({ ok: false, error })
+
+/** خطای ناشناخته → پیام ترجمه‌شده؛ فقط خطای «اتصال امن» پیام اختصاصی داره */
+const errorRef = (e: unknown, fallback: string): MessageRef =>
+    e instanceof Error && e.message === SECURE_CONTEXT_ERROR ? msgRef('auth.errors.secureContext') : msgRef(fallback)
 
 function newCode(): string {
     const n = crypto.getRandomValues(new Uint32Array(1))[0]! % 10 ** OTP_LENGTH
@@ -77,7 +81,7 @@ export function useAuth() {
 
         if (pending?.phone === phone) {
             const wait = Math.ceil((pending.sentAt + OTP_RESEND_SECONDS * 1000 - Date.now()) / 1000)
-            if (wait > 0) return fail(`Please wait ${wait}s before requesting a new code.`)
+            if (wait > 0) return fail(msgRef('auth.errors.waitResend', { seconds: wait }))
         }
 
         const code = newCode()
@@ -93,18 +97,18 @@ export function useAuth() {
     async function verifyCode(rawPhone: string, rawCode: string): Promise<Result> {
         const phone = normalizePhone(rawPhone)
         const code = normalizeDigits(rawCode).trim()
-        if (!pending || pending.phone !== phone) return fail('Request a new code first.')
+        if (!pending || pending.phone !== phone) return fail(msgRef('auth.errors.requestCodeFirst'))
         if (Date.now() > pending.expiresAt) {
             pending = null
-            return fail('This code has expired. Request a new one.')
+            return fail(msgRef('auth.errors.codeExpired'))
         }
         pending.attempts++
         if (code !== pending.code) {
             if (pending.attempts >= OTP_MAX_ATTEMPTS) {
                 pending = null
-                return fail('Too many wrong attempts. Request a new code.')
+                return fail(msgRef('auth.errors.tooManyAttempts'))
             }
-            return fail('Wrong code. Try again.')
+            return fail(msgRef('auth.errors.wrongCode'))
         }
         pending = null
         verified = { phone, until: Date.now() + 10 * 60 * 1000 }
@@ -115,7 +119,7 @@ export function useAuth() {
     async function setPassword(rawPhone: string, password: string): Promise<Result<{ isNew: boolean }>> {
         const phone = normalizePhone(rawPhone)
         if (!verified || verified.phone !== phone || Date.now() > verified.until) {
-            return fail('Your phone verification expired. Please start again.')
+            return fail(msgRef('auth.errors.verificationExpired'))
         }
         const invalid = validatePassword(password)
         if (invalid) return fail(invalid)
@@ -141,7 +145,7 @@ export function useAuth() {
             syncInitial()
             return { ok: true, isNew: !existing }
         } catch (e) {
-            return fail(e instanceof Error ? e.message : 'Could not save your password.')
+            return fail(errorRef(e, 'auth.errors.savePassword'))
         }
     }
 
@@ -157,20 +161,20 @@ export function useAuth() {
                 return { ok: true }
             }
         } catch (e) {
-            return fail(e instanceof Error ? e.message : 'Could not log in.')
+            return fail(errorRef(e, 'auth.errors.login'))
         }
-        return fail('Incorrect password.')
+        return fail(msgRef('auth.errors.incorrectPassword'))
     }
 
     async function updateProfile(profile: UserProfile): Promise<Result> {
         const all = readUsers()
         const found = all.find((u) => u.id === session.value)
-        if (!found) return fail('You are not logged in.')
+        if (!found) return fail(msgRef('auth.errors.notLoggedIn'))
         found.profile = profile
         try {
             save(all)
         } catch {
-            return fail('Could not save your profile.')
+            return fail(msgRef('auth.errors.saveProfile'))
         }
         syncInitial()
         return { ok: true }

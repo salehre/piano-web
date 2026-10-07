@@ -10,10 +10,13 @@ const props = defineProps<{
   maxlength?: number
   multiline?: boolean
   rows?: number
+  /** برای شماره‌ی موبایل، ایمیل و عدد: متن همیشه چپ‌به‌راست (حتی توی صفحه‌ی فارسی) */
+  ltr?: boolean
 }>()
 
 const model = defineModel<string>({ required: true })
 
+const { t } = useI18n()
 const id = useId()
 const reveal = ref(false)
 const isPassword = computed(() => props.type === 'password')
@@ -40,6 +43,7 @@ const fieldClass = computed(() => [
           :maxlength="maxlength"
           :placeholder="placeholder"
           :class="fieldClass"
+          :dir="ltr ? 'ltr' : undefined"
           data-cuelume-type
           :aria-invalid="!!error"
           :aria-describedby="error || hint ? `${id}-msg` : undefined"
@@ -53,7 +57,8 @@ const fieldClass = computed(() => [
           :inputmode="inputmode"
           :maxlength="maxlength"
           :placeholder="placeholder"
-          :class="[fieldClass, isPassword ? 'pr-11' : '']"
+          :class="[fieldClass, isPassword ? 'pe-11' : '']"
+          :dir="ltr ? 'ltr' : undefined"
           data-cuelume-type
           :aria-invalid="!!error"
           :aria-describedby="error || hint ? `${id}-msg` : undefined"
@@ -62,8 +67,8 @@ const fieldClass = computed(() => [
       <button
           v-if="isPassword"
           type="button"
-          class="absolute inset-y-0 right-0 flex w-11 items-center justify-center text-stone-400 hover:text-stone-100"
-          :aria-label="reveal ? 'Hide password' : 'Show password'"
+          class="absolute inset-y-0 end-0 flex w-11 items-center justify-center text-stone-400 hover:text-stone-100"
+          :aria-label="reveal ? t('ui.hidePassword') : t('ui.showPassword')"
           :aria-pressed="reveal"
           data-cuelume-toggle
           data-cuelume-emphasis="subtle"

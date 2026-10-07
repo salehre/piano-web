@@ -1,5 +1,6 @@
 <script setup lang="ts">
 /** سؤال‌های متداول به‌صورت آکاردئونی؛ هر بار فقط یک مورد باز می‌مونه */
+const { t } = useI18n()
 const openIndex = ref<number | null>(null)
 const uid = useId()
 
@@ -10,13 +11,13 @@ function toggle(i: number) {
 
 <template>
   <section aria-labelledby="faq-title">
-    <h2 id="faq-title" class="text-2xl font-semibold tracking-tight">Frequently asked questions</h2>
-    <p class="mt-2 text-sm text-stone-400">Quick answers to the things people ask most.</p>
+    <h2 id="faq-title" class="text-2xl font-semibold tracking-tight">{{ t('faq.title') }}</h2>
+    <p class="mt-2 text-sm text-stone-400">{{ t('faq.subtitle') }}</p>
 
     <ul class="mt-6 flex flex-col gap-3">
       <li
-        v-for="(item, i) in FAQ_ITEMS"
-        :key="item.question"
+        v-for="(id, i) in FAQ_IDS"
+        :key="id"
         class="glass-card relative transition-shadow duration-300"
         :class="openIndex === i ? 'ring-1 ring-key-active/30' : ''"
       >
@@ -24,12 +25,12 @@ function toggle(i: number) {
           <button
             :id="`${uid}-btn-${i}`"
             type="button"
-            class="flex w-full items-center justify-between gap-4 rounded-[28px] px-6 py-4 text-left font-medium focus-visible:outline-2 focus-visible:outline-key-active"
+            class="flex w-full items-center justify-between gap-4 rounded-[28px] px-6 py-4 text-start font-medium focus-visible:outline-2 focus-visible:outline-key-active"
             :aria-expanded="openIndex === i"
             :aria-controls="`${uid}-panel-${i}`"
             @click="toggle(i)"
           >
-            <span>{{ item.question }}</span>
+            <span>{{ t(`faq.items.${id}.question`) }}</span>
             <svg
               class="size-4 shrink-0 text-stone-400 transition-transform duration-300"
               :class="openIndex === i ? 'rotate-180 text-key-active' : ''"
@@ -56,7 +57,7 @@ function toggle(i: number) {
         >
           <div class="overflow-hidden">
             <p class="px-6 pb-5 text-sm leading-relaxed text-stone-300" :inert="openIndex !== i">
-              {{ item.answer }}
+              {{ t(`faq.items.${id}.answer`) }}
             </p>
           </div>
         </div>

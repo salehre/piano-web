@@ -1,13 +1,12 @@
 <script setup lang="ts">
-const props = withDefaults(
-  defineProps<{
-    title: string
-    message?: string
-    confirmLabel?: string
-    cancelLabel?: string
-  }>(),
-  { confirmLabel: 'Confirm', cancelLabel: 'Cancel' },
-)
+const { t } = useI18n()
+// اگه برچسب دکمه‌ها داده نشه، «تأیید» و «انصراف» به زبان فعلی نشون داده می‌شه
+const props = defineProps<{
+  title: string
+  message?: string
+  confirmLabel?: string
+  cancelLabel?: string
+}>()
 
 const emit = defineEmits<{ confirm: [] }>()
 const open = defineModel<boolean>({ default: false })
@@ -73,7 +72,7 @@ function onBackdropClick(e: MouseEvent) {
             data-cuelume-close
             @click="cancel"
         >
-          {{ cancelLabel }}
+          {{ cancelLabel ?? t('ui.cancel') }}
         </button>
         <button
             type="button"
@@ -82,7 +81,7 @@ function onBackdropClick(e: MouseEvent) {
             data-cuelume-emphasis="strong"
             @click="confirm"
         >
-          {{ confirmLabel }}
+          {{ confirmLabel ?? t('ui.confirm') }}
         </button>
       </div>
     </div>

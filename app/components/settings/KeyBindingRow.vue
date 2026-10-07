@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const { t } = useI18n()
 const props = defineProps<{ note: string; code: string | null; error?: string }>()
 const emit = defineEmits<{
   'update:code': [code: string]
@@ -34,14 +35,14 @@ function onKeydown(e: KeyboardEvent) {
         type="button"
         class="w-20 shrink-0 truncate rounded-md border px-2 py-1.5 text-center text-sm"
         :class="capturing ? 'border-key-active ring-2 ring-key-active/40' : 'border-stone-700 hover:bg-stone-800'"
-        :aria-label="`Computer key for ${note}. Click, then press a key.`"
+        :aria-label="t('settings.row.keyAria', { note })"
         data-cuelume-tap
         data-cuelume-emphasis="subtle"
         @click="capturing = true"
         @keydown="onKeydown"
         @blur="capturing = false"
       >
-        <span v-if="capturing" class="text-key-active">Press a key</span>
+        <span v-if="capturing" class="text-key-active">{{ t('settings.row.pressKey') }}</span>
         <kbd v-else-if="code" class="font-sans">{{ formatKeyCode(code) }}</kbd>
         <span v-else class="text-stone-500">--</span>
       </button>
@@ -51,12 +52,12 @@ function onKeydown(e: KeyboardEvent) {
         class="w-12 shrink-0 rounded-md px-1 py-1.5 text-sm text-stone-400 hover:bg-stone-800 hover:text-stone-100"
         :class="{ invisible: !code }"
         :tabindex="code ? 0 : -1"
-        :aria-label="`Clear shortcut for ${note}`"
+        :aria-label="t('settings.row.clearAria', { note })"
         data-cuelume-tap
         data-cuelume-emphasis="subtle"
         @click="emit('clear')"
       >
-        Clear
+        {{ t('settings.row.clear') }}
       </button>
     </div>
 

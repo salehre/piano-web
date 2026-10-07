@@ -1,0 +1,168 @@
+{
+  "finder": {
+    "title": "Find your piano",
+    "intro": "A few quick questions, then we'll suggest the right size and how to get started.",
+    "questionOf": "Question {current} of {total}",
+    "selectAll": "Select all that apply",
+    "back": "Back",
+    "continue": "Continue",
+    "startOver": "Start over",
+    "keysCount": "{n} keys",
+    "unsure": "I'm not sure",
+    "steps": {
+      "goals": {
+        "title": "What would you like to do?"
+      },
+      "level": {
+        "title": "How would you describe your piano level?"
+      },
+      "genres": {
+        "title": "What kind of music do you want to play?"
+      },
+      "input": {
+        "title": "How will you play here?",
+        "subtitle": "The size that feels good depends on your device"
+      },
+      "instrument": {
+        "title": "Do you have a piano or keyboard at home?",
+        "subtitle": "If you do, we can match its size so it feels familiar"
+      },
+      "instrumentKeys": {
+        "title": "How many keys does it have?"
+      }
+    },
+    "goals": {
+      "songs": "Play specific songs",
+      "theory": "Read music & learn theory",
+      "chords": "Learn chords & accompany singing",
+      "scales": "Practice scales & technique",
+      "improvise": "Improvise or compose",
+      "ear": "Train my ear",
+      "record": "Record my playing",
+      "teach": "I teach piano",
+      "fun": "Just play for fun"
+    },
+    "levels": {
+      "never": {
+        "label": "Never played",
+        "hint": "I've never touched a piano"
+      },
+      "beginner": {
+        "label": "Beginner",
+        "hint": "Learning the notes and simple songs"
+      },
+      "lateBeginner": {
+        "label": "Late beginner",
+        "hint": "Can play easy pieces with both hands"
+      },
+      "intermediate": {
+        "label": "Intermediate",
+        "hint": "Comfortable with most songs I practice"
+      },
+      "advanced": {
+        "label": "Advanced",
+        "hint": "Play complex pieces with confidence"
+      },
+      "professional": {
+        "label": "Professional",
+        "hint": "I perform or study music seriously"
+      }
+    },
+    "genres": {
+      "classical": "Classical",
+      "jazz": "Jazz",
+      "pop": "Pop",
+      "rock": "Rock",
+      "film": "Film & game music",
+      "folk": "Folk",
+      "other": "Other"
+    },
+    "inputs": {
+      "keyboard": {
+        "label": "Computer keyboard",
+        "hint": "Typing keys play the notes"
+      },
+      "mouse": {
+        "label": "Mouse or trackpad",
+        "hint": "Click and drag on the keys"
+      },
+      "tablet": {
+        "label": "Tablet touch screen",
+        "hint": "Tap the keys"
+      },
+      "phone": {
+        "label": "Phone touch screen",
+        "hint": "Small screen, small keys"
+      }
+    },
+    "instruments": {
+      "none": {
+        "label": "No, only this",
+        "hint": "The website is my main piano"
+      },
+      "digital": {
+        "label": "Digital piano or keyboard",
+        "hint": "We can match its size"
+      },
+      "acoustic": {
+        "label": "Acoustic piano",
+        "hint": "Upright or grand"
+      }
+    },
+    "sizeNotes": {
+      "s25": "Two octaves. Small and simple, good for trying out melodies.",
+      "s37": "Three octaves. Enough for easy songs with both hands.",
+      "s49": "Four octaves. A balanced size for learning and playing songs.",
+      "s61": "Five octaves. Most pop, rock and film pieces fit comfortably.",
+      "s76": "Over six octaves. Room for demanding repertoire.",
+      "s88": "The full range of a grand piano. Nothing is out of reach."
+    },
+    "result": {
+      "weRecommend": "We recommend",
+      "goodToKnow": "Good to know",
+      "alsoPoints": "Your answers also point to {keys} keys. {link} (keys outside your shortcuts need the mouse or touch).",
+      "trySize": "Try that size",
+      "play": "Play the {n}-key piano"
+    },
+    "reasons": {
+      "level": {
+        "never": "For a first-time player, three octaves is a friendly place to start.",
+        "beginner": "As a beginner, a mid-sized keyboard is plenty to learn on.",
+        "lateBeginner": "At your level, four to five octaves cover the pieces you are working on.",
+        "intermediate": "At your level, five octaves let you play most of what you practice.",
+        "advanced": "Advanced pieces often use a wide range, so you want more room.",
+        "professional": "As a professional, you will want the full range."
+      },
+      "genre": {
+        "classical": "Classical music travels across the whole keyboard, so a wider range helps.",
+        "fiveOctaves": "{genres} music fits comfortably in five octaves."
+      },
+      "goal": {
+        "improvise": "Improvising needs room to move around the keyboard.",
+        "teach": "Teaching means demonstrating across the whole range.",
+        "scales": "Scales over several octaves need a wider keyboard.",
+        "light": "For chords, ear training and playing for fun, five octaves is plenty."
+      },
+      "cap": {
+        "never": "Since you haven't played before, a smaller keyboard is less overwhelming.",
+        "early": "You're still early on, so there's no need for the largest keyboard yet."
+      },
+      "instrument": {
+        "acoustic": "An acoustic piano has 88 keys, so that layout would feel familiar.",
+        "digital": "Your keyboard has {n} keys, so that size would feel familiar."
+      },
+      "input": {
+        "keyboard": "About three octaves fit comfortably on computer keys; the rest needs the mouse.",
+        "tablet": "On a tablet, keys stay easy to tap up to about five octaves.",
+        "phone": "On a phone, keys get small quickly, so we kept it compact."
+      }
+    },
+    "tips": {
+      "shortcuts": "By default only C4 to E5 have computer-key shortcuts. Assign the rest of your keys in Settings.",
+      "openSettings": "Open settings",
+      "rotate": "Turn your phone sideways to make the keys wider.",
+      "noteNames": "Every note you press shows its name above the keyboard.",
+      "recorder": "Use the recorder under the piano to capture a take, play it back or download it."
+    }
+  }
+}

@@ -1,5 +1,8 @@
 <script setup lang="ts">
-/** سؤال‌های مرحله‌ای و پیشنهاد اندازه‌ی پیانو؛ منطق انتخاب توی utils/pianoFinder.ts */
+/** سؤال‌های مرحله‌ای و پیشنهاد اندازه‌ی پیانو؛ منطق انتخاب توی utils/Pianofinder.ts و متن‌ها توی i18n/locales/<زبان>/finder.json */
+const { t, n } = useI18n()
+const tr = useTr()
+
 interface Option {
   value: string
   label: string
@@ -25,53 +28,62 @@ const answers = reactive<{
   instrumentKeys?: string
 }>({})
 
-const allSteps: Step[] = [
+// computed است تا با عوض شدن زبان، سؤال‌ها و گزینه‌ها همون لحظه ترجمه بشن
+const allSteps = computed<Step[]>(() => [
   {
     key: 'goals',
-    title: 'What would you like to do?',
-    subtitle: 'Select all that apply',
+    title: t('finder.steps.goals.title'),
+    subtitle: t('finder.selectAll'),
     multi: true,
-    options: FINDER_GOALS,
+    options: FINDER_GOALS.map((g) => ({ value: g, label: t(`finder.goals.${g}`) })),
     cols: 'sm:grid-cols-3',
   },
   {
     key: 'level',
-    title: 'How would you describe your piano level?',
-    options: PIANO_LEVELS.map((l, i) => ({ ...l, hint: LEVEL_HINTS[l.value], bars: i + 1 })),
+    title: t('finder.steps.level.title'),
+    options: PIANO_LEVELS.map((l, i) => ({
+      value: l,
+      label: t(`finder.levels.${l}.label`),
+      hint: t(`finder.levels.${l}.hint`),
+      bars: i + 1,
+    })),
     cols: 'sm:grid-cols-2',
   },
   {
     key: 'genres',
-    title: 'What kind of music do you want to play?',
-    subtitle: 'Select all that apply',
+    title: t('finder.steps.genres.title'),
+    subtitle: t('finder.selectAll'),
     multi: true,
-    options: FAVORITE_GENRES.map((g) => ({ value: g, label: g })),
+    options: FAVORITE_GENRES.map((g) => ({ value: g, label: t(`finder.genres.${g}`) })),
     cols: 'sm:grid-cols-3',
   },
   {
     key: 'input',
-    title: 'How will you play here?',
-    subtitle: 'The size that feels good depends on your device',
-    options: FINDER_INPUTS,
+    title: t('finder.steps.input.title'),
+    subtitle: t('finder.steps.input.subtitle'),
+    options: FINDER_INPUTS.map((v) => ({ value: v, label: t(`finder.inputs.${v}.label`), hint: t(`finder.inputs.${v}.hint`) })),
     cols: 'sm:grid-cols-2',
   },
   {
     key: 'instrument',
-    title: 'Do you have a piano or keyboard at home?',
-    subtitle: "If you do, we can match its size so it feels familiar",
-    options: FINDER_INSTRUMENTS,
+    title: t('finder.steps.instrument.title'),
+    subtitle: t('finder.steps.instrument.subtitle'),
+    options: FINDER_INSTRUMENTS.map((v) => ({ value: v, label: t(`finder.instruments.${v}.label`), hint: t(`finder.instruments.${v}.hint`) })),
     cols: 'sm:grid-cols-3',
   },
   {
     key: 'instrumentKeys',
-    title: 'How many keys does it have?',
-    options: [...PIANO_TYPES.map((t) => ({ value: String(t.keys), label: `${t.keys} keys` })), { value: 'unsure', label: "I'm not sure" }],
+    title: t('finder.steps.instrumentKeys.title'),
+    options: [
+      ...PIANO_TYPES.map((p) => ({ value: String(p.keys), label: t('finder.keysCount', { n: n(p.keys) }) })),
+      { value: 'unsure', label: t('finder.unsure') },
+    ],
     cols: 'sm:grid-cols-4',
     when: () => answers.instrument === 'digital',
   },
-]
+])
 
-const visible = computed(() => allSteps.filter((s) => !s.when || s.when()))
+const visible = computed(() => allSteps.value.filter((s) => !s.when || s.when()))
 const step = ref(0) // برابر visible.length یعنی نتیجه
 const heading = ref<HTMLElement>()
 
@@ -136,8 +148,8 @@ function restart() {
     />
     <div class="absolute inset-0 -z-10 bg-gradient-to-r from-stone-950/90 via-stone-950/80 to-stone-950/65" aria-hidden="true" />
 
-    <h2 id="finder-title" class="text-xl font-semibold">Find your piano</h2>
-    <p class="mt-1 text-sm text-stone-400">A few quick questions, then we'll suggest the right size and how to get started.</p>
+    <h2 id="finder-title" class="text-xl font-semibold">{{ t('finder.title') }}</h2>
+    <p class="mt-1 text-sm text-stone-400">{{ t('finder.intro') }}</p>
 
     <!-- نوار پیشرفت -->
     <div
@@ -157,7 +169,7 @@ function restart() {
 
     <!-- سؤال -->
     <div v-if="current" class="mt-6">
-      <p class="text-xs uppercase tracking-wide text-stone-400">Question {{ step + 1 }} of {{ visible.length }}</p>
+      <p class="text-xs uppercase tracking-wide text-stone-400">{{ t('finder.questionOf', { current: n(step + 1), total: n(visible.length) }) }}</p>
       <h3 ref="heading" tabindex="-1" class="mt-1 text-lg font-medium outline-none">{{ current.title }}</h3>
       <p v-if="current.subtitle" class="mt-0.5 text-sm text-stone-400">{{ current.subtitle }}</p>
 
@@ -169,7 +181,7 @@ function restart() {
             type="button"
             :role="current.multi ? 'checkbox' : 'radio'"
             :aria-checked="selected(current, o.value)"
-            class="rounded-xl border px-4 py-3 text-left transition-all hover:bg-key-active/10 hover:text-key-active hover:shadow-[0_0_16px_-4px_rgba(245,230,200,0.35)]"
+            class="rounded-xl border px-4 py-3 text-start transition-all hover:bg-key-active/10 hover:text-key-active hover:shadow-[0_0_16px_-4px_rgba(245,230,200,0.35)]"
             :class="selected(current, o.value) ? 'border-key-active bg-key-active/10 text-key-active' : 'border-stone-700 bg-stone-950/50'"
             @click="choose(o.value)"
         >
@@ -190,7 +202,8 @@ function restart() {
 
       <div class="mt-4 flex items-center gap-4">
         <button v-if="step > 0" type="button" class="text-sm text-stone-400 hover:text-key-active" @click="go(step - 1)">
-          ← Back
+          <span class="inline-block rtl:rotate-180" aria-hidden="true">←</span>
+          {{ t('finder.back') }}
         </button>
         <button
             v-if="current.multi"
@@ -199,54 +212,55 @@ function restart() {
             :disabled="!canContinue"
             @click="go(step + 1)"
         >
-          Continue
+          {{ t('finder.continue') }}
         </button>
       </div>
     </div>
 
     <!-- نتیجه -->
     <div v-else-if="result" class="mt-6">
-      <p class="text-xs uppercase tracking-wide text-stone-400">We recommend</p>
+      <p class="text-xs uppercase tracking-wide text-stone-400">{{ t('finder.result.weRecommend') }}</p>
       <h3 ref="heading" tabindex="-1" class="mt-1 text-3xl font-semibold outline-none">
-        {{ result.type.keys }} keys
-        <span class="ml-1 text-base font-normal text-stone-400">{{ result.type.from }} – {{ result.type.to }}</span>
+        {{ t('finder.keysCount', { n: n(result.type.keys) }) }}
+        <span dir="ltr" class="ms-1 inline-block text-base font-normal text-stone-400">{{ result.type.from }} – {{ result.type.to }}</span>
       </h3>
-      <p class="mt-2 text-stone-300">{{ PIANO_SIZE_NOTES[result.type.keys] }}</p>
+      <p class="mt-2 text-stone-300">{{ t(`finder.sizeNotes.s${result.type.keys}`) }}</p>
 
-      <ul class="mt-4 list-disc space-y-1 pl-5 text-sm text-stone-400">
-        <li v-for="r in result.reasons" :key="r">{{ r }}</li>
+      <ul class="mt-4 list-disc space-y-1 ps-5 text-sm text-stone-400">
+        <li v-for="(r, i) in result.reasons" :key="i">{{ tr(r) }}</li>
       </ul>
 
       <div v-if="result.tips.length" class="mt-5 rounded-xl bg-stone-900/70 p-4">
-        <h4 class="text-sm font-medium">Good to know</h4>
+        <h4 class="text-sm font-medium">{{ t('finder.result.goodToKnow') }}</h4>
         <ul class="mt-2 space-y-1.5 text-sm text-stone-300">
-          <li v-for="t in result.tips" :key="t.text">
-            {{ t.text }}
-            <NuxtLink v-if="t.link" :to="t.link.to" class="text-key-active underline-offset-2 hover:underline">{{ t.link.label }}</NuxtLink>
+          <li v-for="(tip, i) in result.tips" :key="i">
+            {{ tr(tip.text) }}
+            <NuxtLink v-if="tip.link" :to="tip.link.to" class="text-key-active underline-offset-2 hover:underline">{{ tr(tip.link.label) }}</NuxtLink>
           </li>
         </ul>
       </div>
 
-      <p v-if="result.ideal" class="mt-4 text-sm text-stone-400">
-        Your answers also point to {{ result.ideal.keys }} keys.
-        <NuxtLink
-            :to="{ path: '/virtual-piano', query: { keys: result.ideal.keys } }"
-            class="text-key-active underline-offset-2 hover:underline"
-        >
-          Try that size
-        </NuxtLink>
-        (keys outside your shortcuts need the mouse or touch).
-      </p>
+      <i18n-t v-if="result.ideal" keypath="finder.result.alsoPoints" tag="p" class="mt-4 text-sm text-stone-400">
+        <template #keys>{{ n(result.ideal.keys) }}</template>
+        <template #link>
+          <NuxtLink
+              :to="{ path: '/virtual-piano', query: { keys: result.ideal.keys } }"
+              class="text-key-active underline-offset-2 hover:underline"
+          >
+            {{ t('finder.result.trySize') }}
+          </NuxtLink>
+        </template>
+      </i18n-t>
 
       <div class="mt-6 flex flex-wrap items-center gap-3">
         <NuxtLink
             :to="{ path: '/virtual-piano', query: { keys: result.type.keys } }"
             class="rounded-lg bg-key-active px-5 py-3 font-medium text-stone-950 transition-opacity hover:opacity-90"
         >
-          Play the {{ result.type.keys }}-key piano
+          {{ t('finder.result.play', { n: n(result.type.keys) }) }}
         </NuxtLink>
         <button type="button" class="rounded-lg px-4 py-3 text-sm text-stone-300 hover:text-key-active" @click="restart">
-          Start over
+          {{ t('finder.startOver') }}
         </button>
       </div>
     </div>

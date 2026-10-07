@@ -14,6 +14,7 @@ const props = defineProps<{
 
 const model = defineModel<string>({ default: '' })
 
+const { t, n } = useI18n()
 const id = useId()
 const boxes = ref<HTMLInputElement[]>([])
 const shaking = ref(false)
@@ -98,7 +99,7 @@ defineExpose({ shake, focus: () => focusAt(model.value.length) })
           type="text"
           inputmode="numeric"
           autocomplete="one-time-code"
-          :aria-label="`Digit ${i + 1} of ${length}`"
+          :aria-label="t('ui.otpDigit', { index: n(i + 1), total: n(length) })"
           :aria-invalid="!!error"
           :readonly="success"
           data-cuelume-type

@@ -1,0 +1,52 @@
+{
+  "settings": {
+    "title": "Settings",
+    "shortcuts": {
+      "title": "Keyboard shortcuts",
+      "description": "All {total} piano keys are listed by octave. Click a field, then press the computer key you want for that note. Shortcuts for notes outside the selected piano size are ignored. Keys are matched by position, so they work with any keyboard language.",
+      "reset": "Reset to defaults",
+      "resetTitle": "Reset all shortcuts?",
+      "resetMessage": "All your custom keyboard shortcuts will be replaced with the defaults. This can't be undone.",
+      "resetConfirm": "Reset",
+      "resetCancel": "Cancel",
+      "octave": "Octave {n}",
+      "assigned": "{set} / {total} set",
+      "clash": "{key} already plays {note}."
+    },
+    "row": {
+      "keyAria": "Computer key for {note}. Click, then press a key.",
+      "pressKey": "Press a key",
+      "clear": "Clear",
+      "clearAria": "Clear shortcut for {note}"
+    },
+    "midi": {
+      "title": "MIDI keyboard",
+      "description": "Play the piano with a MIDI keyboard, a simulator, or a device you build yourself. Key presses are played with their real velocity.",
+      "connect": "Connect MIDI",
+      "tryAgain": "Try again",
+      "status": {
+        "idle": "Not connected yet.",
+        "requesting": "Waiting for your permission…",
+        "readyDevices": "Connected. Play a key on your MIDI device.",
+        "readyNone": "Connected, but no MIDI device was found. Plug one in or start a virtual MIDI port.",
+        "denied": "MIDI access is blocked. Allow it for this site in your browser settings, then reload the page.",
+        "unsupported": "This browser doesn't support Web MIDI. Try Chrome or Edge.",
+        "insecure": "Web MIDI only works on HTTPS or localhost.",
+        "error": "Could not start MIDI. Try again."
+      },
+      "listenTo": "Listen to",
+      "allDevices": "All devices",
+      "unknownDevice": "Unknown device",
+      "connected": "Connected",
+      "disconnected": "Disconnected",
+      "missingDevice": "The device you picked isn't connected right now, so nothing will play until it comes back or you choose “All devices”.",
+      "loadSounds": "Load piano sounds",
+      "loadingSounds": "Loading sounds…",
+      "testNote": "Play test note",
+      "lastNote": "Last note: {note}, velocity {velocity} from {source}",
+      "noNotes": "No notes received yet.",
+      "sourceTest": "test button",
+      "sourceAny": "a MIDI device"
+    }
+  }
+}

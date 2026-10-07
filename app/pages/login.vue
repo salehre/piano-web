@@ -1,6 +1,8 @@
 <script setup lang="ts">
 definePageMeta({ middleware: 'guest', layout: false })
-useHead({ title: 'Log in | Web Piano' })
+const { t, n } = useI18n()
+const tr = useTr()
+useHead({ title: () => t('auth.login.steps.password.button') })
 
 /**
  * ورود و ثبت‌نام توی یک صفحه، فقط با موبایل:
@@ -16,8 +18,9 @@ const { lookup, requestCode, verifyCode, setPassword, login } = useAuth()
 const step = ref<Step>('phone')
 const isReset = ref(false) // کد برای فراموشی رمزه، نه ثبت‌نام
 const form = reactive({ phone: '', password: '', code: '', newPassword: '', confirmPassword: '' })
-const MISMATCH_ERROR = 'Passwords do not match.'
-const error = ref('')
+const MISMATCH_KEY = 'auth.validation.passwordMismatch'
+// خطا به‌صورت ارجاع به پیام نگه داشته می‌شه تا با عوض شدن زبان، خطای روی صفحه هم ترجمه بشه
+const error = ref<MessageRef | null>(null)
 const submitting = ref(false)
 const devCode = ref('')
 const resendIn = ref(0)
@@ -51,7 +54,7 @@ onBeforeUnmount(() => clearInterval(timer))
 // رفتن به مرحله‌ی بعد؛ فوکوس بعد از تموم شدن انیمیشن مرحله (focusFirst) انجام می‌شه
 async function goTo(next: Step) {
   step.value = next
-  error.value = ''
+  error.value = null
   codeOk.value = false
 }
 
@@ -88,14 +91,14 @@ async function submitPhone() {
 }
 
 async function submitPassword() {
-  if (!form.password) return void (error.value = 'Password is required.')
+  if (!form.password) return void (error.value = msgRef('auth.validation.passwordRequired'))
   const result = await login({ phone: form.phone, password: form.password })
   if (!result.ok) return void (error.value = result.error)
   await navigateTo(redirectTo.value)
 }
 
 async function submitCode() {
-  if (form.code.length !== OTP_LENGTH) return void (error.value = `Enter the ${OTP_LENGTH}-digit code.`)
+  if (form.code.length !== OTP_LENGTH) return void (error.value = msgRef('auth.validation.codeRequired', { length: OTP_LENGTH }))
   const result = await verifyCode(form.phone, form.code)
   if (!result.ok) {
     // کد اشتباه: لرزش، پاک‌کردن باکس‌ها و برگشت فوکوس به اولین باکس
@@ -117,7 +120,7 @@ async function submitCode() {
 async function submitNewPassword() {
   const invalid = validatePassword(form.newPassword)
   if (invalid) return void (error.value = invalid)
-  if (form.newPassword !== form.confirmPassword) return void (error.value = MISMATCH_ERROR)
+  if (form.newPassword !== form.confirmPassword) return void (error.value = msgRef(MISMATCH_KEY))
   const result = await setPassword(form.phone, form.newPassword)
   if (!result.ok) return void (error.value = result.error)
   // کاربر جدید می‌ره پروفایلش رو کامل کنه
@@ -133,7 +136,7 @@ const handlers: Record<Step, () => Promise<void>> = {
 
 async function submit() {
   if (submitting.value) return
-  error.value = ''
+  error.value = null
   submitting.value = true
   try {
     await handlers[step.value]()
@@ -145,7 +148,7 @@ async function submit() {
 async function resend() {
   if (resendIn.value > 0 || submitting.value) return
   submitting.value = true
-  error.value = ''
+  error.value = null
   await sendCode(isReset.value)
   submitting.value = false
 }
@@ -153,7 +156,7 @@ async function resend() {
 async function forgotPassword() {
   if (submitting.value) return
   submitting.value = true
-  error.value = ''
+  error.value = null
   await sendCode(true)
   submitting.value = false
 }
@@ -165,7 +168,7 @@ watch(
       const digits = normalizeDigits(value).replace(/\D/g, '').slice(0, OTP_LENGTH)
       if (digits !== value) form.code = digits
       else if (digits) {
-        error.value = ''
+        error.value = null
         if (digits.length === OTP_LENGTH && step.value === 'code') submit()
       }
     },
@@ -175,24 +178,19 @@ watch(
 watch(
     () => [form.phone, form.password, form.newPassword, form.confirmPassword],
     () => {
-      error.value = ''
+      error.value = null
     },
 )
 
 const copy = computed(() => {
-  switch (step.value) {
-    case 'phone':
-      return { title: 'Log in or sign up', hint: 'Enter your mobile number to continue.', button: 'Continue' }
-    case 'password':
-      return { title: 'Welcome back', hint: 'Enter your password to log in.', button: 'Log in' }
-    case 'code':
-      return { title: 'Enter the code', hint: `We sent a ${OTP_LENGTH}-digit code to ${form.phone}.`, button: 'Verify' }
-    default:
-      return {
-        title: isReset.value ? 'Choose a new password' : 'Choose a password',
-        hint: 'You will use it to log in next time.',
-        button: isReset.value ? 'Save and log in' : 'Create account',
-      }
+  // مرحله‌ی رمز جدید برای ثبت‌نام و فراموشی رمز متن جدا داره
+  const base = step.value === 'newPassword' && isReset.value ? 'resetPassword' : step.value
+  const prefix = `auth.login.steps.${base}`
+  return {
+    title: t(`${prefix}.title`),
+    // شماره با LRI/PDI جدا می‌شه تا توی جمله‌ی راست‌به‌چپ جابه‌جا نشه
+    hint: t(`${prefix}.hint`, { length: n(OTP_LENGTH), phone: `\u2066${form.phone}\u2069` }),
+    button: t(`${prefix}.button`),
   }
 })
 </script>
@@ -239,22 +237,23 @@ const copy = computed(() => {
             <UiTextField
                 v-if="step === 'phone'"
                 v-model="form.phone"
-                label="Mobile number"
+                :label="t('auth.login.mobileLabel')"
+                ltr
                 type="tel"
                 inputmode="tel"
                 :maxlength="11"
                 autocomplete="tel"
                 placeholder="09123456789"
-                :error="error"
+                :error="tr(error)"
             />
 
             <template v-else-if="step === 'password'">
               <UiTextField
                   v-model="form.password"
-                  label="Password"
+                  :label="t('auth.login.passwordLabel')"
                   type="password"
                   autocomplete="current-password"
-                  :error="error"
+                  :error="tr(error)"
               />
               <button
                   type="button"
@@ -262,20 +261,22 @@ const copy = computed(() => {
                   :disabled="submitting"
                   @click="forgotPassword"
               >
-                Forgot your password? Log in with a code
+                {{ t('auth.login.forgot') }}
               </button>
             </template>
 
             <template v-else-if="step === 'code'">
               <p v-if="devCode" class="rounded-md bg-stone-900 px-3 py-2 text-xs text-stone-300" role="status">
-                Dev mode: no SMS is sent. Your code is <span class="font-mono text-key-active">{{ devCode }}</span>
+                <i18n-t keypath="auth.login.devMode" scope="global">
+                  <template #code><span class="font-mono text-key-active">{{ devCode }}</span></template>
+                </i18n-t>
               </p>
               <UiOtpInput
                   ref="otpEl"
                   v-model="form.code"
-                  label="Verification code"
+                  :label="t('auth.login.codeLabel')"
                   :length="OTP_LENGTH"
-                  :error="error"
+                  :error="tr(error)"
                   :success="codeOk"
               />
               <button
@@ -284,25 +285,25 @@ const copy = computed(() => {
                   :disabled="resendIn > 0 || submitting"
                   @click="resend"
               >
-                {{ resendIn > 0 ? `Resend code in ${resendIn}s` : 'Resend code' }}
+                {{ resendIn > 0 ? t('auth.login.resendIn', { seconds: n(resendIn) }) : t('auth.login.resend') }}
               </button>
             </template>
 
             <template v-else>
               <UiTextField
                   v-model="form.newPassword"
-                  label="Password"
+                  :label="t('auth.login.passwordLabel')"
                   type="password"
                   autocomplete="new-password"
-                  :hint="`At least ${PASSWORD_MIN} characters, with a letter and a number.`"
-                  :error="error === MISMATCH_ERROR ? '' : error"
+                  :hint="t('auth.login.passwordHint', { min: n(PASSWORD_MIN) })"
+                  :error="error?.key === MISMATCH_KEY ? '' : tr(error)"
               />
               <UiTextField
                   v-model="form.confirmPassword"
-                  label="Confirm password"
+                  :label="t('auth.login.confirmLabel')"
                   type="password"
                   autocomplete="new-password"
-                  :error="error === MISMATCH_ERROR ? error : ''"
+                  :error="error?.key === MISMATCH_KEY ? tr(error) : ''"
               />
             </template>
           </div>
@@ -314,7 +315,7 @@ const copy = computed(() => {
             class="w-full rounded-lg bg-key-active px-5 py-3 font-medium text-stone-950 transition-opacity hover:opacity-90 disabled:opacity-60"
             :disabled="submitting"
         >
-          {{ submitting ? 'Please wait…' : copy.button }}
+          {{ submitting ? t('ui.pleaseWait') : copy.button }}
         </button>
 
         <button
@@ -323,7 +324,7 @@ const copy = computed(() => {
             class="w-full text-sm text-stone-400 hover:text-key-active"
             @click="goTo('phone')"
         >
-          Use a different number
+          {{ t('auth.login.differentNumber') }}
         </button>
       </form>
     </section>

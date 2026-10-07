@@ -1,6 +1,6 @@
 <script setup lang="ts">
-// اسم باشگاه و لینک‌های شبکه‌های اجتماعی؛ فقط همین‌جا عوضشون کن
-const CLUB_NAME = 'Web Piano Club'
+// لینک‌های شبکه‌های اجتماعی؛ فقط همین‌جا عوضشون کن (اسم باشگاه و بقیه‌ی متن‌ها توی common.json)
+const { t, n } = useI18n()
 const STORAGE_KEY = 'web-piano-club-emails'
 
 const socials = [
@@ -31,24 +31,24 @@ const socials = [
 ]
 
 const links = [
-  { label: 'Home', to: '/' },
-  { label: 'Virtual Piano', to: '/virtual-piano' },
-  { label: 'Blog', to: '/blog' },
-  { label: 'Settings', to: '/settings' },
+  { label: 'nav.home', to: '/' },
+  { label: 'nav.virtualPiano', to: '/virtual-piano' },
+  { label: 'nav.blog', to: '/blog' },
+  { label: 'nav.settings', to: '/settings' },
 ]
 
-const year = new Date().getFullYear()
+const year = n(new Date().getFullYear(), 'plain')
 
 // ---------- عضویت در باشگاه ----------
 const email = ref('')
-const error = ref('')
+const error = ref(false)
 const joined = ref(false)
 const submitting = ref(false)
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 watch(email, () => {
-  error.value = ''
+  error.value = false
 })
 
 /**
@@ -69,7 +69,7 @@ async function join() {
   if (submitting.value) return
   const value = email.value.trim().toLowerCase()
   if (!EMAIL_RE.test(value)) {
-    error.value = 'Please enter a valid email address.'
+    error.value = true
     return
   }
   submitting.value = true
@@ -85,12 +85,12 @@ async function join() {
     <div class="mx-auto grid max-w-5xl grid-cols-1 gap-8 px-4 py-10 sm:grid-cols-2 sm:gap-10 sm:px-6 sm:py-12 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)_minmax(0,1.4fr)]">
       <!-- برند و شبکه‌های اجتماعی -->
       <div class="min-w-0">
-        <NuxtLink to="/" class="text-lg font-semibold">Web Piano</NuxtLink>
+        <NuxtLink to="/" class="text-lg font-semibold">{{ t('app.name') }}</NuxtLink>
         <p class="mt-2 max-w-xs text-sm text-stone-400">
-          A piano that lives in your browser. Follow us for new sounds, tips and updates.
+          {{ t('footer.description') }}
         </p>
 
-        <ul class="mt-5 flex items-center gap-2" aria-label="Social media">
+        <ul class="mt-5 flex items-center gap-2" :aria-label="t('footer.social')">
           <li v-for="s in socials" :key="s.name">
             <a
                 :href="s.href"
@@ -118,12 +118,12 @@ async function join() {
       </div>
 
       <!-- لینک‌ها -->
-      <nav class="min-w-0" aria-label="Footer">
-        <h2 class="text-sm font-medium uppercase tracking-wide text-stone-400">Explore</h2>
+      <nav class="min-w-0" :aria-label="t('footer.nav')">
+        <h2 class="text-sm font-medium uppercase tracking-wide text-stone-400">{{ t('nav.explore') }}</h2>
         <ul class="mt-4 space-y-2">
           <li v-for="l in links" :key="l.to">
             <NuxtLink :to="l.to" class="text-sm text-stone-200 transition-colors hover:text-key-active">
-              {{ l.label }}
+              {{ t(l.label) }}
             </NuxtLink>
           </li>
         </ul>
@@ -132,10 +132,10 @@ async function join() {
       <!-- باشگاه مشتریان -->
       <section aria-labelledby="club-title" class="min-w-0 sm:col-span-2 lg:col-span-1">
         <h2 id="club-title" class="text-sm font-medium uppercase tracking-wide text-stone-400">
-          {{ CLUB_NAME }}
+          {{ t('footer.clubName') }}
         </h2>
         <p class="mt-4 text-sm text-stone-300">
-          Join the club for early access to new features, practice tips and member-only news.
+          {{ t('footer.clubText') }}
         </p>
 
         <p
@@ -143,11 +143,11 @@ async function join() {
             class="mt-4 rounded-md bg-stone-900 px-3 py-2 text-sm text-key-active"
             role="status"
         >
-          Welcome to the club! Thanks for joining.
+          {{ t('footer.joined') }}
         </p>
 
         <form v-else class="mt-4" novalidate @submit.prevent="join">
-          <label for="club-email" class="sr-only">Email address</label>
+          <label for="club-email" class="sr-only">{{ t('footer.emailLabel') }}</label>
           <div class="flex flex-col gap-2 sm:flex-row">
             <input
                 id="club-email"
@@ -156,6 +156,7 @@ async function join() {
                 inputmode="email"
                 autocomplete="email"
                 placeholder="you@example.com"
+                dir="ltr"
                 :aria-invalid="!!error"
                 :aria-describedby="error ? 'club-email-error' : undefined"
                 :class="[
@@ -170,18 +171,18 @@ async function join() {
                 class="w-full shrink-0 rounded-md bg-key-active px-5 py-2 text-sm font-medium text-stone-950 transition-opacity hover:opacity-90 disabled:opacity-60 sm:w-auto"
                 :disabled="submitting"
             >
-              Join the club
+              {{ t('footer.join') }}
             </button>
           </div>
-          <p v-if="error" id="club-email-error" class="mt-1.5 text-sm text-red-400" role="alert">{{ error }}</p>
+          <p v-if="error" id="club-email-error" class="mt-1.5 text-sm text-red-400" role="alert">{{ t('footer.invalidEmail') }}</p>
         </form>
       </section>
     </div>
 
     <div class="border-t border-white/5">
       <div class="mx-auto flex max-w-5xl flex-col gap-2 px-4 py-4 text-xs text-stone-500 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-        <p class="min-w-0">© {{ year }} Web Piano. All rights reserved.</p>
-        <p class="min-w-0 sm:text-right">Powered by Saleh Rezaei</p>
+        <p class="min-w-0">{{ t('footer.rights', { year }) }}</p>
+        <p class="min-w-0 sm:text-end">{{ t('footer.poweredBy') }}</p>
       </div>
     </div>
   </footer>

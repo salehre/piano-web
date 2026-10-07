@@ -85,7 +85,7 @@ export const useMidi = () => {
       const connected = input.state === 'connected'
       list.push({
         id: input.id,
-        name: input.name || 'Unknown device',
+        name: input.name || '',
         manufacturer: input.manufacturer || '',
         connected,
       })

@@ -5,6 +5,7 @@ const {
   startRecording, stopRecording, play, stopPlayback, clearRecording, downloadRecording,
   volume, setVolume,
 } = usePiano()
+const { t, n } = useI18n()
 const piano = usePianoType()
 
 // آیکون بلندگو: قطع و وصل کردن صدا
@@ -34,25 +35,26 @@ onBeforeUnmount(() => {
   stopPlayback()
 })
 
-useHead({ title: computed(() => `${piano.value.keys}-key piano | Web Piano`) })
+useHead({ title: () => t('piano.title', { keys: n(piano.value.keys) }) })
 </script>
 
 <template>
   <main class="mx-auto flex max-w-screen-2xl flex-col gap-6 px-6 py-8">
     <section class="flex flex-wrap items-center justify-between gap-4">
       <div>
-        <h1 class="text-2xl font-semibold">{{ piano.keys }}-key piano</h1>
-        <p class="mt-1 text-stone-400">Range {{ piano.from }} to {{ piano.to }}</p>
+        <h1 class="text-2xl font-semibold">{{ t('piano.title', { keys: n(piano.keys) }) }}</h1>
+        <p class="mt-1 text-stone-400">{{ t('piano.range', { from: piano.from, to: piano.to }) }}</p>
       </div>
 
       <div class="flex flex-wrap items-center gap-3">
         <LayoutPianoSizeMenu />
 
-        <div v-if="status === 'ready'" class="flex items-center gap-2">
+        <!-- نوار صدا همیشه چپ‌به‌راست (کم‌صدا → پرصدا) -->
+        <div v-if="status === 'ready'" dir="ltr" class="flex items-center gap-2">
           <button
               type="button"
               class="grid size-8 place-items-center rounded-lg text-stone-300 transition-colors hover:text-key-active"
-              :aria-label="volume > 0 ? 'Mute' : 'Unmute'"
+              :aria-label="volume > 0 ? t('piano.mute') : t('piano.unmute')"
               @click="toggleMute"
           >
             <svg class="size-4" viewBox="0 0 20 20" aria-hidden="true">
@@ -85,7 +87,7 @@ useHead({ title: computed(() => `${piano.value.keys}-key piano | Web Piano`) })
               step="0.01"
               :value="volume"
               class="h-1 w-24 cursor-pointer accent-key-active"
-              aria-label="Volume"
+              :aria-label="t('piano.volume')"
               @input="setVolume(Number(($event.target as HTMLInputElement).value))"
           >
         </div>
@@ -97,24 +99,27 @@ useHead({ title: computed(() => `${piano.value.keys}-key piano | Web Piano`) })
             :disabled="status === 'loading'"
             @click="init"
         >
-          {{ status === 'loading' ? 'Loading sounds…' : status === 'error' ? 'Retry loading' : 'Load piano' }}
+          {{ status === 'loading' ? t('piano.loading') : status === 'error' ? t('piano.retry') : t('piano.loadPiano') }}
         </button>
       </div>
     </section>
 
-    <ClientOnly>
-      <PianoKeyboard :type="piano" />
-    </ClientOnly>
+    <!-- کیبورد پیانو توی صفحه‌ی راست‌به‌چپ هم باید چپ‌به‌راست بمونه (بم ← زیر) -->
+    <div dir="ltr">
+      <ClientOnly>
+        <PianoKeyboard :type="piano" />
+      </ClientOnly>
+    </div>
 
     <!-- ضبط‌کننده: زیر پیانو -->
-    <section v-if="status === 'ready'" class="flex w-fit items-stretch gap-2">
+    <section v-if="status === 'ready'" dir="ltr" class="flex w-fit items-stretch gap-2">
       <div class="glass-card relative flex h-14 items-center gap-2.5 rounded-2xl px-2.5 [--glass-radius:0.95rem]">
         <!-- ضبط -->
         <button
             type="button"
             class="grid size-9 shrink-0 place-items-center rounded-full bg-stone-800/70 transition-colors hover:bg-stone-800 disabled:opacity-40"
             :disabled="recording || playing || saving"
-            aria-label="Record"
+            :aria-label="t('piano.recorder.record')"
             @click="startRecording"
         >
           <span class="size-3 rounded-full bg-red-400" :class="recording ? 'animate-pulse' : ''" />
@@ -125,7 +130,7 @@ useHead({ title: computed(() => `${piano.value.keys}-key piano | Web Piano`) })
             v-if="recording"
             type="button"
             class="grid size-9 shrink-0 place-items-center rounded-full bg-stone-800/70 transition-colors hover:bg-stone-800"
-            aria-label="Stop recording"
+            :aria-label="t('piano.recorder.stopRecording')"
             @click="stopRecording"
         >
           <span class="size-3 rounded-sm bg-stone-100" />
@@ -135,7 +140,7 @@ useHead({ title: computed(() => `${piano.value.keys}-key piano | Web Piano`) })
             type="button"
             class="grid size-9 shrink-0 place-items-center rounded-full bg-stone-800/70 transition-colors hover:bg-stone-800 disabled:opacity-40"
             :disabled="saving || recordedCount === 0"
-            :aria-label="playing ? 'Stop playback' : 'Play recording'"
+            :aria-label="playing ? t('piano.recorder.stopPlayback') : t('piano.recorder.play')"
             @click="playing ? stopPlayback() : play()"
         >
           <svg class="size-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -162,8 +167,8 @@ useHead({ title: computed(() => `${piano.value.keys}-key piano | Web Piano`) })
             type="button"
             class="grid w-8 flex-1 place-items-center rounded-lg bg-stone-950/40 text-stone-300 transition-colors hover:text-key-active disabled:opacity-40"
             :disabled="saving || !canDownload"
-            aria-label="Download recording"
-            title="Download"
+            :aria-label="t('piano.recorder.download')"
+            :title="t('piano.recorder.downloadShort')"
             @click="downloadRecording"
         >
           <svg class="size-3.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
@@ -174,8 +179,8 @@ useHead({ title: computed(() => `${piano.value.keys}-key piano | Web Piano`) })
             type="button"
             class="grid w-8 flex-1 place-items-center rounded-lg bg-stone-950/40 text-stone-300 transition-colors hover:text-key-active disabled:opacity-40"
             :disabled="saving"
-            aria-label="Clear recording"
-            title="Clear"
+            :aria-label="t('piano.recorder.clear')"
+            :title="t('piano.recorder.clearShort')"
             @click="clearRecording"
         >
           <svg class="size-3.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
@@ -192,7 +197,7 @@ useHead({ title: computed(() => `${piano.value.keys}-key piano | Web Piano`) })
           aria-live="polite"
       >
         <div class="loader" />
-        <span class="text-sm font-medium text-stone-200">Loading sounds</span>
+        <span class="text-sm font-medium text-stone-200">{{ t('piano.loadingOverlay') }}</span>
       </div>
     </Transition>
   </main>

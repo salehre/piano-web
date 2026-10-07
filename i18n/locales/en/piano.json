@@ -1,0 +1,26 @@
+{
+  "piano": {
+    "title": "{keys}-key piano",
+    "range": "Range {from} to {to}",
+    "rangeShort": "{from} to {to}",
+    "keys": "{n} keys",
+    "sizes": "Piano sizes",
+    "volume": "Volume",
+    "mute": "Mute",
+    "unmute": "Unmute",
+    "loadPiano": "Load piano",
+    "loading": "Loading sounds…",
+    "retry": "Retry loading",
+    "loadingOverlay": "Loading sounds",
+    "recorder": {
+      "record": "Record",
+      "stopRecording": "Stop recording",
+      "play": "Play recording",
+      "stopPlayback": "Stop playback",
+      "download": "Download recording",
+      "downloadShort": "Download",
+      "clear": "Clear recording",
+      "clearShort": "Clear"
+    }
+  }
+}

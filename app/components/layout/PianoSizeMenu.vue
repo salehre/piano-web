@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const { t } = useI18n()
 const piano = usePianoType()
 const { cue } = useUiSounds()
 
@@ -40,7 +41,7 @@ onBeforeUnmount(() => {
       :aria-expanded="open"
       @click="toggle"
     >
-      Piano sizes
+      {{ t('piano.sizes') }}
       <svg
         class="size-4 text-stone-400 transition-transform"
         :class="open ? 'rotate-180' : ''"
@@ -56,21 +57,21 @@ onBeforeUnmount(() => {
     <ul
       v-if="open"
       role="menu"
-      class="absolute right-0 z-10 mt-2 w-80 origin-top-right overflow-hidden rounded-xl bg-stone-900 shadow-2xl ring-1 ring-black/30"
+      class="absolute end-0 z-10 mt-2 w-80 overflow-hidden ltr:origin-top-right rtl:origin-top-left rounded-xl bg-stone-900 shadow-2xl ring-1 ring-black/30"
     >
-      <li v-for="t in PIANO_TYPES" :key="t.keys" role="none">
+      <li v-for="p in PIANO_TYPES" :key="p.keys" role="none">
         <NuxtLink
           role="menuitem"
-          :to="{ path: '/virtual-piano', query: { keys: t.keys } }"
+          :to="{ path: '/virtual-piano', query: { keys: p.keys } }"
           class="block px-4 py-3 hover:bg-stone-800"
-          :class="t.keys === piano.keys ? 'bg-stone-800' : ''"
+          :class="p.keys === piano.keys ? 'bg-stone-800' : ''"
           data-cuelume-select
           data-cuelume-emphasis="subtle"
           @click="open = false"
         >
           <span class="flex items-baseline justify-between">
-            <span class="font-medium">{{ t.keys }} keys</span>
-            <span class="text-xs text-stone-400">{{ t.from }} to {{ t.to }}</span>
+            <span class="font-medium">{{ $t('piano.keys', { n: $n(p.keys) }) }}</span>
+            <span class="text-xs text-stone-400">{{ $t('piano.rangeShort', { from: p.from, to: p.to }) }}</span>
           </span>
           <!-- <span class="mt-0.5 block text-sm text-stone-400">{{ t.description }}</span> -->
         </NuxtLink>

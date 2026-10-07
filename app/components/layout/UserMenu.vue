@@ -1,15 +1,16 @@
 <script setup lang="ts">
+const { t } = useI18n()
 const { isLoggedIn, initial } = useAuth()
 
 // لاگین‌نکرده: میدلور auth می‌فرستدش به /login?redirect=/profile (و از اونجا لینک ثبت‌نام)
 // لاگین‌کرده: مستقیم میره توی پروفایل و تنظیمات حساب
-const label = computed(() => (isLoggedIn.value ? 'Open your profile' : 'Log in or sign up'))
+const label = computed(() => (isLoggedIn.value ? t('nav.openProfile') : t('nav.loginOrSignup')))
 </script>
 
 <template>
   <NuxtLink
       to="/profile"
-      class="ml-2 flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors hover:text-key-active"
+      class="ms-2 flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors hover:text-key-active"
       active-class="text-key-active"
       :aria-label="label"
       :title="label"
@@ -26,6 +27,6 @@ const label = computed(() => (isLoggedIn.value ? 'Open your profile' : 'Log in o
       <circle cx="10" cy="7" r="3" />
       <path d="M4 17c.8-3 3.2-4.5 6-4.5s5.2 1.5 6 4.5" stroke-linecap="round" />
     </svg>
-    Profile
+    {{ t('nav.profile') }}
   </NuxtLink>
 </template>

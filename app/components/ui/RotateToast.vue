@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const { t } = useI18n()
+
 /** توست «گوشی رو بچرخونید»؛ فقط توی موبایلِ عمودی و فقط یک بار در هر نشست (تب) نشون داده می‌شه */
 const STORAGE_KEY = 'rotate-toast-seen'
 const AUTO_HIDE_MS = 7000
@@ -88,12 +90,12 @@ onBeforeUnmount(() => {
         <path d="m19 15 .2 3.6L15.6 18.4" />
       </svg>
 
-      <p class="flex-1 text-sm text-stone-100">Rotate your phone for a better experience.</p>
+      <p class="flex-1 text-sm text-stone-100">{{ t('ui.rotateToast') }}</p>
 
       <button
           type="button"
           class="grid size-7 shrink-0 place-items-center rounded-full text-stone-400 transition-colors hover:text-key-active"
-          aria-label="Dismiss"
+          :aria-label="t('ui.dismiss')"
           data-cuelume-close
           data-cuelume-emphasis="subtle"
           @click="hide"
