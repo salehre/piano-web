@@ -279,7 +279,8 @@
     "main": "Main",
     "explore": "Explore",
     "loginOrSignup": "Log in or sign up",
-    "openProfile": "Open your profile"
+    "openProfile": "Open your profile",
+    "dock": "Quick navigation"
   },
   "language": {
     "switchTo": "Switch language to {name}"
@@ -580,6 +581,18 @@
   },
   "settings": {
     "title": "Settings",
+    "appearance": {
+      "title": "Appearance",
+      "description": "Choose the language and theme of the site.",
+      "language": "Language",
+      "theme": "Theme",
+      "dark": "Dark",
+      "light": "Light",
+      "languages": {
+        "fa": "فارسی",
+        "en": "English"
+      }
+    },
     "shortcuts": {
       "title": "Keyboard shortcuts",
       "description": "All {total} piano keys are listed by octave. Click a field, then press the computer key you want for that note. Shortcuts for notes outside the selected piano size are ignored. Keys are matched by position, so they work with any keyboard language.",

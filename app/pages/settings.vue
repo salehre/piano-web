@@ -40,6 +40,8 @@ function assignedCount(notes: string[]) {
   <main class="mx-auto max-w-5xl px-6 py-8">
     <h1 class="text-2xl font-semibold">{{ t('settings.title') }}</h1>
 
+    <SettingsAppearancePanel class="mt-8" />
+
     <SettingsMidiPanel class="mt-8" />
 
     <section class="mt-8" aria-labelledby="shortcuts-title">

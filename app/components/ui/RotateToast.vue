@@ -69,7 +69,7 @@ onBeforeUnmount(() => {
     <div
         v-if="visible"
         class="fixed inset-x-4 z-50 mx-auto flex max-w-sm items-center gap-3 rounded-2xl border border-stone-700 bg-stone-900/90 px-4 py-3 shadow-lg backdrop-blur"
-        style="bottom: calc(1rem + env(safe-area-inset-bottom, 0px))"
+        style="bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px))"
         role="status"
         aria-live="polite"
     >
