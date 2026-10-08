@@ -7,6 +7,8 @@ const tr = useTr()
 useHead({ title: () => t('nav.profile') })
 
 const { user, ready, updateProfile, logout } = useAuth()
+const { devices } = useMidi()
+const connectedPianos = computed(() => devices.value.filter(device => device.connected))
 
 /** فرم همه‌ی فیلدها رو رشته نگه می‌داره تا v-model ساده بمونه */
 interface ProfileForm {
@@ -218,7 +220,7 @@ function onLogout() {
                 class="flex size-20 items-center justify-center rounded-full bg-key-active text-3xl font-semibold text-stone-950"
                 aria-hidden="true"
             >
-              {{ user.profile.displayName.trim().charAt(0).toUpperCase() || '?' }}
+              {{ user.profile.displayName.trim().charAt(0).toUpperCase() || '-' }}
             </div>
 
             <button
@@ -340,6 +342,20 @@ function onLogout() {
         <section aria-labelledby="piano-title" class="space-y-5">
           <h2 id="piano-title" class="border-b border-stone-800 pb-2 text-lg font-medium">{{ t('auth.profile.sections.piano') }}</h2>
 
+          <div v-if="connectedPianos.length" class="flex flex-wrap items-center gap-3 text-sm">
+            <span class="flex items-center gap-2 text-emerald-400">
+              <span class="size-2 rounded-full bg-emerald-500" aria-hidden="true" />
+              {{ t('settings.midi.connected') }}
+            </span>
+            <span v-for="device in connectedPianos" :key="device.id" class="text-stone-300">
+              {{ device.name || t('settings.midi.unknownDevice') }}
+            </span>
+          </div>
+          <p v-else class="flex items-center gap-2 text-sm text-stone-400" role="status">
+            <span class="size-2 rounded-full bg-stone-600" aria-hidden="true" />
+            {{ t('settings.midi.disconnected') }}
+          </p>
+
           <UiTextField
               v-model="form.yearsPlaying"
               :label="t('auth.profile.fields.yearsPlaying')"
@@ -353,11 +369,6 @@ function onLogout() {
         <section aria-labelledby="account-title" class="space-y-2">
           <h2 id="account-title" class="border-b border-stone-800 pb-2 text-lg font-medium">{{ t('auth.profile.sections.account') }}</h2>
           <dl class="flex items-center justify-center gap-8 pt-2 text-sm">
-            <div class="flex items-center gap-2">
-              <dt class="text-stone-400">{{ t('auth.profile.fields.mobile') }}</dt>
-              <dd dir="ltr" class="mt-1">{{ user.phone }}</dd>
-            </div>
-            <div class="h-8 w-px shrink-0 bg-stone-700" aria-hidden="true" />
             <div class="flex items-center gap-2">
               <dt class="text-stone-400">{{ t('auth.profile.fields.memberSince') }}</dt>
               <dd>{{ memberSince }}</dd>

@@ -5,6 +5,27 @@ const { cue } = useUiSounds()
 
 const open = ref(false)
 const root = ref<HTMLElement | null>(null)
+const menu = ref<HTMLElement | null>(null)
+const menuPosition = ref({ top: 0, left: 0 })
+
+function updateMenuPosition() {
+  if (!root.value || !menu.value) return
+
+  const anchor = root.value.getBoundingClientRect()
+  const bounds = menu.value.getBoundingClientRect()
+  const padding = 8
+  const maxLeft = window.innerWidth - bounds.width - padding
+  const alignedLeft = getComputedStyle(root.value).direction === 'rtl'
+    ? anchor.left
+    : anchor.right - bounds.width
+  const below = anchor.bottom + padding
+  const maxTop = window.innerHeight - bounds.height - padding
+
+  menuPosition.value = {
+    left: Math.max(padding, Math.min(alignedLeft, maxLeft)),
+    top: Math.max(padding, Math.min(below, maxTop)),
+  }
+}
 
 function toggle() {
   open.value = !open.value
@@ -22,13 +43,23 @@ function onEsc(e: KeyboardEvent) {
   if (e.key === 'Escape') closeMenu()
 }
 
+watch(open, async (isOpen) => {
+  if (!isOpen) return
+  await nextTick()
+  updateMenuPosition()
+})
+
 onMounted(() => {
   document.addEventListener('click', onDocClick)
   document.addEventListener('keydown', onEsc)
+  window.addEventListener('resize', updateMenuPosition)
+  window.addEventListener('scroll', updateMenuPosition, true)
 })
 onBeforeUnmount(() => {
   document.removeEventListener('click', onDocClick)
   document.removeEventListener('keydown', onEsc)
+  window.removeEventListener('resize', updateMenuPosition)
+  window.removeEventListener('scroll', updateMenuPosition, true)
 })
 </script>
 
@@ -55,9 +86,11 @@ onBeforeUnmount(() => {
 
     <Transition name="menu">
     <ul
+      ref="menu"
       v-if="open"
       role="menu"
-      class="absolute end-0 z-10 mt-2 w-80 overflow-hidden ltr:origin-top-right rtl:origin-top-left rounded-xl bg-stone-900 shadow-2xl ring-1 ring-black/30"
+      :style="menuPosition"
+      class="fixed z-50 w-[min(20rem,calc(100vw-1rem))] max-h-[calc(100dvh-1rem)] overflow-y-auto overflow-x-hidden rounded-xl bg-stone-900 shadow-2xl ring-1 ring-black/30"
     >
       <li v-for="p in PIANO_TYPES" :key="p.keys" role="none">
         <NuxtLink
