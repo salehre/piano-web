@@ -5,7 +5,7 @@ const { isLoggedIn, initial } = useAuth()
 const items = [
   { to: '/', label: 'nav.home', exact: true, icon: '<path d="M3 9.5 10 3l7 6.5V16a1 1 0 0 1-1 1h-3.5v-4.5h-5V17H4a1 1 0 0 1-1-1V9.5Z" stroke-linejoin="round"/>' },
   { to: '/virtual-piano', label: 'nav.virtualPiano', exact: false, icon: '<rect x="2.5" y="4" width="15" height="12" rx="1.5"/><path d="M7.5 4v12M12.5 4v12" stroke-linecap="round"/><path d="M6 4v6.5h3V4M11 4v6.5h3V4" fill="currentColor"/>' },
-  { to: '/settings', label: 'nav.settings', exact: false, icon: '<circle cx="10" cy="10" r="2.5"/><path d="M10 2.5v2M10 15.5v2M2.5 10h2M15.5 10h2M4.7 4.7l1.4 1.4M13.9 13.9l1.4 1.4M4.7 15.3l1.4-1.4M13.9 6.1l1.4-1.4" stroke-linecap="round"/>' },
+  { to: '/settings', label: 'nav.settings', exact: false, icon: '<path d="M9.3 2.8h1.4l.5 1.8a5.9 5.9 0 0 1 1.4.6l1.7-.9 1 1 1 1-.9 1.7c.3.4.5.9.6 1.4l1.8.5v1.4l-1.8.5a5.9 5.9 0 0 1-.6 1.4l.9 1.7-1 1-1 1-1.7-.9a5.9 5.9 0 0 1-1.4.6l-.5 1.8H9.3l-.5-1.8a5.9 5.9 0 0 1-1.4-.6l-1.7.9-1-1-1-1 .9-1.7a5.9 5.9 0 0 1-.6-1.4l-1.8-.5v-1.4l1.8-.5a5.9 5.9 0 0 1 .6-1.4l-.9-1.7 1-1 1-1 1.7.9a5.9 5.9 0 0 1 1.4-.6l.5-1.8Z"/><circle cx="10" cy="10" r="2.4"/>' },
 ]
 
 const profileLabel = computed(() => (isLoggedIn.value ? t('nav.openProfile') : t('nav.loginOrSignup')))

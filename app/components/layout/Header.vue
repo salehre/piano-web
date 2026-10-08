@@ -3,7 +3,7 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <header class="sticky top-0 z-40 border-b border-white/5 bg-stone-950/80 backdrop-blur-xl" data-cuelume-emphasis="subtle">
+  <header class="sticky top-0 z-40 hidden border-b border-white/5 bg-stone-950/80 backdrop-blur-xl lg:block" data-cuelume-emphasis="subtle">
     <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-3">
       <NuxtLink to="/" class="text-lg font-semibold" data-cuelume-navigate>{{ t('app.name') }}</NuxtLink>
 
