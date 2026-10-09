@@ -5,27 +5,33 @@ const tr = useTr()
 useHead({ title: () => t('auth.login.steps.password.button') })
 
 /**
- * ورود و ثبت‌نام توی یک صفحه، فقط با موبایل:
- *  phone → (حساب با رمز داره؟) password → ورود
- *        → (حساب نداره)        code → newPassword → ورود
- *  password → «Forgot password?» → code → newPassword → ورود
+ * ورود و ثبت‌نام توی یک صفحه، فقط با موبایل + رمز عبور (فعلاً بدون پیامک):
+ *  - شماره قبلاً ثبت شده → با رمز وارد می‌شه
+ *  - شماره جدیده        → با همین رمز حساب ساخته می‌شه و می‌ره پروفایل
+ * TODO(backend): مراحل کد پیامکی (code / newPassword) کامنت شدن؛ وقتی بک‌اند اومد برشون گردون.
  */
-type Step = 'phone' | 'password' | 'code' | 'newPassword'
+type Step = 'credentials'
+// type Step = 'credentials' | 'code' | 'newPassword'
 
 const route = useRoute()
-const { lookup, requestCode, verifyCode, setPassword, login } = useAuth()
+const { lookup, register, login } = useAuth()
+// const { lookup, requestCode, verifyCode, setPassword, login } = useAuth()
 
-const step = ref<Step>('phone')
-const isReset = ref(false) // کد برای فراموشی رمزه، نه ثبت‌نام
-const form = reactive({ phone: '', password: '', code: '', newPassword: '', confirmPassword: '' })
-const MISMATCH_KEY = 'auth.validation.passwordMismatch'
+const step = ref<Step>('credentials')
+// const isReset = ref(false) // کد برای فراموشی رمزه، نه ثبت‌نام
+const form = reactive({ phone: '', password: '' })
+// const form = reactive({ phone: '', password: '', code: '', newPassword: '', confirmPassword: '' })
+// const MISMATCH_KEY = 'auth.validation.passwordMismatch'
 // خطا به‌صورت ارجاع به پیام نگه داشته می‌شه تا با عوض شدن زبان، خطای روی صفحه هم ترجمه بشه
 const error = ref<MessageRef | null>(null)
 const submitting = ref(false)
-const devCode = ref('')
-const resendIn = ref(0)
-const codeOk = ref(false) // کد درست بود؛ انیمیشن موفقیت تا رفتن به مرحله‌ی بعد
-const otpEl = ref<{ shake: () => void; focus: () => void }>()
+// const devCode = ref('')
+// const resendIn = ref(0)
+// const codeOk = ref(false) // کد درست بود؛ انیمیشن موفقیت تا رفتن به مرحله‌ی بعد
+// const otpEl = ref<{ shake: () => void; focus: () => void }>()
+
+// خطای شماره زیر فیلد شماره نشون داده می‌شه، بقیه‌ی خطاها زیر فیلد رمز
+const isPhoneError = computed(() => !!error.value?.key.startsWith('auth.validation.phone'))
 
 // عکس پس‌زمینه: فایل رو بذار توی public/images/ و فقط اسمش رو همین‌جا عوض کن
 const BG_IMAGE = '/images/download.webp'
@@ -39,99 +45,31 @@ onMounted(() => {
 const redirectTo = computed(() => getSafeRedirect(route.query.redirect))
 const formEl = ref<HTMLFormElement>()
 
-// ---------- تایمر ارسال مجدد کد ----------
-let timer: ReturnType<typeof setInterval> | undefined
-function startCooldown() {
-  clearInterval(timer)
-  resendIn.value = OTP_RESEND_SECONDS
-  timer = setInterval(() => {
-    resendIn.value--
-    if (resendIn.value <= 0) clearInterval(timer)
-  }, 1000)
-}
-onBeforeUnmount(() => clearInterval(timer))
-
-// رفتن به مرحله‌ی بعد؛ فوکوس بعد از تموم شدن انیمیشن مرحله (focusFirst) انجام می‌شه
-async function goTo(next: Step) {
-  step.value = next
-  error.value = null
-  codeOk.value = false
-}
-
 function focusFirst() {
   formEl.value?.querySelector('input')?.focus()
 }
 
-async function sendCode(reset: boolean) {
-  const result = await requestCode(form.phone)
-  if (!result.ok) {
-    error.value = result.error
-    return
-  }
-  isReset.value = reset
-  codeOk.value = false
-  devCode.value = result.devCode ?? ''
-  form.code = ''
-  startCooldown()
-  await goTo('code')
-}
-
-// ---------- مراحل ----------
-async function submitPhone() {
+// ---------- ورود / ثبت‌نام ----------
+async function submitCredentials() {
   const invalid = validatePhone(form.phone)
   if (invalid) return void (error.value = invalid)
   form.phone = normalizePhone(form.phone)
+  if (!form.password) return void (error.value = msgRef('auth.validation.passwordRequired'))
 
   if (lookup(form.phone).hasPassword) {
-    form.password = ''
-    await goTo('password')
+    const result = await login({ phone: form.phone, password: form.password })
+    if (!result.ok) return void (error.value = result.error)
+    await navigateTo(redirectTo.value)
   } else {
-    await sendCode(false)
+    // شماره‌ی جدید: حساب با همین رمز ساخته می‌شه و کاربر می‌ره پروفایلش رو کامل کنه
+    const result = await register(form.phone, form.password)
+    if (!result.ok) return void (error.value = result.error)
+    await navigateTo('/profile')
   }
-}
-
-async function submitPassword() {
-  if (!form.password) return void (error.value = msgRef('auth.validation.passwordRequired'))
-  const result = await login({ phone: form.phone, password: form.password })
-  if (!result.ok) return void (error.value = result.error)
-  await navigateTo(redirectTo.value)
-}
-
-async function submitCode() {
-  if (form.code.length !== OTP_LENGTH) return void (error.value = msgRef('auth.validation.codeRequired', { length: OTP_LENGTH }))
-  const result = await verifyCode(form.phone, form.code)
-  if (!result.ok) {
-    // کد اشتباه: لرزش، پاک‌کردن باکس‌ها و برگشت فوکوس به اولین باکس
-    error.value = result.error
-    form.code = ''
-    otpEl.value?.shake()
-    await nextTick()
-    otpEl.value?.focus()
-    return
-  }
-  // کد درست: انیمیشن موفقیت، بعد رفتن به مرحله‌ی بعد
-  codeOk.value = true
-  await new Promise((resolve) => setTimeout(resolve, 700))
-  form.newPassword = ''
-  form.confirmPassword = ''
-  await goTo('newPassword')
-}
-
-async function submitNewPassword() {
-  const invalid = validatePassword(form.newPassword)
-  if (invalid) return void (error.value = invalid)
-  if (form.newPassword !== form.confirmPassword) return void (error.value = msgRef(MISMATCH_KEY))
-  const result = await setPassword(form.phone, form.newPassword)
-  if (!result.ok) return void (error.value = result.error)
-  // کاربر جدید می‌ره پروفایلش رو کامل کنه
-  await navigateTo(result.isNew ? '/profile' : redirectTo.value)
 }
 
 const handlers: Record<Step, () => Promise<void>> = {
-  phone: submitPhone,
-  password: submitPassword,
-  code: submitCode,
-  newPassword: submitNewPassword,
+  credentials: submitCredentials,
 }
 
 async function submit() {
@@ -145,54 +83,153 @@ async function submit() {
   }
 }
 
-async function resend() {
-  if (resendIn.value > 0 || submitting.value) return
-  submitting.value = true
-  error.value = null
-  await sendCode(isReset.value)
-  submitting.value = false
-}
-
-async function forgotPassword() {
-  if (submitting.value) return
-  submitting.value = true
-  error.value = null
-  await sendCode(true)
-  submitting.value = false
-}
-
-// فقط رقم نگه می‌داره و وقتی کد کامل شد خودش ارسال می‌کنه
+// تایپ‌کردن خطا رو پاک می‌کنه
 watch(
-    () => form.code,
-    (value) => {
-      const digits = normalizeDigits(value).replace(/\D/g, '').slice(0, OTP_LENGTH)
-      if (digits !== value) form.code = digits
-      else if (digits) {
-        error.value = null
-        if (digits.length === OTP_LENGTH && step.value === 'code') submit()
-      }
-    },
-)
-
-// تایپ‌کردن خطا رو پاک می‌کنه (کد جداست: ورودیش توی watch بالا مدیریت می‌شه تا بعد از کد اشتباه، خطا نپره)
-watch(
-    () => [form.phone, form.password, form.newPassword, form.confirmPassword],
+    () => [form.phone, form.password],
     () => {
       error.value = null
     },
 )
 
-const copy = computed(() => {
-  // مرحله‌ی رمز جدید برای ثبت‌نام و فراموشی رمز متن جدا داره
-  const base = step.value === 'newPassword' && isReset.value ? 'resetPassword' : step.value
-  const prefix = `auth.login.steps.${base}`
-  return {
-    title: t(`${prefix}.title`),
-    // شماره با LRI/PDI جدا می‌شه تا توی جمله‌ی راست‌به‌چپ جابه‌جا نشه
-    hint: t(`${prefix}.hint`, { length: n(OTP_LENGTH), phone: `\u2066${form.phone}\u2069` }),
-    button: t(`${prefix}.button`),
-  }
-})
+// ======================================================================
+// غیرفعال تا وقتی بک‌اند بیاد: ارسال کد پیامکی، تأیید کد، رمز جدید، فراموشی رمز
+// ======================================================================
+// // ---------- تایمر ارسال مجدد کد ----------
+// let timer: ReturnType<typeof setInterval> | undefined
+// function startCooldown() {
+//   clearInterval(timer)
+//   resendIn.value = OTP_RESEND_SECONDS
+//   timer = setInterval(() => {
+//     resendIn.value--
+//     if (resendIn.value <= 0) clearInterval(timer)
+//   }, 1000)
+// }
+// onBeforeUnmount(() => clearInterval(timer))
+//
+// // رفتن به مرحله‌ی بعد؛ فوکوس بعد از تموم شدن انیمیشن مرحله (focusFirst) انجام می‌شه
+// async function goTo(next: Step) {
+//   step.value = next
+//   error.value = null
+//   codeOk.value = false
+// }
+//
+// async function sendCode(reset: boolean) {
+//   const result = await requestCode(form.phone)
+//   if (!result.ok) {
+//     error.value = result.error
+//     return
+//   }
+//   isReset.value = reset
+//   codeOk.value = false
+//   devCode.value = result.devCode ?? ''
+//   form.code = ''
+//   startCooldown()
+//   await goTo('code')
+// }
+//
+// // ---------- مراحل ----------
+// async function submitPhone() {
+//   const invalid = validatePhone(form.phone)
+//   if (invalid) return void (error.value = invalid)
+//   form.phone = normalizePhone(form.phone)
+//
+//   if (lookup(form.phone).hasPassword) {
+//     form.password = ''
+//     await goTo('password')
+//   } else {
+//     await sendCode(false)
+//   }
+// }
+//
+// async function submitPassword() {
+//   if (!form.password) return void (error.value = msgRef('auth.validation.passwordRequired'))
+//   const result = await login({ phone: form.phone, password: form.password })
+//   if (!result.ok) return void (error.value = result.error)
+//   await navigateTo(redirectTo.value)
+// }
+//
+// async function submitCode() {
+//   if (form.code.length !== OTP_LENGTH) return void (error.value = msgRef('auth.validation.codeRequired', { length: OTP_LENGTH }))
+//   const result = await verifyCode(form.phone, form.code)
+//   if (!result.ok) {
+//     // کد اشتباه: لرزش، پاک‌کردن باکس‌ها و برگشت فوکوس به اولین باکس
+//     error.value = result.error
+//     form.code = ''
+//     otpEl.value?.shake()
+//     await nextTick()
+//     otpEl.value?.focus()
+//     return
+//   }
+//   // کد درست: انیمیشن موفقیت، بعد رفتن به مرحله‌ی بعد
+//   codeOk.value = true
+//   await new Promise((resolve) => setTimeout(resolve, 700))
+//   form.newPassword = ''
+//   form.confirmPassword = ''
+//   await goTo('newPassword')
+// }
+//
+// async function submitNewPassword() {
+//   const invalid = validatePassword(form.newPassword)
+//   if (invalid) return void (error.value = invalid)
+//   if (form.newPassword !== form.confirmPassword) return void (error.value = msgRef(MISMATCH_KEY))
+//   const result = await setPassword(form.phone, form.newPassword)
+//   if (!result.ok) return void (error.value = result.error)
+//   // کاربر جدید می‌ره پروفایلش رو کامل کنه
+//   await navigateTo(result.isNew ? '/profile' : redirectTo.value)
+// }
+//
+// const handlers: Record<Step, () => Promise<void>> = {
+//   phone: submitPhone,
+//   password: submitPassword,
+//   code: submitCode,
+//   newPassword: submitNewPassword,
+// }
+//
+// async function resend() {
+//   if (resendIn.value > 0 || submitting.value) return
+//   submitting.value = true
+//   error.value = null
+//   await sendCode(isReset.value)
+//   submitting.value = false
+// }
+//
+// async function forgotPassword() {
+//   if (submitting.value) return
+//   submitting.value = true
+//   error.value = null
+//   await sendCode(true)
+//   submitting.value = false
+// }
+//
+// // فقط رقم نگه می‌داره و وقتی کد کامل شد خودش ارسال می‌کنه
+// watch(
+//     () => form.code,
+//     (value) => {
+//       const digits = normalizeDigits(value).replace(/\D/g, '').slice(0, OTP_LENGTH)
+//       if (digits !== value) form.code = digits
+//       else if (digits) {
+//         error.value = null
+//         if (digits.length === OTP_LENGTH && step.value === 'code') submit()
+//       }
+//     },
+// )
+
+const copy = computed(() => ({
+  title: t('auth.login.steps.phone.title'),
+  hint: t('auth.login.steps.phone.hint'),
+  button: t('auth.login.steps.password.button'),
+}))
+// const copy = computed(() => {
+//   // مرحله‌ی رمز جدید برای ثبت‌نام و فراموشی رمز متن جدا داره
+//   const base = step.value === 'newPassword' && isReset.value ? 'resetPassword' : step.value
+//   const prefix = `auth.login.steps.${base}`
+//   return {
+//     title: t(`${prefix}.title`),
+//     // شماره با LRI/PDI جدا می‌شه تا توی جمله‌ی راست‌به‌چپ جابه‌جا نشه
+//     hint: t(`${prefix}.hint`, { length: n(OTP_LENGTH), phone: `\u2066${form.phone}\u2069` }),
+//     button: t(`${prefix}.button`),
+//   }
+// })
 </script>
 
 <template>
@@ -232,10 +269,9 @@ const copy = computed(() => {
       </header>
 
       <form ref="formEl" class="mt-6 space-y-5" novalidate @submit.prevent="submit">
-        <Transition name="step" mode="out-in" @after-enter="focusFirst">
+        <Transition name="step" mode="out-in" appear @after-enter="focusFirst">
           <div :key="step" class="space-y-5">
             <UiTextField
-                v-if="step === 'phone'"
                 v-model="form.phone"
                 :label="t('auth.login.mobileLabel')"
                 ltr
@@ -244,26 +280,26 @@ const copy = computed(() => {
                 :maxlength="11"
                 autocomplete="tel"
                 placeholder="09123456789"
-                :error="tr(error)"
+                :error="isPhoneError ? tr(error) : ''"
+            />
+            <UiTextField
+                v-model="form.password"
+                :label="t('auth.login.passwordLabel')"
+                type="password"
+                autocomplete="current-password"
+                :hint="t('auth.login.passwordHint', { min: n(PASSWORD_MIN) })"
+                :error="isPhoneError ? '' : tr(error)"
             />
 
-            <template v-else-if="step === 'password'">
-              <UiTextField
-                  v-model="form.password"
-                  :label="t('auth.login.passwordLabel')"
-                  type="password"
-                  autocomplete="current-password"
-                  :error="tr(error)"
-              />
-              <button
-                  type="button"
-                  class="text-sm text-key-active underline-offset-2 hover:underline disabled:opacity-60"
-                  :disabled="submitting"
-                  @click="forgotPassword"
-              >
-                {{ t('auth.login.forgot') }}
-              </button>
-            </template>
+            <!-- TODO(backend): مراحل کد پیامکی؛ وقتی بک‌اند اومد برگردون
+            <button
+                type="button"
+                class="text-sm text-key-active underline-offset-2 hover:underline disabled:opacity-60"
+                :disabled="submitting"
+                @click="forgotPassword"
+            >
+              {{ t('auth.login.forgot') }}
+            </button>
 
             <template v-else-if="step === 'code'">
               <p v-if="devCode" class="rounded-md bg-stone-900 px-3 py-2 text-xs text-stone-300" role="status">
@@ -306,11 +342,11 @@ const copy = computed(() => {
                   :error="error?.key === MISMATCH_KEY ? tr(error) : ''"
               />
             </template>
+            -->
           </div>
         </Transition>
 
         <button
-            v-if="step !== 'code'"
             type="submit"
             class="w-full rounded-lg bg-key-active px-5 py-3 font-medium text-stone-950 transition-opacity hover:opacity-90 disabled:opacity-60"
             :disabled="submitting"
@@ -318,6 +354,7 @@ const copy = computed(() => {
           {{ submitting ? t('ui.pleaseWait') : copy.button }}
         </button>
 
+        <!-- TODO(backend): دکمه‌ی «شماره‌ی دیگر» مخصوص مراحل رمز/کد بود
         <button
             v-if="step === 'password' || step === 'code'"
             type="button"
@@ -326,6 +363,7 @@ const copy = computed(() => {
         >
           {{ t('auth.login.differentNumber') }}
         </button>
+        -->
       </form>
     </section>
   </main>
