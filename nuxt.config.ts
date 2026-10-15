@@ -21,11 +21,11 @@ export default defineNuxtConfig({
         { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' },
       ],
       link: [
-        // ?v=2 باعث می‌شه مرورگر آیکون قدیمی کش‌شده رو دور بندازه؛ بعداً اگه آیکون رو عوض کردی عددش رو بالا ببر
-        { rel: 'icon', href: '/favicon.ico?v=2', sizes: '48x48' },
-        { rel: 'icon', type: 'image/png', href: '/icons/favicon-32.png?v=2', sizes: '32x32' },
-        { rel: 'icon', type: 'image/svg+xml', href: '/icon.svg?v=2', sizes: 'any' },
-        { rel: 'apple-touch-icon', href: '/icons/apple-touch-icon.png?v=2' },
+        // ?v=N باعث می‌شه مرورگر آیکون قدیمی کش‌شده رو دور بندازه؛ هر بار آیکون رو عوض کردی N رو بالا ببر
+        { rel: 'icon', href: '/favicon.ico?v=3', sizes: '48x48' },
+        { rel: 'icon', type: 'image/png', href: '/icons/favicon-32.png?v=3', sizes: '32x32' },
+        { rel: 'icon', type: 'image/svg+xml', href: '/icon.svg?v=3', sizes: 'any' },
+        { rel: 'apple-touch-icon', href: '/icons/apple-touch-icon.png?v=3' },
       ],
     },
   },
@@ -96,7 +96,7 @@ export default defineNuxtConfig({
         },
         {
           urlPattern: ({ request }: { request: Request }) =>
-            ['image', 'font', 'audio'].includes(request.destination),
+            ['font', 'audio'].includes(request.destination),
           handler: 'CacheFirst',
           options: {
             cacheName: 'assets',
