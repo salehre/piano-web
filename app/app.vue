@@ -19,6 +19,8 @@ useHead({
 </script>
 
 <template>
+  <!-- لینک manifest وب‌اپ (PWA) رو توی head می‌ذاره -->
+  <NuxtPwaManifest />
   <UiGlassFilter />
   <UiRotateToast />
   <NuxtLayout>

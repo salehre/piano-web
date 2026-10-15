@@ -3,13 +3,32 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  modules: ['@nuxtjs/i18n'],
+  modules: ['@nuxtjs/i18n', '@vite-pwa/nuxt'],
   // فونت فارسی (روی خود پروژه نصب می‌شه، نیازی به گوگل‌فونت نیست)
   css: ['@fontsource-variable/vazirmatn', '~/assets/css/main.css'],
   vite: {
     plugins: [tailwindcss()],
   },
   // lang و dir و title از app.vue و بر اساس زبان فعلی ست می‌شن (اینجا title ثابت نذار)
+
+  app: {
+    head: {
+      meta: [
+        { name: 'theme-color', content: '#170701' },
+        { name: 'mobile-web-app-capable', content: 'yes' },
+        { name: 'apple-mobile-web-app-capable', content: 'yes' },
+        { name: 'apple-mobile-web-app-title', content: 'وب پیانو' },
+        { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' },
+      ],
+      link: [
+        // ?v=2 باعث می‌شه مرورگر آیکون قدیمی کش‌شده رو دور بندازه؛ بعداً اگه آیکون رو عوض کردی عددش رو بالا ببر
+        { rel: 'icon', href: '/favicon.ico?v=2', sizes: '48x48' },
+        { rel: 'icon', type: 'image/png', href: '/icons/favicon-32.png?v=2', sizes: '32x32' },
+        { rel: 'icon', type: 'image/svg+xml', href: '/icon.svg?v=2', sizes: 'any' },
+        { rel: 'apple-touch-icon', href: '/icons/apple-touch-icon.png?v=2' },
+      ],
+    },
+  },
 
   i18n: {
     locales: [
@@ -29,30 +48,68 @@ export default defineNuxtConfig({
     // تنظیمات vue-i18n (فرمت تاریخ و عدد، زبان جایگزین) توی i18n/i18n.config.ts
   },
 
-    pwa: {
-    registerType: "autoUpdate",
+  // وب‌اپ (PWA)
+  pwa: {
+    registerType: 'autoUpdate',
     manifest: {
-      name: "Todolist",
-      short_name: "Todolist",
-      description: "اپلیکیشن مدیریت کارها",
-      theme_color: "#ffffff",
-      background_color: "#ffffff",
-      display: "standalone",
-      start_url: "/",
-      lang: "fa",
-      dir: "rtl",
+      id: '/',
+      name: 'وب پیانو',
+      short_name: 'وب پیانو',
+      description: 'پیانوی مجازی آنلاین؛ با کیبورد، موس، لمس یا MIDI بنواز',
+      theme_color: '#170701',
+      background_color: '#170701',
+      display: 'standalone',
+      orientation: 'any',
+      start_url: '/',
+      scope: '/',
+      lang: 'fa',
+      dir: 'rtl',
+      categories: ['music', 'entertainment'],
       icons: [
-        { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
-        { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
-        { src: "/icons/icon-512-maskable.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
+        { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+        { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+        { src: '/icons/icon-512-maskable.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+      ],
+      shortcuts: [
+        {
+          name: 'پیانوی مجازی',
+          short_name: 'پیانو',
+          url: '/virtual-piano',
+          icons: [{ src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' }],
+        },
       ],
     },
     workbox: {
-      globPatterns: ["**/*.{js,css,html,png,svg,ico,woff2}"],
+      globPatterns: ['**/*.{js,css,html,png,svg,ico,woff,woff2}'],
+      // برنامه SSR هست و index.html نداره؛ صفحه‌ها موقع اولین بازدید کش می‌شن (NetworkFirst)
+      navigateFallback: null,
+      cleanupOutdatedCaches: true,
+      runtimeCaching: [
+        {
+          urlPattern: ({ request }: { request: Request }) => request.mode === 'navigate',
+          handler: 'NetworkFirst',
+          options: {
+            cacheName: 'pages',
+            networkTimeoutSeconds: 4,
+            expiration: { maxEntries: 30, maxAgeSeconds: 60 * 60 * 24 * 30 },
+          },
+        },
+        {
+          urlPattern: ({ request }: { request: Request }) =>
+            ['image', 'font', 'audio'].includes(request.destination),
+          handler: 'CacheFirst',
+          options: {
+            cacheName: 'assets',
+            expiration: { maxEntries: 80, maxAgeSeconds: 60 * 60 * 24 * 60 },
+          },
+        },
+      ],
+    },
+    client: {
+      installPrompt: true,
     },
     devOptions: {
       enabled: false,
     },
   },
-  
 })
