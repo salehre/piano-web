@@ -588,14 +588,30 @@
     "title": "تنظیمات",
     "appearance": {
       "title": "ظاهر",
-      "description": "زبان و تم سایت را انتخاب کنید.",
+      "description": "زبان و تم مورد علاقه‌ی خود را انتخاب کنید.",
       "language": "زبان",
       "theme": "تم",
-      "dark": "تیره",
-      "light": "روشن",
       "languages": {
         "fa": "فارسی",
         "en": "English"
+      },
+      "themes": {
+        "navy": {
+          "name": "سرمه‌ای",
+          "description": "خنک و آرام"
+        },
+        "dark": {
+          "name": "قهوه‌ای",
+          "description": "گرم و طبیعی"
+        },
+        "wine": {
+          "name": "شرابی",
+          "description": "شیک و عمیق"
+        },
+        "light": {
+          "name": "روشن",
+          "description": "تمیز و درخشان"
+        }
       }
     },
     "shortcuts": {

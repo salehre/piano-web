@@ -1,4 +1,9 @@
-export type Theme = 'dark' | 'light'
+/** ترتیب نمایش تم‌ها توی صفحه‌ی ظاهر. «dark» همون تم قهوه‌ایه (اسم داخلی عوض نشده تا کوکی‌های قدیمی کار کنن) */
+export const THEMES = ['navy', 'dark', 'wine', 'light'] as const
+
+export type Theme = (typeof THEMES)[number]
+
+const isTheme = (v: unknown): v is Theme => (THEMES as readonly unknown[]).includes(v)
 
 /** تم سایت؛ توی کوکی می‌مونه تا SSR از همون اول تم درست رو رندر کنه */
 export function useTheme() {
@@ -8,14 +13,16 @@ export function useTheme() {
         default: () => 'dark',
     })
 
-    const theme = useState<Theme>('theme', () => (cookie.value === 'light' ? 'light' : 'dark'))
+    const theme = useState<Theme>('theme', () => (isTheme(cookie.value) ? cookie.value : 'dark'))
     const isLight = computed(() => theme.value === 'light')
 
     function setTheme(next: Theme) {
+        if (!isTheme(next)) return
         theme.value = next
         cookie.value = next
     }
 
+    /** رفت‌وبرگشت بین تیره (قهوه‌ای) و روشن */
     function toggle() {
         setTheme(isLight.value ? 'dark' : 'light')
     }

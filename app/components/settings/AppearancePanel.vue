@@ -6,10 +6,47 @@ const { theme, setTheme } = useTheme()
 
 const langs = computed(() => (locales.value as LocaleObject[]).map((l) => ({ code: l.code, language: l.language })))
 
-const themes = [
-  { value: 'dark', label: 'settings.appearance.dark' },
-  { value: 'light', label: 'settings.appearance.light' },
-] as const
+// رنگ‌های پیش‌نمایش هر کارت ثابت‌ان (مستقل از تم فعلی) تا هر تم همون‌طور که هست دیده بشه
+const previews: Record<Theme, { bg: string; border: string; text: string; sub: string; glow: string; panel: string }> = {
+  navy: {
+    bg: 'linear-gradient(160deg, #0f1c33, #070d1a)',
+    border: 'rgba(148, 169, 196, 0.25)',
+    text: '#e6ecf5',
+    sub: '#94a9c4',
+    glow: 'rgba(70, 110, 180, 0.4)',
+    panel: 'rgba(148, 169, 196, 0.1)',
+  },
+  dark: {
+    bg: 'linear-gradient(160deg, #2a160c, #170c07)',
+    border: 'rgba(196, 169, 138, 0.25)',
+    text: '#f4ebdd',
+    sub: '#c4a98a',
+    glow: 'rgba(226, 117, 47, 0.35)',
+    panel: 'rgba(196, 169, 138, 0.1)',
+  },
+  wine: {
+    bg: 'linear-gradient(160deg, #3a0f1c, #1c060d)',
+    border: 'rgba(197, 139, 151, 0.25)',
+    text: '#f6e4e7',
+    sub: '#c58b97',
+    glow: 'rgba(190, 40, 70, 0.4)',
+    panel: 'rgba(197, 139, 151, 0.1)',
+  },
+  light: {
+    bg: 'linear-gradient(160deg, #fbf3e2, #e9d6b3)',
+    border: 'rgba(74, 44, 29, 0.2)',
+    text: '#24140e',
+    sub: '#6f523c',
+    glow: 'rgba(255, 255, 255, 0.85)',
+    panel: 'rgba(74, 44, 29, 0.08)',
+  },
+}
+
+// کلیدهای کوچیک پیش‌نمایش: ۱۴ کلید سفید، و کلید مشکی بعد از کلیدهای ۰،۱،۳،۴،۵ هر اکتاو
+const WHITE_KEYS = 14
+const KEY_W = 10
+const BLACK_AFTER = new Set([0, 1, 3, 4, 5])
+const blackKeys = Array.from({ length: WHITE_KEYS - 1 }, (_, i) => i).filter((i) => BLACK_AFTER.has(i % 7))
 
 const base =
   'flex min-w-28 items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-key-active/60'
@@ -43,26 +80,77 @@ const off = 'border-stone-700/60 bg-stone-950/30 text-stone-200 hover:bg-stone-8
     <!-- تم -->
     <section class="rounded-2xl border border-stone-700/40 bg-stone-950/30 p-5" role="radiogroup" :aria-label="t('settings.appearance.theme')">
       <h3 class="text-sm font-medium">{{ t('settings.appearance.theme') }}</h3>
-      <div class="mt-3 flex flex-wrap gap-2">
+
+      <div class="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
         <button
-          v-for="th in themes"
-          :key="th.value"
+          v-for="th in THEMES"
+          :key="th"
           type="button"
           role="radio"
-          :aria-checked="theme === th.value"
-          :class="[base, theme === th.value ? on : off]"
+          :aria-checked="theme === th"
+          class="relative flex flex-col overflow-hidden rounded-2xl border p-3 text-start transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-key-active/60"
+          :class="theme === th ? 'border-key-active shadow-[0_0_24px_-8px_var(--color-key-active)]' : 'hover:-translate-y-0.5'"
+          :style="{
+            background: previews[th].bg,
+            color: previews[th].text,
+            ...(theme === th ? {} : { borderColor: previews[th].border }),
+          }"
           data-cuelume-tap
           data-cuelume-emphasis="subtle"
-          @click="setTheme(th.value)"
+          @click="setTheme(th)"
         >
-          <svg v-if="th.value === 'dark'" class="size-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-            <path d="M16.5 11.5A6.5 6.5 0 0 1 8.5 3.5a6.5 6.5 0 1 0 8 8Z" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-          <svg v-else class="size-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-            <circle cx="10" cy="10" r="3.5" />
-            <path d="M10 2.5v1.8M10 15.7v1.8M2.5 10h1.8M15.7 10h1.8M4.7 4.7l1.3 1.3M14 14l1.3 1.3M4.7 15.3 6 14M14 6l1.3-1.3" stroke-linecap="round" />
-          </svg>
-          {{ t(th.label) }}
+          <!-- تیک انتخاب -->
+          <span
+            v-if="theme === th"
+            class="absolute end-2.5 top-2.5 z-10 grid size-5 place-items-center rounded-full bg-key-active text-stone-950"
+            aria-hidden="true"
+          >
+            <svg class="size-3" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.6">
+              <path d="m5 10.5 3.5 3.5L15 7" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </span>
+
+          <!-- پیش‌نمایش: درخشش نور + پنل + کیبورد -->
+          <div
+            class="relative aspect-4/3 overflow-hidden rounded-xl"
+            :style="{ background: `radial-gradient(ellipse at 70% 15%, ${previews[th].glow}, transparent 65%)` }"
+            aria-hidden="true"
+          >
+            <div class="absolute inset-x-3 top-3 h-[42%] rounded-lg" :style="{ background: previews[th].panel }">
+              <span class="absolute inset-x-3 top-3 h-px opacity-40" :style="{ background: previews[th].sub }" />
+              <span class="absolute inset-x-3 top-6 h-px w-1/2 opacity-30" :style="{ background: previews[th].sub }" />
+            </div>
+
+            <svg
+              class="absolute inset-x-3 bottom-3 w-[calc(100%-1.5rem)]"
+              :viewBox="`0 0 ${WHITE_KEYS * KEY_W} 34`"
+              preserveAspectRatio="none"
+            >
+              <rect
+                v-for="i in WHITE_KEYS"
+                :key="i"
+                :x="(i - 1) * KEY_W + 0.4"
+                y="0"
+                :width="KEY_W - 0.8"
+                height="34"
+                rx="1.2"
+                fill="#f4ebdd"
+              />
+              <rect
+                v-for="i in blackKeys"
+                :key="`b${i}`"
+                :x="(i + 1) * KEY_W - 3"
+                y="0"
+                width="6"
+                height="21"
+                rx="1"
+                fill="#14100d"
+              />
+            </svg>
+          </div>
+
+          <span class="mt-3 text-sm font-semibold">{{ t(`settings.appearance.themes.${th}.name`) }}</span>
+          <span class="mt-0.5 text-xs" :style="{ color: previews[th].sub }">{{ t(`settings.appearance.themes.${th}.description`) }}</span>
         </button>
       </div>
     </section>

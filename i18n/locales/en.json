@@ -588,14 +588,30 @@
     "title": "Settings",
     "appearance": {
       "title": "Appearance",
-      "description": "Choose the language and theme of the site.",
+      "description": "Choose your language and favorite theme.",
       "language": "Language",
       "theme": "Theme",
-      "dark": "Dark",
-      "light": "Light",
       "languages": {
         "fa": "فارسی",
         "en": "English"
+      },
+      "themes": {
+        "navy": {
+          "name": "Navy",
+          "description": "Cool & Calm"
+        },
+        "dark": {
+          "name": "Brown",
+          "description": "Warm & Natural"
+        },
+        "wine": {
+          "name": "Wine",
+          "description": "Elegant & Deep"
+        },
+        "light": {
+          "name": "Light",
+          "description": "Clean & Bright"
+        }
       }
     },
     "shortcuts": {

@@ -10,6 +10,14 @@ const FMAX = 9000 // بالاترین فرکانس نمایش داده‌شده 
 const DB_MIN = -90 // سطح صدایی که ستون صفر حساب می‌شه
 const DB_MAX = -28 // سطح صدایی که ستون پر حساب می‌شه
 
+// رنگ ستون‌ها به تفکیک تم: [پایین، وسط، بالا]
+const BAR_COLORS: Record<string, [string, string, string]> = {
+  dark: ['#6f523c', '#c4a98a', '#F5E6C8'],
+  navy: ['#4d6482', '#94a9c4', '#F5E6C8'],
+  wine: ['#7a4452', '#c58b97', '#F5E6C8'],
+  light: ['#c4a98a', '#6f523c', '#4a2c1d'],
+}
+
 const levels = new Float32Array(BARS) // ارتفاع فعلی هر ستون (۰ تا ۱)
 const peaks = new Float32Array(BARS) // نوک‌های کوچیکی که آروم میفتن
 
@@ -76,18 +84,14 @@ function draw() {
   const barW = (width - gap * (BARS - 1)) / BARS
   const radius = Math.min(barW / 2, 2.5)
 
-  // توی تم روشن ستون‌ها قهوه‌ای‌ان (روی کرم دیده بشن)، توی تم تیره کرم
-  const light = document.documentElement.dataset.theme === 'light'
+  // رنگ ستون‌ها از تم فعلی می‌آد: توی تم روشن قهوه‌ای (روی کرم دیده بشن)، توی بقیه از تیره به کرم
+  const theme = document.documentElement.dataset.theme ?? 'dark'
+  const light = theme === 'light'
+  const [c0, c1, c2] = BAR_COLORS[theme] ?? BAR_COLORS.dark!
   const grad = g.createLinearGradient(0, height, 0, 0)
-  if (light) {
-    grad.addColorStop(0, '#c4a98a')
-    grad.addColorStop(0.55, '#6f523c')
-    grad.addColorStop(1, '#4a2c1d')
-  } else {
-    grad.addColorStop(0, '#6f523c')
-    grad.addColorStop(0.55, '#c4a98a')
-    grad.addColorStop(1, '#F5E6C8')
-  }
+  grad.addColorStop(0, c0)
+  grad.addColorStop(0.55, c1)
+  grad.addColorStop(1, c2)
 
   for (let i = 0; i < BARS; i++) {
     const lv = levels[i]!
