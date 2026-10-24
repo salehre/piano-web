@@ -480,23 +480,27 @@
   },
   "home": {
     "hero": {
-      "line1": "A piano that lives",
+      "line1": "Play the piano",
       "line2": "in your browser",
-      "text": "Play with real piano sounds using your mouse, touch screen, or computer keyboard. No install, no sign-up.",
-      "cta": "Play virtual piano"
+      "text": "A modern web piano with real piano sounds. Play with your mouse, touch screen, or computer keyboard. Connect a MIDI device and experience more.",
+      "cta": "Start Playing"
     },
-    "features": {
-      "sound": {
-        "title": "Real piano sound",
-        "text": "Recorded grand piano samples, loaded once and played instantly."
+    "highlights": {
+      "touch": {
+        "title": "Mouse & Touch",
+        "text": "Play with your fingers"
       },
-      "play": {
-        "title": "Play your way",
-        "text": "Click, drag across the keys, touch the screen, or use your computer keyboard."
+      "keyboard": {
+        "title": "Keyboard",
+        "text": "Use your computer keys"
       },
-      "shortcuts": {
-        "title": "Your shortcuts",
-        "text": "Map any note to any key and make the keyboard feel like yours."
+      "midi": {
+        "title": "MIDI Support",
+        "text": "Connect your device"
+      },
+      "install": {
+        "title": "No installation",
+        "text": "Works in your browser"
       }
     }
   },

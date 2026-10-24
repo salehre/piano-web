@@ -110,17 +110,31 @@ const off = 'border-stone-700/60 bg-stone-950/30 text-stone-200 hover:bg-stone-8
             </svg>
           </span>
 
-          <!-- پیش‌نمایش: درخشش نور + پنل + کیبورد -->
+          <!-- پیش‌نمایش: تصویر واضح داخل کادر و ادامه‌ی مات آن در حاشیه -->
           <div
-            class="relative aspect-4/3 overflow-hidden rounded-xl"
+            class="relative isolate aspect-4/3 rounded-xl border"
             :style="{
-              backgroundImage: `linear-gradient(${previews[th].glow}, ${previews[th].glow}), url('/images/theme-bg.webp')`,
-              backgroundPosition: 'center',
-              backgroundSize: 'cover',
+              borderColor: previews[th].border,
               boxShadow: `inset 0 0 36px 8px ${previews[th].glow}`,
             }"
             aria-hidden="true"
           >
+            <div
+              class="absolute -inset-3 -z-10 rounded-2xl blur-[3px]"
+              :style="{
+                backgroundImage: `linear-gradient(${previews[th].glow}, ${previews[th].glow}), url('/images/theme-bg.webp')`,
+                backgroundPosition: 'center',
+                backgroundSize: 'cover',
+              }"
+            />
+            <div
+              class="absolute inset-0 z-0 rounded-[inherit]"
+              :style="{
+                backgroundImage: `linear-gradient(${previews[th].glow}, ${previews[th].glow}), url('/images/theme-bg.webp')`,
+                backgroundPosition: 'center',
+                backgroundSize: 'cover',
+              }"
+            />
           </div>
 
           <span class="mt-3 text-sm font-semibold">{{ t(`settings.appearance.themes.${th}.name`) }}</span>

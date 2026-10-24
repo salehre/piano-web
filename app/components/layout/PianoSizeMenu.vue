@@ -60,7 +60,7 @@ const BLACK_AFTER = new Set([0, 1, 3, 4, 5])
   <div>
     <button
       type="button"
-      class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors hover:text-key-active"
+      class="flex items-center gap-2 rounded-lg px-3 py-2 border text-sm transition-colors hover:text-key-active"
       aria-haspopup="dialog"
       :aria-expanded="open"
       @click="openDialog"

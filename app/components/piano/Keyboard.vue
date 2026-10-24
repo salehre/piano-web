@@ -114,7 +114,7 @@ onBeforeUnmount(() => {
   <div class="flex flex-col shadow-[0_12px_30px_-12px_rgb(0_0_0/0.7)]">
     <!-- باکس نمایش نت‌های فشرده‌شده؛ بعد از لود صداها ظاهر می‌شه -->
     <div
-        class="h-8 rounded-t-lg bg-black px-3 transition-opacity duration-500"
+        class="note-display h-8 rounded-t-lg px-3 transition-opacity duration-500"
         :class="status === 'ready' ? 'opacity-100' : 'opacity-0'"
         aria-hidden="true"
     >
@@ -186,7 +186,17 @@ onBeforeUnmount(() => {
 <style scoped>
 .keybed {
   --half-gap: 1px;
-  background: linear-gradient(to bottom, #000 0%, #120a07 100%);
+  background:
+    radial-gradient(ellipse 42% 55% at 0% 0%, rgb(55 35 25 / 0.42), transparent 100%),
+    radial-gradient(ellipse 42% 55% at 100% 0%, rgb(55 35 25 / 0.42), transparent 100%),
+    linear-gradient(to bottom, #1b110c 0%, #170d08 28%, #120a07 72%, #100906 100%);
+}
+
+.note-display {
+  background:
+    radial-gradient(ellipse at 0% 0%, rgb(60 38 27 / 0.42), transparent 72%),
+    radial-gradient(ellipse at 100% 0%, rgb(60 38 27 / 0.42), transparent 72%),
+    linear-gradient(to bottom, #130b07, #0e0806);
 }
 
 .felt {
@@ -203,12 +213,12 @@ onBeforeUnmount(() => {
 }
 .cheek-l {
   left: 0;
-  background: linear-gradient(to right, #2b1a13, #120a07);
+  background: linear-gradient(to right, #302017 0%, #21150e 58%, #170e09 100%);
   box-shadow: inset -1px 0 0 rgb(255 255 255 / 0.07);
 }
 .cheek-r {
   right: 0;
-  background: linear-gradient(to left, #2b1a13, #120a07);
+  background: linear-gradient(to left, #302017 0%, #21150e 58%, #170e09 100%);
   box-shadow: inset 1px 0 0 rgb(255 255 255 / 0.07);
 }
 
