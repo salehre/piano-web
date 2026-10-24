@@ -561,6 +561,11 @@
     "rangeShort": "{from} to {to}",
     "keys": "{n} keys",
     "sizes": "Piano sizes",
+    "sizeDialog": {
+      "title": "Select Piano Size",
+      "subtitle": "Choose the number of keys for your virtual piano",
+      "apply": "Apply"
+    },
     "volume": "Volume",
     "mute": "Mute",
     "unmute": "Unmute",
