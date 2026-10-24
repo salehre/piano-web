@@ -617,8 +617,8 @@
       "clearAria": "Clear shortcut for {note}"
     },
     "midi": {
-      "title": "MIDI keyboard",
-      "description": "Play the piano with a MIDI keyboard, a simulator, or a device you build yourself. Key presses are played with their real velocity.",
+      "title": "MIDI Devices",
+      "description": "Connect and manage your MIDI devices",
       "connect": "Connect MIDI",
       "tryAgain": "Try again",
       "status": {
@@ -643,7 +643,30 @@
       "lastNote": "Last note: {note}, velocity {velocity} from {source}",
       "noNotes": "No notes received yet.",
       "sourceTest": "test button",
-      "sourceAny": "a MIDI device"
+      "sourceAny": "a MIDI device",
+      "deviceCount": "no devices | {n} device | {n} devices",
+      "inputOnly": "Input",
+      "velocity": "Velocity",
+      "liveInput": "Live MIDI Input",
+      "lastNoteLabel": "Last Note",
+      "message": "Message",
+      "testTitle": "Test your MIDI device",
+      "testHint": "Make sure your device is working correctly.",
+      "testHintLoad": "Load the piano sounds first, then play a test note.",
+      "state": {
+        "active": "Active",
+        "standby": "Standby",
+        "off": "Disconnected"
+      }
+    },
+    "nav": {
+      "general": "General",
+      "appearance": "Appearance",
+      "midi": "MIDI"
+    },
+    "general": {
+      "title": "General",
+      "description": "Choose which computer key plays each piano note."
     }
   }
 }

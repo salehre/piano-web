@@ -1,98 +1,84 @@
 <script setup lang="ts">
-const { t, n } = useI18n()
-const { bindings, setBinding, clearBinding, resetBindings } = useKeyBindings()
+const { t } = useI18n()
+const route = useRoute()
+const { status: midiStatus, connect } = useMidi()
 
-useHead({ title: () => t('settings.title') })
+// آیکون هر بخش (viewBox 20×20)
+const sections = [
+  {
+    id: 'general',
+    icon: '<rect x="2.5" y="5" width="15" height="10" rx="2"/><path d="M5.5 8.5h.01M8.5 8.5h.01M11.5 8.5h.01M14.5 8.5h.01M6.5 11.5h7" stroke-linecap="round"/>',
+  },
+  {
+    id: 'appearance',
+    icon: '<path d="M10 2.5a7.5 7.5 0 1 0 0 15c1 0 1.6-.7 1.6-1.5 0-1.2-1-1.4-1-2.3 0-.8.7-1.2 1.5-1.2h1.6a3.3 3.3 0 0 0 3.3-3.3C17 5.5 13.9 2.5 10 2.5Z" stroke-linejoin="round"/><path d="M6.2 9.2h.01M8.4 6.2h.01M12 6.2h.01" stroke-linecap="round"/>',
+  },
+  {
+    id: 'midi',
+    icon: '<circle cx="10" cy="10" r="7.5"/><path d="M6.2 10h.01M7.4 6.9h.01M10 5.8h.01M12.6 6.9h.01M13.8 10h.01M7.5 13.5h5" stroke-linecap="round"/>',
+  },
+] as const
 
-// خطای هر نت (مثلاً کلید تکراری)؛ ارجاع به پیام نگه داشته می‌شه تا با عوض شدن زبان ترجمه‌اش عوض بشه
-const errors = ref<Record<string, MessageRef>>({})
-const tr = useTr()
+type SectionId = (typeof sections)[number]['id']
 
-function setCode(note: string, code: string) {
-  const clash = Object.entries(bindings.value).find(([n, c]) => c === code && n !== note)
-  if (clash) {
-    errors.value[note] = msgRef('settings.shortcuts.clash', { key: formatKeyCode(code), note: clash[0] })
-    return
-  }
-  delete errors.value[note]
-  setBinding(note, code)
-}
+// بخش فعلی از آدرس: /settings/midi → midi
+const current = computed<SectionId>(() => {
+  const seg = route.path.split('/').filter(Boolean)[1]
+  return sections.find((s) => s.id === seg)?.id ?? 'general'
+})
 
-function clear(note: string) {
-  delete errors.value[note]
-  clearBinding(note)
-}
+// دکمه‌ی اتصال MIDI فقط وقتی لازمه که هنوز وصل نیستیم
+const showConnect = computed(
+  () => current.value === 'midi' && ['idle', 'error', 'denied'].includes(midiStatus.value),
+)
 
-const showResetConfirm = ref(false)
-
-function reset() {
-  errors.value = {}
-  resetBindings()
-}
-
-/** تعداد نت‌های تنظیم‌شده‌ی هر اکتاو */
-function assignedCount(notes: string[]) {
-  return notes.filter((n) => bindings.value[n]).length
-}
+useHead({ title: () => `${t(`settings.${current.value}.title`)} · ${t('settings.title')}` })
 </script>
 
 <template>
   <main class="mx-auto max-w-5xl px-6 py-8">
-    <h1 class="text-2xl font-semibold">{{ t('settings.title') }}</h1>
+    <!-- سربرگ بخش فعلی -->
+    <header class="flex flex-wrap items-start justify-between gap-4">
+      <div class="min-w-0">
+        <h1 class="text-2xl font-semibold">{{ t(`settings.${current}.title`) }}</h1>
+        <p class="mt-1 text-sm text-stone-400">{{ t(`settings.${current}.description`) }}</p>
+      </div>
 
-    <SettingsAppearancePanel class="mt-8" />
+      <button
+        v-if="showConnect"
+        type="button"
+        class="rounded-xl bg-key-active px-5 py-2.5 text-sm font-semibold text-stone-950 transition-opacity hover:opacity-90"
+        data-cuelume-emphasis="strong"
+        @click="connect"
+      >
+        {{ midiStatus === 'error' || midiStatus === 'denied' ? t('settings.midi.tryAgain') : t('settings.midi.connect') }}
+      </button>
+    </header>
 
-    <SettingsMidiPanel class="mt-8" />
-
-    <section class="mt-8" aria-labelledby="shortcuts-title">
-      <div class="flex flex-wrap items-start justify-between gap-4">
-        <div class="max-w-md">
-          <h2 id="shortcuts-title" class="text-lg font-medium">{{ t('settings.shortcuts.title') }}</h2>
-          <p class="mt-1 text-sm text-stone-400">
-            All 88 piano keys are listed by octave. Click a field, then press the computer key you want for that
-            note. Shortcuts for notes outside the selected piano size are ignored. Keys are matched by position, so
-            they work with any keyboard language.
-          </p>
-        </div>
-
-        <button
-          type="button"
-          class="rounded-md border border-stone-700 px-3 py-2 text-sm hover:bg-stone-800"
-          @click="showResetConfirm = true"
+    <div class="mt-6 flex flex-col gap-6 md:flex-row md:gap-8">
+      <!-- سایدبار: توی موبایل افقی، توی دسکتاپ کنار صفحه -->
+      <nav
+        class="flex shrink-0 gap-1 overflow-x-auto md:sticky md:top-20 md:w-52 md:flex-col md:self-start md:overflow-visible md:border-e md:border-stone-700/40 md:pe-4"
+        :aria-label="t('settings.title')"
+      >
+        <NuxtLink
+          v-for="s in sections"
+          :key="s.id"
+          :to="`/settings/${s.id}`"
+          class="flex shrink-0 items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm transition-colors hover:bg-stone-800/40 hover:text-key-active focus:outline-none focus-visible:ring-2 focus-visible:ring-key-active/60"
+          :class="current === s.id ? 'bg-stone-800/70 text-key-active' : 'text-stone-300'"
+          data-cuelume-tap
+          data-cuelume-emphasis="subtle"
         >
-          {{ t('settings.shortcuts.reset') }}
-        </button>
-      </div>
+          <svg class="size-4 shrink-0" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" v-html="s.icon" />
+          {{ t(`settings.nav.${s.id}`) }}
+        </NuxtLink>
+      </nav>
 
-      <div class="mt-6 space-y-8">
-        <section v-for="g in NOTE_GROUPS" :key="g.octave" :aria-labelledby="`octave-${g.octave}`">
-          <div class="flex items-baseline justify-between border-b border-stone-800 pb-2">
-            <h3 :id="`octave-${g.octave}`" class="text-base font-medium">{{ t('settings.shortcuts.octave', { n: n(g.octave) }) }}</h3>
-            <span class="text-xs text-stone-500">{{ t('settings.shortcuts.assigned', { set: n(assignedCount(g.notes)), total: n(g.notes.length) }) }}</span>
-          </div>
-
-          <ul class="grid grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] gap-x-6">
-            <SettingsKeyBindingRow
-              v-for="note in g.notes"
-              :key="note"
-              :note="note"
-              :code="bindings[note] ?? null"
-              :error="tr(errors[note])"
-              @update:code="setCode(note, $event)"
-              @clear="clear(note)"
-            />
-          </ul>
-        </section>
-      </div>
-    </section>
-
-    <UiConfirmDialog
-      v-model="showResetConfirm"
-      :title="t('settings.shortcuts.resetTitle')"
-      :message="t('settings.shortcuts.resetMessage')"
-      :confirm-label="t('settings.shortcuts.resetConfirm')"
-      :cancel-label="t('settings.shortcuts.resetCancel')"
-      @confirm="reset"
-    />
+      <!-- محتوای بخش -->
+      <section class="min-w-0 flex-1">
+        <NuxtPage />
+      </section>
+    </div>
   </main>
 </template>

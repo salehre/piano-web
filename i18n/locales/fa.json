@@ -617,8 +617,8 @@
       "clearAria": "پاک کردن میان‌بر {note}"
     },
     "midi": {
-      "title": "کیبورد MIDI",
-      "description": "با کیبورد MIDI، یک شبیه‌ساز یا دستگاهی که خودتان می‌سازید پیانو را بنوازید. ضربه‌ی کلیدها با شدت واقعی‌شان پخش می‌شود.",
+      "title": "دستگاه‌های MIDI",
+      "description": "دستگاه‌های MIDI خود را متصل و مدیریت کنید",
       "connect": "اتصال MIDI",
       "tryAgain": "تلاش دوباره",
       "status": {
@@ -643,7 +643,30 @@
       "lastNote": "آخرین نت: {note}، شدت {velocity} از {source}",
       "noNotes": "هنوز نتی دریافت نشده است.",
       "sourceTest": "دکمه‌ی آزمایش",
-      "sourceAny": "یک دستگاه MIDI"
+      "sourceAny": "یک دستگاه MIDI",
+      "deviceCount": "بدون دستگاه | {n} دستگاه | {n} دستگاه",
+      "inputOnly": "ورودی",
+      "velocity": "شدت",
+      "liveInput": "ورودی زنده‌ی MIDI",
+      "lastNoteLabel": "آخرین نت",
+      "message": "پیام",
+      "testTitle": "دستگاه MIDI خود را آزمایش کنید",
+      "testHint": "مطمئن شوید دستگاه شما درست کار می‌کند.",
+      "testHintLoad": "اول صداهای پیانو را بارگذاری کنید، بعد نت آزمایشی بزنید.",
+      "state": {
+        "active": "فعال",
+        "standby": "آماده‌باش",
+        "off": "قطع‌شده"
+      }
+    },
+    "nav": {
+      "general": "عمومی",
+      "appearance": "ظاهر",
+      "midi": "MIDI"
+    },
+    "general": {
+      "title": "عمومی",
+      "description": "مشخص کنید هر کلید کامپیوتر کدام نت پیانو را بنوازد."
     }
   }
 }

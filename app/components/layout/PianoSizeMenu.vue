@@ -75,7 +75,7 @@ const BLACK_AFTER = new Set([0, 1, 3, 4, 5])
 
       <dialog
         ref="dialog"
-        class="size-dialog glass-card m-auto w-[calc(100%-2rem)] max-w-xl bg-stone-900/90 p-0 backdrop:bg-black/60 backdrop:backdrop-blur-sm [--glass-radius:1.5rem]"
+        class="size-dialog glass-card fixed inset-0 m-auto w-[calc(100%-2rem)] max-w-xl bg-stone-900/90 p-0 backdrop:bg-black/60 backdrop:backdrop-blur-sm [--glass-radius:1.5rem]"
         :aria-labelledby="titleId"
         :aria-describedby="descId"
         @close="onNativeClose"
