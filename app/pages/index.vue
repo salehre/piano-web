@@ -3,7 +3,7 @@ const { t } = useI18n()
 // عنوان صفحه‌ی اصلی همون اسم برنامه است (titleTemplate توی app.vue)
 
 // تصویر پس‌زمینه‌ی هیرو (همون عکس پیانوی تاریک)؛ برای عوض کردنش فقط همین خط رو تغییر بده
-const HERO_IMAGE = '/images/piano-finder-bg.webp'
+const HERO_IMAGE = '/images/1.png'
 
 // آیکون‌ها (viewBox 24×24، خط‌دار)
 const highlights = [
@@ -48,7 +48,7 @@ const highlights = [
       />
 
       <div
-        class="mx-auto flex min-h-[32rem] max-w-5xl flex-col justify-between gap-12 px-6 pt-14 pb-8 sm:pt-20 lg:min-h-[calc(100svh-3.75rem)]"
+        class="mx-auto flex min-h-112 max-w-5xl flex-col justify-between gap-12 px-6 pt-14 pb-8 sm:pt-20 lg:min-h-[calc(80svh-3.75rem)]"
       >
         <div class="flex max-w-xl flex-col items-start gap-6">
           <h1 class="font-serif text-4xl leading-[1.1] font-medium sm:text-6xl rtl:font-sans rtl:leading-[1.35]">
