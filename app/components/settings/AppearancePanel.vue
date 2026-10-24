@@ -113,7 +113,12 @@ const off = 'border-stone-700/60 bg-stone-950/30 text-stone-200 hover:bg-stone-8
           <!-- پیش‌نمایش: درخشش نور + پنل + کیبورد -->
           <div
             class="relative aspect-4/3 overflow-hidden rounded-xl"
-            :style="{ background: `radial-gradient(ellipse at 70% 15%, ${previews[th].glow}, transparent 65%)` }"
+            :style="{
+              backgroundImage: `linear-gradient(${previews[th].glow}, ${previews[th].glow}), url('/images/theme-bg.webp')`,
+              backgroundPosition: 'center',
+              backgroundSize: 'cover',
+              boxShadow: `inset 0 0 36px 8px ${previews[th].glow}`,
+            }"
             aria-hidden="true"
           >
             <div class="absolute inset-x-3 top-3 h-[42%] rounded-lg" :style="{ background: previews[th].panel }">
