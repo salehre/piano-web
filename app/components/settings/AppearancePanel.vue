@@ -121,37 +121,6 @@ const off = 'border-stone-700/60 bg-stone-950/30 text-stone-200 hover:bg-stone-8
             }"
             aria-hidden="true"
           >
-            <div class="absolute inset-x-3 top-3 h-[42%] rounded-lg" :style="{ background: previews[th].panel }">
-              <span class="absolute inset-x-3 top-3 h-px opacity-40" :style="{ background: previews[th].sub }" />
-              <span class="absolute inset-x-3 top-6 h-px w-1/2 opacity-30" :style="{ background: previews[th].sub }" />
-            </div>
-
-            <svg
-              class="absolute inset-x-3 bottom-3 w-[calc(100%-1.5rem)]"
-              :viewBox="`0 0 ${WHITE_KEYS * KEY_W} 34`"
-              preserveAspectRatio="none"
-            >
-              <rect
-                v-for="i in WHITE_KEYS"
-                :key="i"
-                :x="(i - 1) * KEY_W + 0.4"
-                y="0"
-                :width="KEY_W - 0.8"
-                height="34"
-                rx="1.2"
-                fill="#f4ebdd"
-              />
-              <rect
-                v-for="i in blackKeys"
-                :key="`b${i}`"
-                :x="(i + 1) * KEY_W - 3"
-                y="0"
-                width="6"
-                height="21"
-                rx="1"
-                fill="#14100d"
-              />
-            </svg>
           </div>
 
           <span class="mt-3 text-sm font-semibold">{{ t(`settings.appearance.themes.${th}.name`) }}</span>
