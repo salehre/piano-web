@@ -57,6 +57,7 @@
       "fields": {
         "name": "نام",
         "email": "ایمیل",
+        "emailPlaceholder": "name@example.com",
         "country": "کشور",
         "nationalId": "کد ملی",
         "nationalIdPlaceholder": "۱۰ رقم",

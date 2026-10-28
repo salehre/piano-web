@@ -41,13 +41,10 @@ const deviceName = (name: string) => name || t('settings.midi.unknownDevice')
 const selectedMissing = computed(
   () => selectedId.value !== 'all' && !devices.value.some((d) => d.id === selectedId.value && d.connected),
 )
-const selectedDeviceNotListed = computed(
-  () => selectedId.value !== 'all' && !devices.value.some((d) => d.id === selectedId.value),
-)
 
 const deviceOptions = computed(() => [
   { id: 'all', label: t('settings.midi.allDevices') },
-  ...(selectedDeviceNotListed.value ? [{ id: selectedId.value, label: t('settings.midi.unknownDevice') }] : []),
+  ...(selectedMissing.value ? [{ id: selectedId.value, label: t('settings.midi.unknownDevice') }] : []),
   ...devices.value.map((device) => ({ id: device.id, label: deviceName(device.name) })),
 ])
 

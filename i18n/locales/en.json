@@ -57,6 +57,7 @@
       "fields": {
         "name": "Name",
         "email": "Email",
+        "emailPlaceholder": "name@example.com",
         "country": "Country",
         "nationalId": "National ID",
         "nationalIdPlaceholder": "10 digits",
