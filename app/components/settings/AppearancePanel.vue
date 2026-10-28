@@ -4,7 +4,12 @@ import type { LocaleObject } from '@nuxtjs/i18n'
 const { t, locale, locales, setLocale } = useI18n()
 const { theme, setTheme } = useTheme()
 
-const langs = computed(() => (locales.value as LocaleObject[]).map((l) => ({ code: l.code, language: l.language })))
+const langs = computed(() =>
+  (locales.value as LocaleObject[]).map((l) => ({
+    code: l.code,
+    language: l.language,
+  })),
+)
 
 const previews: Record<Theme, { bg: string; border: string; text: string; sub: string; glow: string; panel: string }> = {
   navy: {
@@ -55,15 +60,22 @@ function playDelay(index: number, phrase: number[]) {
 }
 
 const base =
-  'lang-btn flex min-w-28 items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-sm transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-key-active/60'
-const on = 'border-key-active bg-key-active text-stone-950 scale-[1.03]'
+  'lang-btn relative flex min-w-28 items-center justify-center gap-2 overflow-hidden rounded-xl border px-4 py-2.5 text-sm transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-key-active/60'
+const on = 'is-selected border-key-active bg-key-active text-stone-950'
 const off = 'border-stone-700/60 bg-stone-950/30 text-stone-200 hover:bg-stone-800/60'
 </script>
 
 <template>
   <div class="space-y-4">
-    <section class="rounded-2xl border border-stone-700/40 bg-stone-950/30 p-5" role="radiogroup" :aria-label="t('settings.appearance.language')">
-      <h3 class="text-sm font-medium">{{ t('settings.appearance.language') }}</h3>
+    <section
+      class="rounded-2xl border border-stone-700/40 bg-stone-950/30 p-5"
+      role="radiogroup"
+      :aria-label="t('settings.appearance.language')"
+    >
+      <h3 class="text-sm font-medium">
+        {{ t('settings.appearance.language') }}
+      </h3>
+
       <div class="mt-3 flex flex-wrap gap-2">
         <button
           v-for="(l, i) in langs"
@@ -78,13 +90,34 @@ const off = 'border-stone-700/60 bg-stone-950/30 text-stone-200 hover:bg-stone-8
           data-cuelume-emphasis="subtle"
           @click="setLocale(l.code)"
         >
-          {{ t(`settings.appearance.languages.${l.code}`) }}
+          <span class="lang-indicator" aria-hidden="true">
+            <svg
+              v-if="locale === l.code"
+              class="lang-check"
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.8"
+            >
+              <path d="m5 10.5 3.5 3.5L15 7" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </span>
+
+          <span class="relative z-10">
+            {{ t(`settings.appearance.languages.${l.code}`) }}
+          </span>
         </button>
       </div>
     </section>
 
-    <section class="rounded-2xl border border-stone-700/40 bg-stone-950/30 p-5" role="radiogroup" :aria-label="t('settings.appearance.theme')">
-      <h3 class="text-sm font-medium">{{ t('settings.appearance.theme') }}</h3>
+    <section
+      class="rounded-2xl border border-stone-700/40 bg-stone-950/30 p-5"
+      role="radiogroup"
+      :aria-label="t('settings.appearance.theme')"
+    >
+      <h3 class="text-sm font-medium">
+        {{ t('settings.appearance.theme') }}
+      </h3>
 
       <div class="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
         <button
@@ -174,10 +207,17 @@ const off = 'border-stone-700/60 bg-stone-950/30 text-stone-200 hover:bg-stone-8
           <span class="mt-3 flex items-center gap-2 text-sm font-semibold">
             {{ t(`settings.appearance.themes.${th}.name`) }}
             <span v-if="theme === th" class="ms-auto flex h-3 items-end gap-0.5" aria-hidden="true">
-              <i v-for="n in 3" :key="n" class="eq-bar" :style="{ animationDelay: `${(n - 1) * 0.12}s`, background: previews[th].sub }" />
+              <i
+                v-for="n in 3"
+                :key="n"
+                class="eq-bar"
+                :style="{ animationDelay: `${(n - 1) * 0.12}s`, background: previews[th].sub }"
+              />
             </span>
           </span>
-          <span class="mt-0.5 text-xs" :style="{ color: previews[th].sub }">{{ t(`settings.appearance.themes.${th}.description`) }}</span>
+          <span class="mt-0.5 text-xs" :style="{ color: previews[th].sub }">
+            {{ t(`settings.appearance.themes.${th}.description`) }}
+          </span>
         </button>
       </div>
     </section>
@@ -187,9 +227,80 @@ const off = 'border-stone-700/60 bg-stone-950/30 text-stone-200 hover:bg-stone-8
 <style scoped>
 .lang-btn,
 .theme-card {
-  animation: card-in 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation: card-in 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
 }
 
+/* Language buttons */
+.lang-btn {
+  transform: translateY(0);
+}
+
+.lang-btn:hover {
+  transform: translateY(-2px);
+}
+
+.lang-btn:active {
+  transform: translateY(0) scale(0.97);
+}
+
+.lang-btn.is-selected {
+  box-shadow: 0 0 18px -7px var(--color-key-active);
+}
+
+.lang-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 65%
+  );
+  transform: translateX(-130%);
+  pointer-events: none;
+}
+
+.lang-btn:hover::after {
+  animation: sheen 0.75s ease;
+}
+
+.lang-indicator {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: 1rem;
+  height: 1rem;
+  flex: none;
+  place-items: center;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  opacity: 0.55;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    opacity 0.3s ease,
+    transform 0.3s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+
+.lang-btn:hover .lang-indicator {
+  opacity: 0.85;
+}
+
+.lang-btn.is-selected .lang-indicator {
+  border-color: transparent;
+  background: rgba(0, 0, 0, 0.16);
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.lang-check {
+  width: 0.7rem;
+  height: 0.7rem;
+  animation: lang-check-in 0.35s cubic-bezier(0.2, 1.45, 0.4, 1) both;
+}
+
+/* Theme cards */
 .theme-card::after {
   content: '';
   position: absolute;
@@ -253,21 +364,47 @@ const off = 'border-stone-700/60 bg-stone-950/30 text-stone-200 hover:bg-stone-8
 }
 
 @keyframes card-in {
-  from { opacity: 0; transform: translateY(10px) scale(0.97); }
-  to { opacity: 1; transform: none; }
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes lang-check-in {
+  from {
+    opacity: 0;
+    transform: scale(0.3) rotate(-35deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
 }
 
 @keyframes sheen {
-  to { transform: translateX(130%); }
+  to {
+    transform: translateX(130%);
+  }
 }
 
 @keyframes drift {
-  from { transform: scale(1.04); }
-  to { transform: scale(1.12) translate3d(-2%, -1%, 0); }
+  from {
+    transform: scale(1.04);
+  }
+  to {
+    transform: scale(1.12) translate3d(-2%, -1%, 0);
+  }
 }
 
 @keyframes key-play {
-  0%, 72%, 100% { transform: translateY(0); filter: brightness(1); }
+  0%, 72%, 100% {
+    transform: translateY(0);
+    filter: brightness(1);
+  }
   7% {
     transform: translateY(2px) scaleY(0.96);
     filter: brightness(1.2);
@@ -276,13 +413,23 @@ const off = 'border-stone-700/60 bg-stone-950/30 text-stone-200 hover:bg-stone-8
 }
 
 @keyframes pop {
-  from { opacity: 0; transform: scale(0.4); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @keyframes eq {
-  0%, 100% { transform: scaleY(0.35); }
-  50% { transform: scaleY(1); }
+  0%, 100% {
+    transform: scaleY(0.35);
+  }
+  50% {
+    transform: scaleY(1);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -293,8 +440,21 @@ const off = 'border-stone-700/60 bg-stone-950/30 text-stone-200 hover:bg-stone-8
   .is-played,
   .check-pop,
   .eq-bar,
+  .lang-check,
+  .lang-btn::after,
   .theme-card::after {
     animation: none !important;
+  }
+
+  .lang-btn,
+  .lang-indicator,
+  .theme-card {
+    transition: none !important;
+  }
+
+  .lang-btn:hover,
+  .lang-btn:active {
+    transform: none;
   }
 }
 </style>

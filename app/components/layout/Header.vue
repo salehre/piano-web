@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const { t } = useI18n()
+const { isLight } = useTheme()
 const route = useRoute()
 
 const rays = [
@@ -9,7 +10,6 @@ const rays = [
   'M16.0 9.5L16.0 5.0',   'M19.2 10.4L23.0 3.9',  'M21.6 12.7L25.5 10.5',
 ]
 
-const headerEl = ref<HTMLElement | null>(null)
 const navEl = ref<HTMLElement | null>(null)
 const scrolled = ref(false)
 const progress = ref(0)
@@ -42,13 +42,6 @@ function onScroll() {
   progress.value = max > 0 ? Math.min(y / max, 1) : 0
 }
 
-function onMove(e: MouseEvent) {
-  const r = headerEl.value?.getBoundingClientRect()
-  if (!r) return
-  headerEl.value!.style.setProperty('--mx', `${e.clientX - r.left}px`)
-  headerEl.value!.style.setProperty('--my', `${e.clientY - r.top}px`)
-}
-
 let ro: ResizeObserver | undefined
 onMounted(async () => {
   await nextTick()
@@ -71,15 +64,14 @@ watch(() => route.fullPath, () => nextTick(syncInk))
 
 <template>
   <header
-    ref="headerEl"
     class="site-header sticky top-0 z-40 hidden lg:block border-b transition-all duration-500"
-    :class="scrolled
-      ? 'border-white/10 bg-stone-950/75 shadow-[0_10px_40px_-20px_rgba(0,0,0,.9)] backdrop-blur-xl'
-      : 'border-white/5 bg-stone-950/50 backdrop-blur-md'"
-    @mousemove="onMove"
+    :class="[
+      scrolled
+        ? 'border-white/10 bg-stone-950/75 shadow-[0_10px_40px_-20px_rgba(0,0,0,.9)] backdrop-blur-xl'
+        : 'border-white/5 bg-stone-950/50 backdrop-blur-md',
+      { 'theme-light': isLight },
+    ]"
   >
-    <div class="spotlight pointer-events-none absolute inset-0 text-key-active opacity-0 transition-opacity duration-500" />
-
     <div
       class="relative mx-auto flex max-w-5xl items-center justify-between px-6 transition-[padding] duration-500"
       :class="scrolled ? 'py-2' : 'py-3.5'"
@@ -96,7 +88,7 @@ watch(() => route.fullPath, () => nextTick(syncInk))
             <path v-for="(d, i) in rays" :key="i" :d="d" class="ray" :style="{ animationDelay: `${i * 110}ms` }" />
           </svg>
         </span>
-        <span class="font-serif rtl:font-sans tracking-wide bg-gradient-to-b from-white to-stone-400 bg-clip-text text-transparent">
+        <span class="font-serif rtl:font-sans tracking-wide bg-gradient-to-b from-stone-50 to-stone-400 bg-clip-text text-transparent">
           {{ t('app.name') }}
         </span>
       </NuxtLink>
@@ -121,11 +113,6 @@ watch(() => route.fullPath, () => nextTick(syncInk))
         </NuxtLink>
 
         <NuxtLink to="/settings" active-class="nav-active" class="nav-link group/s" @mouseenter="onEnter">
-          <svg class="size-4 transition-transform duration-700 group-hover/s:rotate-90" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="3" />
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c.14.63.67 1.09 1.31 1.1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
-          </svg>
           {{ t('nav.settings') }}
         </NuxtLink>
 
@@ -152,12 +139,6 @@ watch(() => route.fullPath, () => nextTick(syncInk))
   to { opacity: 1; transform: translateY(0); }
 }
 
-.spotlight {
-  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 0px),
-    color-mix(in srgb, currentColor 14%, transparent), transparent 70%);
-}
-.site-header:hover .spotlight { opacity: 1; }
-
 /* لینک‌ها: فقط رنگ + لیفت، بدون بکگراند */
 .nav-link {
   position: relative;
@@ -177,6 +158,19 @@ watch(() => route.fullPath, () => nextTick(syncInk))
 }
 .nav-link.nav-active {
   color: theme('colors.key-active', #fff);
+}
+
+.site-header.theme-light {
+  color: #24140e;
+}
+.site-header.theme-light .nav-link {
+  color: #6f523c;
+}
+.site-header.theme-light .nav-link:hover {
+  color: #24140e;
+}
+.site-header.theme-light nav:hover .nav-link:not(:hover):not(.nav-active) {
+  opacity: 1;
 }
 
 /* وقتی روی ناو هاوری، بقیه کم‌رنگ میشن تا فوکوس بره روی هاور شده */
