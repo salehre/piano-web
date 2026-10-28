@@ -80,7 +80,7 @@ export default defineNuxtConfig({
       ],
     },
     workbox: {
-      globPatterns: ['**/*.{js,css,html,png,svg,ico,woff,woff2}'],
+      globPatterns: ['**/*.{js,css,html,png,svg,ico,webp,woff,woff2}'],
       // برنامه SSR هست و index.html نداره؛ صفحه‌ها موقع اولین بازدید کش می‌شن (NetworkFirst)
       navigateFallback: null,
       cleanupOutdatedCaches: true,
@@ -95,12 +95,31 @@ export default defineNuxtConfig({
           },
         },
         {
-          urlPattern: ({ request }: { request: Request }) =>
-            ['font', 'audio'].includes(request.destination),
+          urlPattern: ({ request }: { request: Request }) => request.destination === 'font',
           handler: 'CacheFirst',
           options: {
-            cacheName: 'assets',
-            expiration: { maxEntries: 80, maxAgeSeconds: 60 * 60 * 24 * 60 },
+            cacheName: 'fonts',
+            expiration: { maxEntries: 20, maxAgeSeconds: 60 * 60 * 24 * 365 },
+          },
+        },
+        // نمونه‌صداهای پیانو با fetch() لود می‌شن (request.destination خالیه، نه 'audio')؛
+        // پس با مسیرشون کش می‌کنیم تا دفعه‌ی بعد فوری لود بشن و آفلاین هم کار کنن
+        {
+          urlPattern: ({ url }: { url: URL }) => url.pathname.startsWith('/samples/'),
+          handler: 'CacheFirst',
+          options: {
+            cacheName: 'piano-samples',
+            expiration: { maxEntries: 60, maxAgeSeconds: 60 * 60 * 24 * 365 },
+            cacheableResponse: { statuses: [0, 200] },
+          },
+        },
+        {
+          urlPattern: ({ url }: { url: URL }) => url.pathname.startsWith('/images/'),
+          handler: 'StaleWhileRevalidate',
+          options: {
+            cacheName: 'images',
+            expiration: { maxEntries: 40, maxAgeSeconds: 60 * 60 * 24 * 60 },
+            cacheableResponse: { statuses: [0, 200] },
           },
         },
       ],

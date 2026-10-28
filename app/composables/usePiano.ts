@@ -118,6 +118,10 @@ export const usePiano = () => {
 
       if (!master) master = new Tone!.Volume(volumeToDb(volume.value)).toDestination()
 
+      // اگه بار قبل لود شکست خورده و کاربر «تلاش دوباره» زده، نمونه‌ی ناقصِ قبلی رو آزاد می‌کنیم
+      sampler?.dispose()
+      sampler = null
+
       await new Promise<void>((resolve, reject) => {
         sampler = new Tone!.Sampler({
           urls: buildSampleUrls(),

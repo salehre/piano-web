@@ -78,11 +78,6 @@ body {
     box-shadow: 0 10px 24px -18px rgba(0, 0, 0, 0.7);
   }
 
-  .glass-flat {
-    box-shadow: none;
-    text-shadow: none;
-  }
-
   .glass-card::before {
     content: '';
     position: absolute;

@@ -22,14 +22,23 @@ const BLACK_OFFSET: Record<string, number> = {
 // موقعیت هر کلید مشکی نسبت به کلیدهای سفید قبلی‌اش
 const blackKeys = computed(() => {
   let whitesBefore = 0
-  const result: { note: string; left: number; gap: number }[] = []
+  const result: { note: string; left: number; gap: number; style: Record<string, string> }[] = []
   for (const k of keys.value) {
     if (k.isBlack) {
       const offset = BLACK_OFFSET[k.note.replace(/-?\d+$/, '')] ?? 0
+      const left = (whitesBefore + offset) * whiteWidth.value - blackWidth.value / 2
+      const gap = (0.5 - offset / BLACK_RATIO) * 100
       result.push({
         note: k.note,
-        left: (whitesBefore + offset) * whiteWidth.value - blackWidth.value / 2,
-        gap: (0.5 - offset / BLACK_RATIO) * 100,
+        left,
+        gap,
+        // استایل یک بار با نوع پیانو ساخته می‌شه، نه با هر نت که زده می‌شه
+        style: {
+          left: `${left}%`,
+          width: `${blackWidth.value}%`,
+          '--gap': `${gap}%`,
+          ...riseStyle(result.length + 1000),
+        },
       })
     } else whitesBefore++
   }
@@ -53,7 +62,9 @@ const pressedNotes = computed(() => active.value.filter((n) => n in centers.valu
 const playable = computed(() => new Set(keys.value.map((k) => k.note)))
 useKeyboardInput((note) => playable.value.has(note))
 
-const isActive = (note: string) => active.value.includes(note)
+// Set: هر ۸۸ کلید با O(1) چک می‌شن، نه includes روی آرایه
+const activeSet = computed(() => new Set(active.value))
+const isActive = (note: string) => activeSet.value.has(note)
 
 // کلیدهای مشکی جدا و با تأخیر و سرعت تصادفی خودشون میان
 function rand(seed: number) {
@@ -167,13 +178,13 @@ onBeforeUnmount(() => {
 
         <!-- کلیدهای مشکی -->
         <button
-            v-for="(k, i) in blackKeys"
+            v-for="k in blackKeys"
             :key="k.note"
             type="button"
             :aria-label="k.note"
             class="key-black key-rise absolute top-0 flex h-[63%] touch-none items-end justify-center overflow-hidden pb-[10%] text-[9px] font-medium text-stone-400 sm:text-[10px]"
             :class="{ 'is-active': isActive(k.note) }"
-            :style="{ left: `${k.left}%`, width: `${blackWidth}%`, '--gap': `${k.gap}%`, ...riseStyle(i + 1000) }"
+            :style="k.style"
             :data-note="k.note"
         >
           {{ noteLabels[k.note] ?? '' }}

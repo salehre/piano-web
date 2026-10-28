@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // ستون‌های عمودیِ طیف صدا (spectrum analyzer) که با صدای پیانو بالا و پایین می‌رن
-const { getSpectrum } = usePiano()
+const { getSpectrum, active } = usePiano()
+const { theme } = useTheme()
 
 const canvas = ref<HTMLCanvasElement | null>(null)
 
@@ -25,6 +26,8 @@ let ctx: CanvasRenderingContext2D | null = null
 let width = 0
 let height = 0
 let raf = 0
+let running = false // حلقه‌ی انیمیشن فقط وقتی صدایی هست یا ستون‌ها دارن پایین میان می‌چرخه
+let grad: CanvasGradient | null = null // گرادیان فقط با تغییر اندازه یا تم دوباره ساخته می‌شه، نه هر فریم
 let observer: ResizeObserver | null = null
 
 function resize() {
@@ -38,6 +41,17 @@ function resize() {
   c.height = Math.round(height * dpr)
   ctx = c.getContext('2d')
   ctx?.setTransform(dpr, 0, 0, dpr, 0, 0)
+  buildGradient()
+  if (!running) draw() // تغییر اندازه بوم رو پاک می‌کنه؛ وقتی حلقه خوابه یک بار دوباره می‌کشیم
+}
+
+function buildGradient() {
+  if (!ctx || height === 0) return
+  const [c0, c1, c2] = BAR_COLORS[theme.value] ?? BAR_COLORS.dark!
+  grad = ctx.createLinearGradient(0, height, 0, 0)
+  grad.addColorStop(0, c0)
+  grad.addColorStop(0.55, c1)
+  grad.addColorStop(1, c2)
 }
 
 function update() {
@@ -85,13 +99,8 @@ function draw() {
   const radius = Math.min(barW / 2, 2.5)
 
   // رنگ ستون‌ها از تم فعلی می‌آد: توی تم روشن قهوه‌ای (روی کرم دیده بشن)، توی بقیه از تیره به کرم
-  const theme = document.documentElement.dataset.theme ?? 'dark'
-  const light = theme === 'light'
-  const [c0, c1, c2] = BAR_COLORS[theme] ?? BAR_COLORS.dark!
-  const grad = g.createLinearGradient(0, height, 0, 0)
-  grad.addColorStop(0, c0)
-  grad.addColorStop(0.55, c1)
-  grad.addColorStop(1, c2)
+  const light = theme.value === 'light'
+  if (!grad) buildGradient()
 
   for (let i = 0; i < BARS; i++) {
     const lv = levels[i]!
@@ -100,7 +109,7 @@ function draw() {
 
     // ستون‌های ساکت کم‌رنگ‌ترن
     g.globalAlpha = 0.3 + 0.7 * Math.min(1, lv * 1.5)
-    g.fillStyle = grad
+    g.fillStyle = grad!
     g.beginPath()
     if (g.roundRect) g.roundRect(x, height - bh, barW, bh, radius)
     else g.rect(x, height - bh, barW, bh)
@@ -117,11 +126,40 @@ function draw() {
   g.globalAlpha = 1
 }
 
+// ساکت و بی‌حرکت: نت فعالی نیست و همه‌ی ستون‌ها و نوک‌ها به ته رسیدن
+function isIdle() {
+  if (active.value.length) return false
+  for (let i = 0; i < BARS; i++) if (levels[i]! > 0.004 || peaks[i]! > 0.06) return false
+  return true
+}
+
 function frame() {
   update()
   draw()
+  if (isIdle()) {
+    running = false
+    raf = 0
+    return
+  }
   raf = requestAnimationFrame(frame)
 }
+
+function start() {
+  if (running) return
+  running = true
+  raf = requestAnimationFrame(frame)
+}
+
+// با اولین نت (کیبورد، موس، MIDI یا پخش ضبط) حلقه بیدار می‌شه
+watch(() => active.value.length, (count) => {
+  if (count > 0) start()
+})
+
+// عوض شدن تم: گرادیان رو دوباره بساز و اگه حلقه خوابه یک بار بکش
+watch(theme, () => {
+  buildGradient()
+  if (!running) draw()
+})
 
 onMounted(() => {
   resize()
@@ -129,10 +167,12 @@ onMounted(() => {
     observer = new ResizeObserver(resize)
     observer.observe(canvas.value)
   }
-  frame()
+  draw()
+  if (active.value.length) start()
 })
 
 onBeforeUnmount(() => {
+  running = false
   cancelAnimationFrame(raf)
   observer?.disconnect()
 })

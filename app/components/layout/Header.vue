@@ -35,18 +35,24 @@ function syncInk() {
 
 const onEnter = (e: MouseEvent) => moveTo(e.currentTarget as HTMLElement)
 
-function onScroll() {
+// حداکثر یک بار در هر فریم محاسبه می‌شه (scroll خیلی بیشتر از فریم رویداد می‌ده)
+let scrollRaf = 0
+function readScroll() {
+  scrollRaf = 0
   const y = window.scrollY
   scrolled.value = y > 8
   const max = document.documentElement.scrollHeight - window.innerHeight
   progress.value = max > 0 ? Math.min(y / max, 1) : 0
+}
+function onScroll() {
+  if (!scrollRaf) scrollRaf = requestAnimationFrame(readScroll)
 }
 
 let ro: ResizeObserver | undefined
 onMounted(async () => {
   await nextTick()
   syncInk()
-  onScroll()
+  readScroll()
   window.addEventListener('scroll', onScroll, { passive: true })
   window.addEventListener('resize', syncInk)
   if (navEl.value) {
@@ -55,6 +61,7 @@ onMounted(async () => {
   }
 })
 onBeforeUnmount(() => {
+  cancelAnimationFrame(scrollRaf)
   window.removeEventListener('scroll', onScroll)
   window.removeEventListener('resize', syncInk)
   ro?.disconnect()
@@ -157,7 +164,7 @@ watch(() => route.fullPath, () => nextTick(syncInk))
   transform: translateY(-1px);
 }
 .nav-link.nav-active {
-  color: theme('colors.key-active', #fff);
+  color: var(--color-key-active, #fff);
 }
 
 .site-header.theme-light {
