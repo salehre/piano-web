@@ -3,8 +3,10 @@ const {
   status, init,
   recording, playing, saving, canDownload, recordedCount, timerMs,
   startRecording, stopRecording, play, stopPlayback, clearRecording, downloadRecording,
-  volume, setVolume,
+  volume, setVolume, getAudioStream,
 } = usePiano()
+const screen = useScreenRecorder()
+onMounted(screen.checkSupport)
 const { t, n } = useI18n()
 const piano = usePianoType()
 const pianoName = computed(() => t(`piano.names.${piano.value.keys}`))
@@ -21,17 +23,24 @@ function toggleMute() {
 }
 
 // تایمر به‌صورت دقیقه:ثانیه.صدم‌ثانیه
-const timer = computed(() => {
-  const cs = Math.floor(timerMs.value / 10)
+function formatTime(ms: number) {
+  const cs = Math.floor(ms / 10)
   const m = Math.floor(cs / 6000)
   const s = Math.floor((cs % 6000) / 100)
   const c = cs % 100
   const pad = (n: number) => String(n).padStart(2, '0')
   return `${pad(m)}:${pad(s)}.${pad(c)}`
-})
+}
+const timer = computed(() => formatTime(timerMs.value))
+const screenTimer = computed(() => formatTime(screen.timerMs.value))
+
+function startScreen() {
+  screen.start(getAudioStream())
+}
 
 // موقع رفتن به صفحه‌ی دیگه، ضبط و پخش متوقف می‌شه
 onBeforeUnmount(() => {
+  screen.abort()
   stopRecording()
   stopPlayback()
 })
@@ -113,7 +122,7 @@ useHead({ title: () => t('piano.title', { name: pianoName.value }) })
     </div>
 
     <!-- ضبط‌کننده: زیر پیانو -->
-    <section v-if="status === 'ready'" dir="ltr" class="mr-auto flex w-fit items-stretch gap-2">
+    <section v-if="status === 'ready'" dir="ltr" class="mr-auto flex w-fit flex-wrap items-stretch gap-2">
       <div class="glass-card relative flex h-14 items-center gap-2.5 rounded-2xl px-2.5 [--glass-radius:0.95rem]">
         <!-- ضبط -->
         <button
@@ -188,6 +197,71 @@ useHead({ title: () => t('piano.title', { name: pianoName.value }) })
             <path d="M5 5l10 10M15 5 5 15" stroke-linecap="round" />
           </svg>
         </button>
+      </div>
+
+      <!-- اسکرین‌ریکورد (ویدیو + صدای پیانو) -->
+      <div v-if="screen.supported.value" class="flex items-stretch gap-2">
+        <div class="glass-card relative flex h-14 items-center gap-2.5 rounded-2xl px-2.5 [--glass-radius:0.95rem]">
+          <button
+              v-if="!screen.recording.value"
+              type="button"
+              class="grid size-9 shrink-0 place-items-center rounded-full bg-stone-800/70 text-stone-200 transition-colors hover:bg-stone-800 disabled:opacity-40"
+              :disabled="recording || saving"
+              :aria-label="t('piano.screen.record')"
+              :title="t('piano.screen.record')"
+              @click="startScreen"
+          >
+            <svg class="size-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+              <rect x="2.5" y="4" width="15" height="10" rx="2" />
+              <path d="M7 17h6M10 14v3" stroke-linecap="round" />
+              <circle cx="10" cy="9" r="1.6" fill="#f87171" stroke="none" />
+            </svg>
+          </button>
+          <button
+              v-else
+              type="button"
+              class="grid size-9 shrink-0 place-items-center rounded-full bg-stone-800/70 transition-colors hover:bg-stone-800"
+              :aria-label="t('piano.screen.stop')"
+              :title="t('piano.screen.stop')"
+              @click="screen.stop()"
+          >
+            <span class="size-3 animate-pulse rounded-sm bg-red-400" />
+          </button>
+
+          <span
+              class="font-mono text-sm tabular-nums"
+              :class="screen.recording.value ? 'text-red-400' : screen.hasVideo.value ? 'text-stone-200' : 'text-stone-500'"
+          >
+            {{ screenTimer }}
+          </span>
+
+          <span v-if="screen.error.value" class="text-xs text-red-400">{{ t('piano.screen.failed') }}</span>
+        </div>
+
+        <div v-if="screen.hasVideo.value && !screen.recording.value" class="flex h-14 flex-col gap-1">
+          <button
+              type="button"
+              class="grid w-8 flex-1 place-items-center rounded-lg bg-stone-950/40 text-stone-300 transition-colors hover:text-key-active"
+              :aria-label="t('piano.screen.download')"
+              :title="t('piano.recorder.downloadShort')"
+              @click="screen.download()"
+          >
+            <svg class="size-3.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+              <path d="M10 3v10m0 0-3.5-3.5M10 13l3.5-3.5M4 16h12" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <button
+              type="button"
+              class="grid w-8 flex-1 place-items-center rounded-lg bg-stone-950/40 text-stone-300 transition-colors hover:text-key-active"
+              :aria-label="t('piano.screen.clear')"
+              :title="t('piano.recorder.clearShort')"
+              @click="screen.clear()"
+          >
+            <svg class="size-3.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+              <path d="M5 5l10 10M15 5 5 15" stroke-linecap="round" />
+            </svg>
+          </button>
+        </div>
       </div>
     </section>
     <Transition name="loading-fade">

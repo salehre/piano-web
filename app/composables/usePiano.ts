@@ -6,6 +6,7 @@ let sampler: ToneNS.Sampler | null = null
 let recorder: ToneNS.Recorder | null = null
 let analyser: ToneNS.Analyser | null = null
 let master: ToneNS.Volume | null = null
+let streamDest: MediaStreamAudioDestinationNode | null = null // خروجی صدای پیانو برای اسکرین‌ریکورد
 
 // ضبط و پخش: رویدادهای نت با زمان (میلی‌ثانیه از شروع ضبط) + فایل صوتی برای دانلود
 interface RecEvent {
@@ -21,7 +22,7 @@ let playStart = 0
 let playTimers: ReturnType<typeof setTimeout>[] = []
 let raf = 0
 
-const SAMPLE_BASE_URL = 'https://tonejs.github.io/audio/salamander/'
+const SAMPLE_BASE_URL = '/samples/salamander/'
 
 // نمونه‌صداهای Salamander برای کل ۸۸ کلید: A0 تا C8
 // (Tone.js بقیه‌ی نت‌ها رو از نزدیک‌ترین نمونه می‌سازه)
@@ -266,6 +267,16 @@ export const usePiano = () => {
     return { data: analyser.getValue() as Float32Array, sampleRate: Tone.getContext().sampleRate }
   }
 
+  /** استریم صدای پیانو (برای قاطی کردن با ویدیوی اسکرین‌ریکورد) */
+  function getAudioStream(): MediaStream | null {
+    if (!Tone || !master) return null
+    if (!streamDest) {
+      streamDest = Tone.getContext().createMediaStreamDestination()
+      master.connect(streamDest)
+    }
+    return streamDest.stream
+  }
+
   function downloadRecording() {
     if (!audioBlob) return
     const type = audioBlob.type
@@ -282,6 +293,6 @@ export const usePiano = () => {
     status, active, init, noteOn, noteOff,
     recording, playing, saving, canDownload, recordedCount, recordedMs, timerMs,
     startRecording, stopRecording, play, stopPlayback, clearRecording, downloadRecording,
-    getSpectrum, volume, setVolume,
+    getSpectrum, getAudioStream, volume, setVolume,
   }
 }

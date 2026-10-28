@@ -586,6 +586,13 @@
       "downloadShort": "Download",
       "clear": "Clear recording",
       "clearShort": "Clear"
+    },
+    "screen": {
+      "record": "Record screen",
+      "stop": "Stop screen recording",
+      "download": "Download screen recording",
+      "clear": "Clear screen recording",
+      "failed": "Couldn't start recording"
     }
   },
   "settings": {
