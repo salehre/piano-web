@@ -28,7 +28,7 @@ function onKeydown(e: KeyboardEvent) {
 </script>
 
 <template>
-  <li class="group py-2.5">
+  <div class="group py-2.5">
     <div class="flex items-center gap-3">
 
       <!-- ───── Note Badge ───── -->
@@ -144,7 +144,7 @@ function onKeydown(e: KeyboardEvent) {
         {{ error }}
       </p>
     </Transition>
-  </li>
+  </div>
 </template>
 
 <style scoped>

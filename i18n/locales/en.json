@@ -651,7 +651,7 @@
       "statAssigned": "Assigned",
       "statRemaining": "Remaining",
       "statOctaves": "Full octaves",
-      "searchPlaceholder": "Search notes… e.g. C4",
+      "searchPlaceholder": "Search notes…",
       "clearSearch": "Clear search",
       "complete": "Complete",
       "noResultsTitle": "No results found",
