@@ -24,6 +24,7 @@ const highlights = [
 ] as const
 
 const heroSection = ref<HTMLElement | null>(null)
+const highlightsEl = ref<HTMLElement | null>(null)
 
 // reveal on scroll - سبک و بدون dependency
 const vReveal = {
@@ -51,10 +52,21 @@ const vReveal = {
   },
 }
 
-// پارالاکس لطیف هیرو با موس
 onMounted(() => {
   const el = heroSection.value
   if (!el || typeof window === 'undefined') return
+
+  // ارتفاع کادر هایلایت‌ها رو اندازه می‌گیریم تا بک‌گراند دقیقاً تا نصف کادر بیاد
+  const card = highlightsEl.value
+  if (card && 'ResizeObserver' in window) {
+    const ro = new ResizeObserver(() => {
+      el.style.setProperty('--card-h', `${card.offsetHeight}px`)
+    })
+    ro.observe(card)
+    el.style.setProperty('--card-h', `${card.offsetHeight}px`)
+  }
+
+  // پارالاکس لطیف هیرو با موس
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
   if (!window.matchMedia('(pointer: fine)').matches) return
 
@@ -80,44 +92,46 @@ onMounted(() => {
 
 <template>
   <main class="overflow-clip">
-    <section ref="heroSection" class="relative isolate overflow-hidden">
-      <!-- بک‌گراند -->
-      <div class="parallax-bg absolute inset-0 -z-20">
-        <img
-          :src="HERO_IMAGE"
-          alt=""
+    <section ref="heroSection" class="relative isolate">
+      <!-- لایهٔ بک‌گراند: تا نصف کادر هایلایت‌ها میاد و بقیهٔ کادر می‌افته بیرون زیرش -->
+      <div class="hero-bg absolute inset-x-0 top-0 -z-10 overflow-hidden">
+        <div class="parallax-bg absolute inset-0">
+          <img
+            :src="HERO_IMAGE"
+            alt=""
+            aria-hidden="true"
+            fetchpriority="high"
+            decoding="async"
+            draggable="false"
+            class="hero-zoom size-full scale-105 object-cover object-[70%_center] select-none"
+          />
+        </div>
+        <div
+          class="absolute inset-0 bg-linear-to-r from-stone-950 via-stone-950/70 to-stone-950/10"
           aria-hidden="true"
-          fetchpriority="high"
-          decoding="async"
-          draggable="false"
-          class="hero-zoom size-full scale-105 object-cover object-[70%_center] select-none"
         />
-      </div>
-      <div
-        class="absolute inset-0 -z-10 bg-linear-to-r from-stone-950 via-stone-950/70 to-stone-950/10"
-        aria-hidden="true"
-      />
-      <div
-        class="absolute inset-0 -z-10 bg-linear-to-t from-stone-950 via-transparent to-stone-950/40"
-        aria-hidden="true"
-      />
-      <!-- glow -->
-      <div aria-hidden="true" class="pointer-events-none absolute inset-0 -z-10">
-        <div class="absolute -top-24 inset-s-[12%] size-72 rounded-full bg-key-active/20 blur-[110px]" />
-        <div class="absolute top-1/3 -inset-e-20 size-80 rounded-full bg-amber-500/10 blur-[120px]" />
-      </div>
+        <div
+          class="absolute inset-0 bg-linear-to-t from-stone-950 via-transparent to-stone-950/40"
+          aria-hidden="true"
+        />
+        <!-- glow -->
+        <div aria-hidden="true" class="pointer-events-none absolute inset-0">
+          <div class="absolute -top-24 inset-s-[12%] size-72 rounded-full bg-key-active/20 blur-[110px]" />
+          <div class="absolute top-1/3 -inset-e-20 size-80 rounded-full bg-amber-500/10 blur-[120px]" />
+        </div>
 
-      <!-- نت‌های شناور -->
-      <div aria-hidden="true" class="pointer-events-none absolute inset-0 z-0 overflow-hidden select-none">
-        <span class="float-note left-[10%] text-2xl text-key-active/40" style="animation-duration: 9s; animation-delay: 0s">♪</span>
-        <span class="float-note left-[26%] text-lg text-white/30" style="animation-duration: 12s; animation-delay: 2.5s">♫</span>
-        <span class="float-note left-[55%] text-xl text-key-active/30" style="animation-duration: 10s; animation-delay: 1.2s">♫</span>
-        <span class="float-note left-[78%] text-3xl text-white/20" style="animation-duration: 13s; animation-delay: 4s">♪</span>
-        <span class="float-note left-[88%] text-lg text-key-active/25" style="animation-duration: 11s; animation-delay: 0.8s">♩</span>
+        <!-- نت‌های شناور -->
+        <div aria-hidden="true" class="pointer-events-none absolute inset-0 overflow-hidden select-none">
+          <span class="float-note left-[10%] text-2xl text-key-active/40" style="animation-duration: 9s; animation-delay: 0s">♪</span>
+          <span class="float-note left-[26%] text-lg text-white/30" style="animation-duration: 12s; animation-delay: 2.5s">♫</span>
+          <span class="float-note left-[55%] text-xl text-key-active/30" style="animation-duration: 10s; animation-delay: 1.2s">♫</span>
+          <span class="float-note left-[78%] text-3xl text-white/20" style="animation-duration: 13s; animation-delay: 4s">♪</span>
+          <span class="float-note left-[88%] text-lg text-key-active/25" style="animation-duration: 11s; animation-delay: 0.8s">♩</span>
+        </div>
       </div>
 
       <div
-        class="parallax-content relative z-10 mx-auto flex min-h-112 max-w-5xl flex-col justify-between gap-12 px-6 pt-14 pb-8 sm:pt-20 lg:min-h-[calc(80svh-3.75rem)]"
+        class="parallax-content relative z-10 mx-auto flex min-h-112 max-w-5xl flex-col justify-between gap-12 px-6 pt-14 pb-0 sm:pt-20 lg:min-h-[calc(80svh-3.75rem)]"
       >
         <div class="flex max-w-xl flex-col items-start gap-6">
           <!-- بج اختیاری، اگه ترجمه نداری خودش مخفی میمونه -->
@@ -133,7 +147,7 @@ onMounted(() => {
             {{ t('home.hero.badge') }}
           </div>
 
-          <h1 class="font-serif text-4xl leading-[1.1] font-medium text-balance text-white drop-shadow-sm sm:text-6xl">
+          <h1 class="font-sans text-4xl leading-[1.1] font-medium text-balance text-white drop-shadow-sm sm:text-6xl">
             <span class="block overflow-hidden pb-1">
               <span class="hero-line" style="--d: 100ms">{{ t('home.hero.line1') }}</span>
             </span>
@@ -160,7 +174,7 @@ onMounted(() => {
           </div>
         </div>
 
-        <ul class="glass-card hero-fade relative grid grid-cols-2 gap-x-2 gap-y-2 p-3 [--glass-radius:1.5rem] sm:gap-x-4 sm:gap-y-5 sm:p-5 lg:grid-cols-4 lg:p-6" style="--d: 450ms">
+        <ul ref="highlightsEl" class="hidden glass-card hero-fade relative sm:grid grid-cols-2 gap-x-2 gap-y-2 p-3 [--glass-radius:1.5rem] sm:gap-x-4 sm:gap-y-5 sm:p-5 lg:grid-cols-4 lg:p-6" style="--d: 450ms">
           <li
             v-for="(h, i) in highlights"
             :key="h.id"
@@ -210,6 +224,11 @@ onMounted(() => {
 </template>
 
 <style scoped>
+/* بک‌گراند هیرو تا نصف کادر هایلایت‌ها */
+.hero-bg {
+  bottom: calc(var(--card-h, 10rem) / 2);
+}
+
 /* ورود هیرو */
 .hero-anim {
   opacity: 0;
