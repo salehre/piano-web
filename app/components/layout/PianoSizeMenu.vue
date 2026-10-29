@@ -75,7 +75,7 @@ const BLACK_AFTER = new Set([0, 1, 3, 4, 5])
 
       <dialog
         ref="dialog"
-        class="size-dialog glass-card fixed inset-0 m-auto w-[calc(100%-2rem)] max-w-xl bg-stone-900/90 p-0 backdrop:bg-black/60 backdrop:backdrop-blur-sm [--glass-radius:1.5rem]"
+        class="size-dialog glass-card fixed inset-0 m-auto w-[calc(100%-2rem)] max-w-xl p-0 backdrop:bg-black/60 backdrop:backdrop-blur-sm [--glass-radius:1.5rem]"
         :aria-labelledby="titleId"
         :aria-describedby="descId"
         @close="onNativeClose"
@@ -86,7 +86,7 @@ const BLACK_AFTER = new Set([0, 1, 3, 4, 5])
           <!-- بستن -->
           <button
             type="button"
-            class="absolute end-4 top-4 grid size-8 place-items-center rounded-lg text-stone-400 transition-colors hover:text-key-active"
+            class="absolute inset-e-4 top-4 grid size-8 place-items-center rounded-lg text-stone-400 transition-colors hover:text-key-active"
             :aria-label="t('ui.dismiss')"
             data-cuelume-close
             @click="closeDialog"
@@ -118,7 +118,7 @@ const BLACK_AFTER = new Set([0, 1, 3, 4, 5])
               <!-- تیک انتخاب -->
               <span
                 v-if="pending === p.keys"
-                class="absolute end-2.5 top-2.5 grid size-5 place-items-center rounded-full bg-key-active text-stone-950"
+                class="absolute inset-e-2.5 top-2.5 grid size-5 place-items-center rounded-full bg-key-active text-stone-950"
                 aria-hidden="true"
               >
                 <svg class="size-3" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.6">

@@ -284,7 +284,7 @@ useHead({ title: () => t('piano.title', { name: pianoName.value }) })
   aspect-ratio: 0.75;
   --c: no-repeat linear-gradient(var(--color-key-active, #e0a526) 0 0);
   background:
-      var(--c) 0% 50%,
+      var(--c) 0 50%,
       var(--c) 50% 50%,
       var(--c) 100% 50%;
   animation: l7 1s infinite linear alternate;

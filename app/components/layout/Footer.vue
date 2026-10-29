@@ -235,10 +235,10 @@ const pianoKeys = [
                 :aria-invalid="!!error"
                 :aria-describedby="error ? 'club-email-error' : undefined"
                 :class="[
-                  'w-full min-w-0 rounded-lg border bg-stone-900/80 px-3.5 py-2.5 text-sm text-stone-100 placeholder:text-stone-500 transition-all duration-300 focus:outline-none focus:ring-2',
+                  'w-full min-w-0 rounded-lg border bg-stone-900/80 px-3.5 py-2.5 text-sm placeholder:text-stone-500 transition-all duration-300 focus:outline-none focus:ring-2',
                   error
                     ? 'border-red-400 focus:ring-red-400/40 animate-chord-error'
-                    : 'border-stone-800 focus:border-key-active focus:ring-key-active/30 focus:shadow-[0_0_15px_rgba(var(--color-key-active-rgb,16,185,129),0.15)]',
+                    : 'border-stone-800 focus:ring-key-active/30 focus:shadow-[0_0_15px_rgba(var(--color-key-active-rgb,16,185,129),0.15)]',
                 ]"
               />
             </div>
@@ -250,7 +250,7 @@ const pianoKeys = [
               :disabled="submitting"
             >
               <!-- خط براق بازتاب شبیه لاک پیانو -->
-              <span class="lacquer-gloss absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 group-hover:translate-x-full"></span>
+              <span class="lacquer-gloss absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 group-hover:translate-x-full"></span>
               
               <span class="relative z-10 flex items-center justify-center gap-1.5">
                 <span v-if="submitting" class="size-3.5 animate-spin rounded-full border-2 border-stone-950 border-t-transparent"></span>

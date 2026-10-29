@@ -9,7 +9,7 @@ const latest = computed(() => posts.value.slice(0, 3))
     <!-- هاله‌ی نور ملایم پشت کارت‌ها -->
     <div
       aria-hidden="true"
-      class="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-72 w-[40rem] max-w-full -translate-x-1/2 -translate-y-1/2 rounded-full bg-key-active/10 blur-3xl"
+      class="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-72 w-160 max-w-full -translate-x-1/2 -translate-y-1/2 rounded-full bg-key-active/10 blur-3xl"
     />
 
     <!-- هدر -->
@@ -17,7 +17,7 @@ const latest = computed(() => posts.value.slice(0, 3))
       <div class="max-w-xl">
         <span
           aria-hidden="true"
-          class="mb-4 block h-1 w-10 rounded-full bg-linear-to-r from-key-active to-transparent rtl:bg-linear-to-l"
+          class="mb-4 block h-1 w-10 rounded-full bg-linear-to-r from-key-active to-transparent"
         />
         <h2 id="blog-title" class="text-2xl font-semibold tracking-tight text-stone-100 sm:text-3xl">
           {{ t('blogPreview.title') }}
@@ -51,10 +51,10 @@ const latest = computed(() => posts.value.slice(0, 3))
       >
         <NuxtLink
           :to="`/blog/${p.slug}`"
-          class="glass-card group relative flex h-full flex-col overflow-hidden rounded-4xl ring-1 ring-white/10 transition-all duration-500 ease-out hover:-translate-y-1.5 hover:ring-key-active/40 hover:shadow-[0_30px_60px_-25px_rgba(245,230,200,0.35)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-key-active"
+          class="glass-card group relative flex h-full flex-col overflow-hidden rounded-4xl ring-1 ring-white/10 transition-all duration-500 ease-out hover:-translate-y-1.5 hover:ring-key-active/40 hover:shadow-[0_30px_60px_-25px_rgba(245,230,200,0.35)] focus-visible:outline-none"
         >
           <!-- تصویر -->
-          <div class="relative aspect-[16/10] overflow-hidden">
+          <div class="relative aspect-16/10 overflow-hidden">
             <img
               :src="p.image"
               alt=""
@@ -69,7 +69,7 @@ const latest = computed(() => posts.value.slice(0, 3))
 
             <!-- برچسب روی تصویر -->
             <span
-              class="absolute start-4 top-4 rounded-full border border-white/15 bg-stone-950/50 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-key-active backdrop-blur-md"
+              class="absolute inset-s-4 top-4 rounded-full border border-white/15 bg-stone-950/50 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-key-active backdrop-blur-md"
             >
               {{ p.tag }}
             </span>
@@ -77,7 +77,7 @@ const latest = computed(() => posts.value.slice(0, 3))
             <!-- فلشی که با هاور ظاهر می‌شود -->
             <span
               aria-hidden="true"
-              class="absolute bottom-4 end-4 flex size-9 translate-y-2 items-center justify-center rounded-full bg-key-active text-stone-950 opacity-0 shadow-lg transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 rtl:rotate-180"
+              class="absolute bottom-4 inset-e-4 flex size-9 translate-y-2 items-center justify-center rounded-full bg-key-active text-stone-950 opacity-0 shadow-lg transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 rtl:rotate-180"
             >
               →
             </span>

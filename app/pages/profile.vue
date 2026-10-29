@@ -207,7 +207,7 @@ function onLogout() {
 <template>
   <main class="relative isolate min-h-screen bg-stone-950 px-4 py-8 text-stone-100 sm:px-6 lg:px-8">
     <div
-      class="pointer-events-none absolute -top-48 left-1/2 z-0 size-[36rem] -translate-x-1/2 rounded-full bg-key-active/5 blur-3xl animate-breathe"
+      class="pointer-events-none absolute -top-48 left-1/2 z-0 size-144 -translate-x-1/2 rounded-full bg-key-active/5 blur-3xl animate-breathe"
       aria-hidden="true"
     />
 
@@ -223,10 +223,10 @@ function onLogout() {
       <template v-else>
         <!-- ══════ کارت هدر ══════ -->
         <section
-          class="card-in relative isolate overflow-hidden rounded-[1.75rem] border border-stone-700/40 bg-gradient-to-br from-stone-900 via-stone-950 to-stone-900 shadow-2xl shadow-black/30"
+          class="card-in relative isolate overflow-hidden rounded-[1.75rem] border border-stone-700/40 bg-linear-to-br from-stone-900 via-stone-950 to-stone-900 shadow-2xl shadow-black/30"
         >
           <div class="pointer-events-none absolute -top-24 right-0 size-64 translate-x-1/3 rounded-full bg-key-active/10 blur-3xl" aria-hidden="true" />
-          <div class="pointer-events-none absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-white/[0.025] to-transparent" aria-hidden="true" />
+          <div class="pointer-events-none absolute inset-y-0 right-0 w-1/3 bg-linear-to-l from-white/2.5 to-transparent" aria-hidden="true" />
 
           <!-- نُت‌های شناور -->
           <div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
@@ -245,7 +245,7 @@ function onLogout() {
           <div class="relative flex flex-col gap-6 p-5 sm:p-7 md:flex-row md:items-center md:justify-between">
             <div class="flex min-w-0 items-center gap-4 sm:gap-5">
               <div class="relative shrink-0">
-                <div class="size-20 rounded-full bg-gradient-to-br from-key-active via-stone-300 to-stone-700 p-[3px] transition-transform duration-300 hover:scale-105 sm:size-24">
+                <div class="size-20 rounded-full bg-linear-to-br from-key-active via-stone-300 to-stone-700 p-0.75 transition-transform duration-300 hover:scale-105 sm:size-24">
                   <Transition name="avatar-fade" mode="out-in">
                     <img
                       v-if="form.avatar"
@@ -267,7 +267,7 @@ function onLogout() {
 
                 <button
                   type="button"
-                  class="absolute -bottom-1 -end-1 flex size-8 items-center justify-center rounded-full border border-stone-700 bg-stone-900 text-stone-200 shadow-lg transition hover:scale-110 hover:border-key-active hover:text-key-active focus:outline-none focus-visible:ring-2 focus-visible:ring-key-active/60"
+                  class="absolute -bottom-1 -inset-e-1 flex size-8 items-center justify-center rounded-full border border-stone-700 bg-stone-900 text-stone-200 shadow-lg transition hover:scale-110 hover:border-key-active hover:text-key-active focus:outline-none focus-visible:ring-2 focus-visible:ring-key-active/60"
                   :aria-label="t('auth.profile.changePhoto')"
                   :title="t('auth.profile.changePhoto')"
                   @click="pickAvatar"
@@ -327,7 +327,7 @@ function onLogout() {
               style="animation-delay: 80ms"
               aria-labelledby="completion-title"
             >
-              <div class="pointer-events-none absolute -end-10 -top-10 size-32 rounded-full bg-key-active/5 blur-2xl" aria-hidden="true" />
+              <div class="pointer-events-none absolute -inset-e-10 -top-10 size-32 rounded-full bg-key-active/5 blur-2xl" aria-hidden="true" />
               <div class="relative">
                 <div class="flex items-center justify-between gap-3">
                   <h2 id="completion-title" class="text-sm font-semibold">{{ t('auth.profile.completion') }}</h2>
@@ -343,7 +343,7 @@ function onLogout() {
                   :aria-valuenow="completion"
                   :aria-valuetext="n(completion / 100, 'percent')"
                 >
-                  <div class="progress-shimmer h-full rounded-full bg-gradient-to-r from-key-active/70 to-key-active transition-[width] duration-700 ease-out" :style="{ width: `${completion}%` }" />
+                  <div class="progress-shimmer h-full rounded-full bg-linear-to-r from-key-active/70 to-key-active transition-[width] duration-700 ease-out" :style="{ width: `${completion}%` }" />
                 </div>
                 <Transition name="fade-up" mode="out-in">
                   <p v-if="completion < 100" key="incomplete" class="mt-3 text-xs leading-5 text-stone-400">

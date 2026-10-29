@@ -197,7 +197,7 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
           <button
             ref="deviceTriggerEl"
             type="button"
-            class="group flex w-full items-center justify-between gap-3 rounded-xl border border-stone-700/60 bg-stone-900/60 py-2.5 ps-3.5 pe-3 text-start text-sm text-stone-200 transition-all duration-200 hover:border-stone-600 focus:outline-none focus:border-key-active focus:ring-2 focus:ring-key-active/30"
+            class="group flex w-full items-center justify-between gap-3 rounded-xl border border-stone-700/60 bg-stone-900/60 py-2.5 ps-3.5 pe-3 text-start text-sm text-stone-200 transition-all duration-200 hover:border-stone-600 focus:outline-none focus:ring-2 focus:ring-key-active/30"
             aria-haspopup="listbox"
             aria-controls="midi-device-listbox"
             :aria-expanded="isDeviceMenuOpen"
@@ -278,20 +278,20 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
             card,
             'relative overflow-hidden flex items-center gap-4 px-5 py-4 transition-all duration-200',
             lastNote && lastNote.source === d.id && isNoteTriggered
-              ? 'border-key-active/70 bg-key-active/[0.04] midi-device-glow scale-[1.005]'
+              ? 'border-key-active/70 bg-key-active/4 midi-device-glow scale-[1.005]'
               : 'hover:border-stone-700/70 hover:bg-stone-900/30'
           ]"
         >
           <!-- افکت نوری فلش در زمان دریافت سیگنال از همین دستگاه -->
           <div
             v-if="lastNote && lastNote.source === d.id && isNoteTriggered"
-            class="pointer-events-none absolute inset-0 bg-gradient-to-r from-key-active/15 via-transparent to-transparent animate-pulse-fast"
+            class="pointer-events-none absolute inset-0 bg-linear-to-r from-key-active/15 via-transparent to-transparent animate-pulse-fast"
           />
 
           <!-- آیکون DIN پورت میدی -->
           <span 
             class="relative grid size-12 shrink-0 place-items-center rounded-xl bg-stone-900 border border-stone-800 transition-all duration-300 text-stone-400"
-            :class="{ '!text-key-active !border-key-active/40 !bg-key-active/10 midi-icon-glow': lastNote && lastNote.source === d.id && isNoteTriggered }"
+            :class="{ 'text-key-active! border-key-active/40! bg-key-active/10! midi-icon-glow': lastNote && lastNote.source === d.id && isNoteTriggered }"
             aria-hidden="true"
           >
             <svg class="size-6 transition-transform duration-200" :class="{ 'scale-110': lastNote && lastNote.source === d.id && isNoteTriggered }" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -398,9 +398,9 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
           <span>Velocity Level</span>
           <span class="font-mono">{{ velocityPercentage }}%</span>
         </div>
-        <div class="h-1.5 w-full bg-stone-900 rounded-full overflow-hidden p-[1px]">
+        <div class="h-1.5 w-full bg-stone-900 rounded-full overflow-hidden p-px">
           <div 
-            class="h-full rounded-full transition-all duration-100 ease-out bg-gradient-to-r from-key-active via-stone-500 to-key-active"
+            class="h-full rounded-full transition-all duration-100 ease-out bg-linear-to-r from-key-active via-stone-500 to-key-active"
             :style="{ width: `${velocityPercentage}%` }"
           />
         </div>
@@ -433,7 +433,7 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
         <button
           v-else
           type="button"
-          class="piano-test-btn group relative overflow-hidden rounded-xl bg-gradient-to-b from-stone-800 to-stone-900 border border-stone-700/70 px-5 py-2.5 text-sm font-medium text-stone-100 transition-all duration-150 hover:border-key-active/60 hover:text-key-active active:translate-y-0.5 active:bg-stone-950 active:shadow-inner"
+          class="piano-test-btn group relative overflow-hidden rounded-xl bg-linear-to-b from-stone-800 to-stone-900 border border-stone-700/70 px-5 py-2.5 text-sm font-medium text-stone-100 transition-all duration-150 hover:border-key-active/60 hover:text-key-active active:translate-y-0.5 active:bg-stone-950 active:shadow-inner"
           :class="{ 'ring-2 ring-key-active/40 border-key-active': isTesting }"
           @click="triggerTestNote"
         >

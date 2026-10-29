@@ -161,14 +161,14 @@ function restart() {
       aria-hidden="true"
       class="bg-zoom absolute inset-0 -z-10 size-full object-cover object-center opacity-45 mix-blend-luminosity"
     />
-    <div class="orb orb-1 pointer-events-none absolute -top-32 -end-32 -z-10 size-80 rounded-full bg-key-active/15 blur-[100px]" aria-hidden="true" />
-    <div class="orb orb-2 pointer-events-none absolute -bottom-32 -start-32 -z-10 size-80 rounded-full bg-key-active/10 blur-[100px]" aria-hidden="true" />
-    <div class="absolute inset-0 -z-10 bg-gradient-to-b from-stone-950/50 via-stone-950/60 to-stone-950/75" aria-hidden="true" />
+    <div class="orb orb-1 pointer-events-none absolute -top-32 -inset-e-32 -z-10 size-80 rounded-full bg-key-active/15 blur-[100px]" aria-hidden="true" />
+    <div class="orb orb-2 pointer-events-none absolute -bottom-32 -inset-s-32 -z-10 size-80 rounded-full bg-key-active/10 blur-[100px]" aria-hidden="true" />
+    <div class="absolute inset-0 -z-10 bg-linear-to-b from-stone-950/50 via-stone-950/60 to-stone-950/75" aria-hidden="true" />
 
     <header class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div class="title-in">
         <div class="inline-flex items-center gap-2 rounded-full border border-key-active/20 bg-key-active/10 px-3 py-1 text-xs font-medium text-key-active backdrop-blur-md">
-          <span class="equalizer flex items-end gap-[2px]" aria-hidden="true">
+          <span class="equalizer flex items-end gap-0.5" aria-hidden="true">
             <span /><span /><span /><span />
           </span>
           {{ t('finder.title') }}
@@ -229,7 +229,7 @@ function restart() {
             :class="selected(current, o.value) ? 'is-selected border-key-active bg-key-active/15 text-stone-100 ring-1 ring-key-active/50' : 'border-stone-800/80 bg-stone-900/40 text-stone-300 hover:border-stone-600 hover:bg-stone-800/50 hover:text-stone-100'"
             @click="choose(o.value)"
           >
-            <div class="relative z-[1] flex w-full items-center justify-between gap-2">
+            <div class="relative z-1 flex w-full items-center justify-between gap-2">
               <span v-if="o.bars" class="bars flex items-end gap-1" aria-hidden="true">
                 <span
                   v-for="b in 6"
@@ -243,12 +243,12 @@ function restart() {
                 class="check ms-auto flex size-5 items-center justify-center rounded-full border"
                 :class="selected(current, o.value) ? 'border-key-active bg-key-active text-stone-950' : 'border-stone-700 bg-stone-800/40 group-hover:border-stone-500'"
               >
-                <svg v-if="selected(current, o.value)" class="check-icon size-3.5 stroke-[3]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg v-if="selected(current, o.value)" class="check-icon size-3.5 stroke-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
               </div>
             </div>
-            <div class="relative z-[1] mt-3">
+            <div class="relative z-1 mt-3">
               <span class="block font-medium text-stone-100 transition-colors group-hover:text-key-active">{{ o.label }}</span>
               <span v-if="o.hint" class="mt-1 block text-xs leading-relaxed text-stone-400">{{ o.hint }}</span>
             </div>
@@ -284,8 +284,8 @@ function restart() {
       </div>
 
       <div v-else-if="result" key="result" class="result-wrap mt-8">
-        <div class="result-card relative overflow-hidden rounded-3xl border border-key-active/30 bg-gradient-to-br from-stone-900/90 via-stone-950 to-stone-900/60 p-6 backdrop-blur-xl sm:p-8">
-          <div class="pointer-events-none absolute -top-12 -end-12 size-40 rounded-full bg-key-active/10 blur-2xl" />
+        <div class="result-card relative overflow-hidden rounded-3xl border border-key-active/30 bg-linear-to-br from-stone-900/90 via-stone-950 to-stone-900/60 p-6 backdrop-blur-xl sm:p-8">
+          <div class="pointer-events-none absolute -top-12 -inset-e-12 size-40 rounded-full bg-key-active/10 blur-2xl" />
           <span class="inline-block text-xs font-semibold tracking-wider uppercase text-key-active">{{ t('finder.result.weRecommend') }}</span>
           <div class="mt-2 flex flex-wrap items-baseline gap-3">
             <h3 ref="heading" tabindex="-1" class="text-3xl font-extrabold text-stone-100 outline-none sm:text-4xl">

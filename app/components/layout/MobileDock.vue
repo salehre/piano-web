@@ -30,7 +30,7 @@ const linkBase =
     data-cuelume-emphasis="subtle"
   >
     <span
-      class="pointer-events-none absolute inset-0 rounded-3xl bg-gradient-to-b from-white/10 to-transparent opacity-70"
+      class="pointer-events-none absolute inset-0 rounded-3xl bg-linear-to-b from-white/10 to-transparent opacity-70"
       aria-hidden="true"
     />
 
@@ -63,7 +63,7 @@ const linkBase =
       </span>
       <span
         class="max-w-0 overflow-hidden whitespace-nowrap font-medium opacity-0 transition-all duration-300 ease-[cubic-bezier(0.22,1.15,0.36,1)] motion-reduce:transition-none"
-        :class="isActive(item.to, item.exact) && 'max-w-[4.75rem] opacity-100'"
+        :class="isActive(item.to, item.exact) && 'max-w-19 opacity-100'"
       >
         {{ t(item.label) }}
       </span>
@@ -102,7 +102,7 @@ const linkBase =
       </span>
       <span
         class="max-w-0 overflow-hidden whitespace-nowrap font-medium opacity-0 transition-all duration-300 ease-[cubic-bezier(0.22,1.15,0.36,1)] motion-reduce:transition-none"
-        :class="profileActive && 'max-w-[4.75rem] opacity-100'"
+        :class="profileActive && 'max-w-19 opacity-100'"
       >
         {{ t('nav.profile') }}
       </span>

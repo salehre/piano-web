@@ -140,7 +140,7 @@ const off = 'border-stone-700/60 bg-stone-950/30 text-stone-200 hover:bg-stone-8
         >
           <span
             v-if="theme === th"
-            class="check-pop absolute end-2.5 top-2.5 z-10 grid size-5 place-items-center rounded-full bg-key-active text-stone-950"
+            class="check-pop absolute inset-e-2.5 top-2.5 z-10 grid size-5 place-items-center rounded-full bg-key-active text-stone-950"
             aria-hidden="true"
           >
             <svg class="size-3" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.6">

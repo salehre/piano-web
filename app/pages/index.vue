@@ -90,11 +90,11 @@ onMounted(() => {
           fetchpriority="high"
           decoding="async"
           draggable="false"
-          class="hero-zoom size-full scale-105 object-cover object-[70%_center] select-none rtl:object-[30%_center]"
+          class="hero-zoom size-full scale-105 object-cover object-[70%_center] select-none"
         />
       </div>
       <div
-        class="absolute inset-0 -z-10 bg-linear-to-r from-stone-950 via-stone-950/70 to-stone-950/10 rtl:bg-linear-to-l"
+        class="absolute inset-0 -z-10 bg-linear-to-r from-stone-950 via-stone-950/70 to-stone-950/10"
         aria-hidden="true"
       />
       <div
@@ -103,8 +103,8 @@ onMounted(() => {
       />
       <!-- glow -->
       <div aria-hidden="true" class="pointer-events-none absolute inset-0 -z-10">
-        <div class="absolute -top-24 start-[12%] size-72 rounded-full bg-key-active/20 blur-[110px]" />
-        <div class="absolute top-1/3 -end-20 size-80 rounded-full bg-amber-500/10 blur-[120px]" />
+        <div class="absolute -top-24 inset-s-[12%] size-72 rounded-full bg-key-active/20 blur-[110px]" />
+        <div class="absolute top-1/3 -inset-e-20 size-80 rounded-full bg-amber-500/10 blur-[120px]" />
       </div>
 
       <!-- نت‌های شناور -->
@@ -133,7 +133,7 @@ onMounted(() => {
             {{ t('home.hero.badge') }}
           </div>
 
-          <h1 class="font-serif text-4xl leading-[1.1] font-medium text-balance text-white drop-shadow-sm sm:text-6xl rtl:font-sans rtl:leading-[1.35]">
+          <h1 class="font-serif text-4xl leading-[1.1] font-medium text-balance text-white drop-shadow-sm sm:text-6xl">
             <span class="block overflow-hidden pb-1">
               <span class="hero-line" style="--d: 100ms">{{ t('home.hero.line1') }}</span>
             </span>
@@ -165,7 +165,7 @@ onMounted(() => {
             v-for="(h, i) in highlights"
             :key="h.id"
             :style="{ '--d': `${520 + i * 110}ms` }"
-            class="hero-anim group flex items-center gap-3 rounded-2xl p-2 transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/[0.06]"
+            class="hero-anim group flex items-center gap-3 rounded-2xl p-2 transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/6"
           >
             <span
               class="grid size-11 shrink-0 place-items-center rounded-xl border border-stone-700/50 bg-stone-950/40 text-key-active transition-all duration-300 group-hover:scale-110 group-hover:-rotate-6 group-hover:border-key-active/50 group-hover:shadow-[0_0_22px_-6px_var(--color-key-active)]"
@@ -196,7 +196,7 @@ onMounted(() => {
         <HomePianoFinder />
       </section>
 
-      <div aria-hidden="true" class="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+      <div aria-hidden="true" class="h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
 
       <section v-reveal>
         <HomeFaq />

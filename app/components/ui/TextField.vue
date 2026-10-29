@@ -67,7 +67,7 @@ const fieldClass = computed(() => [
       <button
           v-if="isPassword"
           type="button"
-          class="absolute inset-y-0 end-0 flex w-11 items-center justify-center text-stone-400 hover:text-stone-100"
+          class="absolute inset-y-0 inset-e-0 flex w-11 items-center justify-center text-stone-400 hover:text-stone-100"
           :aria-label="reveal ? t('ui.hidePassword') : t('ui.showPassword')"
           :aria-pressed="reveal"
           data-cuelume-toggle

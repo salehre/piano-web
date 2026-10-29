@@ -35,14 +35,14 @@ function toggle(i: number) {
       <li
         v-for="(id, i) in FAQ_IDS"
         :key="id"
-        class="glass-card faq-item group relative rounded-[28px] transition-all duration-300 hover:bg-white/[0.03]"
+        class="glass-card faq-item group relative rounded-[28px] transition-all duration-300 hover:bg-white/3"
         :class="openIndex === i ? 'ring-1 ring-key-active/30 shadow-lg shadow-key-active/10' : ''"
         :style="{ animationDelay: `${i * 70}ms` }"
       >
         <!-- خط نوری بالای کارتِ باز -->
         <span
           aria-hidden="true"
-          class="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-key-active/60 to-transparent transition-opacity duration-500"
+          class="pointer-events-none absolute inset-x-6 top-0 h-px bg-linear-to-r from-transparent via-key-active/60 to-transparent transition-opacity duration-500"
           :class="openIndex === i ? 'opacity-100' : 'opacity-0'"
         />
 
@@ -125,7 +125,7 @@ function toggle(i: number) {
               <!-- خط عمودی از زیر کیبورد تا پاسخ -->
               <span
                 aria-hidden="true"
-                class="absolute bottom-5 top-0 start-9 w-px bg-gradient-to-b from-key-active/60 via-key-active/20 to-transparent"
+                class="absolute bottom-5 top-0 inset-s-9 w-px bg-linear-to-b from-key-active/60 via-key-active/20 to-transparent"
               />
               <p
                 class="ps-10 text-sm leading-7 text-stone-300"

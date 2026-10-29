@@ -85,17 +85,17 @@ watch(() => route.fullPath, () => nextTick(syncInk))
     >
       <!-- Logo -->
       <NuxtLink to="/" class="group relative flex items-center gap-3 text-lg font-semibold outline-none">
-        <span class="relative grid size-9 place-items-center rounded-xl transition-colors duration-300 group-hover:bg-white/[0.06]">
+        <span class="relative grid size-9 place-items-center rounded-xl transition-colors duration-300 group-hover:bg-white/6">
           <span class="absolute inset-0 -z-10 rounded-xl bg-key-active/25 opacity-0 blur-lg transition-opacity duration-500 group-hover:opacity-100" />
           <svg
-            class="logo size-7 text-key-active transition-transform duration-[900ms] ease-[cubic-bezier(.22,1,.36,1)] group-hover:rotate-180"
+            class="logo size-7 text-key-active transition-transform duration-900 ease-[cubic-bezier(.22,1,.36,1)] group-hover:rotate-180"
             viewBox="0 0 32 32" fill="none" stroke="currentColor"
             stroke-width="1.6" stroke-linecap="round" aria-hidden="true"
           >
             <path v-for="(d, i) in rays" :key="i" :d="d" class="ray" :style="{ animationDelay: `${i * 110}ms` }" />
           </svg>
         </span>
-        <span class="font-serif rtl:font-sans tracking-wide bg-gradient-to-b from-stone-50 to-stone-400 bg-clip-text text-transparent">
+        <span class="font-serif tracking-wide bg-linear-to-b from-stone-50 to-stone-400 bg-clip-text text-transparent">
           {{ t('app.name') }}
         </span>
       </NuxtLink>
@@ -123,7 +123,7 @@ watch(() => route.fullPath, () => nextTick(syncInk))
           {{ t('nav.settings') }}
         </NuxtLink>
 
-        <span class="mx-2 h-5 w-px bg-gradient-to-b from-transparent via-white/15 to-transparent" />
+        <span class="mx-2 h-5 w-px bg-linear-to-b from-transparent via-white/15 to-transparent" />
 
         <!-- وقتی موس میره روی یوزرمنو، خط برمیگرده سرجای اکتیو -->
         <div @mouseenter="syncInk">
@@ -133,7 +133,7 @@ watch(() => route.fullPath, () => nextTick(syncInk))
     </div>
 
     <div
-      class="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] origin-left bg-gradient-to-r from-key-active/0 via-key-active to-key-active/0"
+      class="pointer-events-none absolute inset-x-0 bottom-0 h-0.5 origin-left bg-linear-to-r from-key-active/0 via-key-active to-key-active/0"
       :style="{ transform: `scaleX(${progress})` }"
     />
   </header>
