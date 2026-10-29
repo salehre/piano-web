@@ -125,9 +125,9 @@ onUnmounted(() => window.removeEventListener('keydown', onGlobalKey))
   <section aria-labelledby="shortcuts-title" class="relative isolate p-2 sm:p-4">
     <!-- بک‌گراند دکوراتیو -->
     <div aria-hidden="true" class="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-      <div class="animate-orbit-1 absolute -top-24 start-1/4 h-64 w-64 rounded-full bg-key-active/10 blur-3xl" />
-      <div class="animate-orbit-2 absolute -end-20 top-40 h-72 w-72 rounded-full bg-primary-400/10 blur-3xl" />
-      <div class="animate-orbit-3 absolute -start-10 bottom-0 h-48 w-96 rounded-full bg-key-active/[0.06] blur-3xl" />
+      <div class="animate-orbit-1 absolute -top-24 inset-s-1/4 h-64 w-64 rounded-full bg-key-active/10 blur-3xl" />
+      <div class="animate-orbit-2 absolute -inset-e-20 top-40 h-72 w-72 rounded-full bg-primary-400/10 blur-3xl" />
+      <div class="animate-orbit-3 absolute -inset-s-10 bottom-0 h-48 w-96 rounded-full bg-key-active/6 blur-3xl" />
       <div class="animate-aurora absolute inset-0 opacity-30" />
       <div class="bg-grid absolute inset-0" />
     </div>
@@ -136,7 +136,7 @@ onUnmounted(() => window.removeEventListener('keydown', onGlobalKey))
     <div class="animate-rise flex flex-wrap items-start justify-between gap-4">
       <div class="flex max-w-xl items-start gap-4">
         <div class="relative shrink-0">
-          <div class="icon-glow grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-key-active via-primary-400 to-key-active text-stone-950 shadow-lg shadow-key-active/20 ring-1 ring-white/20">
+          <div class="icon-glow grid h-12 w-12 place-items-center rounded-2xl bg-linear-to-br from-key-active via-primary-400 to-key-active text-stone-950 shadow-lg shadow-key-active/20 ring-1 ring-white/20">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
               <rect width="20" height="16" x="2" y="4" rx="2" />
               <path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M6 12h.01M18 12h.01M7 16h10" />
@@ -162,7 +162,7 @@ onUnmounted(() => window.removeEventListener('keydown', onGlobalKey))
       </div>
 
       <div class="flex flex-wrap items-center gap-2">
-        <div class="hidden items-center gap-1 rounded-xl border border-white/5 bg-white/[0.02] p-1 sm:flex">
+        <div class="hidden items-center gap-1 rounded-xl border border-white/5 bg-white/2 p-1 sm:flex">
           <button type="button" class="btn-ripple rounded-lg px-2.5 py-1.5 text-xs text-stone-400 transition hover:bg-white/5 hover:text-stone-200 active:scale-95" @click="expandAll">
             {{ t('settings.shortcuts.expandAll') }}
           </button>
@@ -174,10 +174,10 @@ onUnmounted(() => window.removeEventListener('keydown', onGlobalKey))
 
         <button
           type="button"
-          class="btn-ripple group inline-flex items-center gap-2 rounded-xl border border-rose-500/20 bg-rose-500/[0.07] px-4 py-2.5 text-sm font-medium text-rose-200 transition-all duration-300 hover:border-rose-500/40 hover:bg-rose-500/[0.12] hover:shadow-lg hover:shadow-rose-500/10 active:scale-95"
+          class="btn-ripple group inline-flex items-center gap-2 rounded-xl border border-rose-500/20 bg-rose-500/[0.07] px-4 py-2.5 text-sm font-medium text-rose-200 transition-all duration-300 hover:border-rose-500/40 hover:bg-rose-500/12 hover:shadow-lg hover:shadow-rose-500/10 active:scale-95"
           @click="showResetConfirm = true"
         >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:-rotate-[360deg]">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:rotate-[-360deg]">
             <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
             <path d="M3 3v5h5" />
           </svg>
@@ -187,10 +187,10 @@ onUnmounted(() => window.removeEventListener('keydown', onGlobalKey))
     </div>
 
     <!-- کارت پیشرفت کلی -->
-    <div class="animate-rise mt-6  overflow-hidden rounded-2xl border border-white/[0.06] bg-gradient-to-br from-stone-900/90 via-stone-900/60 to-stone-950/90 p-5 shadow-xl shadow-black/20 backdrop-blur" style="animation-delay: 80ms">
+    <div class="animate-rise mt-6  overflow-hidden rounded-2xl border border-white/6 bg-linear-to-br from-stone-900/90 via-stone-900/60 to-stone-950/90 p-5 shadow-xl shadow-black/20 backdrop-blur" style="animation-delay: 80ms">
       <div class="flex flex-wrap items-center justify-between gap-3">
         <div class="flex items-center gap-3">
-          <div class="h-9 w-1 rounded-full bg-gradient-to-b from-key-active to-primary-400 animate-gradient-flow" />
+          <div class="h-9 w-1 rounded-full bg-linear-to-b from-key-active to-primary-400 animate-gradient-flow" />
           <div>
             <p class="text-sm font-medium text-stone-200">
               {{ t('settings.shortcuts.totalProgress') }}
@@ -200,25 +200,25 @@ onUnmounted(() => window.removeEventListener('keydown', onGlobalKey))
             </p>
           </div>
         </div>
-        <p class="animate-number-glow bg-gradient-to-r from-key-active to-primary-400 bg-clip-text text-2xl font-bold tabular-nums text-transparent">
+        <p class="animate-number-glow bg-linear-to-r from-key-active to-primary-400 bg-clip-text text-2xl font-bold tabular-nums text-transparent">
           {{ n(progressPercent) }}%
         </p>
       </div>
 
       <div dir="ltr" class="mt-4 h-2.5 overflow-hidden rounded-full bg-stone-800/80 ring-1 ring-white/5">
-        <div class="progress-fill h-full rounded-full bg-gradient-to-r from-key-active via-primary-400 to-key-active" :style="{ width: progressPercent + '%' }" />
+        <div class="progress-fill h-full rounded-full bg-linear-to-r from-key-active via-primary-400 to-key-active" :style="{ width: progressPercent + '%' }" />
       </div>
 
       <div class="mt-4 grid grid-cols-3 gap-2.5 sm:gap-3">
-        <div class="stat-card rounded-xl border border-emerald-500/10 bg-emerald-500/[0.06] px-3 py-2.5 text-center transition-all duration-500 hover:bg-emerald-500/[0.09] hover:shadow-lg hover:shadow-emerald-500/5 hover:-translate-y-0.5">
+        <div class="stat-card rounded-xl border border-emerald-500/10 bg-emerald-500/6 px-3 py-2.5 text-center transition-all duration-500 hover:bg-emerald-500/9 hover:shadow-lg hover:shadow-emerald-500/5 hover:-translate-y-0.5">
           <p class="text-lg font-bold tabular-nums text-emerald-300">{{ n(totalAssigned) }}</p>
           <p class="mt-0.5 text-[11px] text-stone-500">{{ t('settings.shortcuts.statAssigned') }}</p>
         </div>
-        <div class="stat-card rounded-xl border border-primary-400/10 bg-primary-400/[0.06] px-3 py-2.5 text-center transition-all duration-500 hover:bg-primary-400/[0.09] hover:shadow-lg hover:shadow-primary-400/5 hover:-translate-y-0.5">
+        <div class="stat-card rounded-xl border border-primary-400/10 bg-primary-400/6 px-3 py-2.5 text-center transition-all duration-500 hover:bg-primary-400/9 hover:shadow-lg hover:shadow-primary-400/5 hover:-translate-y-0.5">
           <p class="text-lg font-bold tabular-nums text-primary-400">{{ n(remainingCount) }}</p>
           <p class="mt-0.5 text-[11px] text-stone-500">{{ t('settings.shortcuts.statRemaining') }}</p>
         </div>
-        <div class="stat-card rounded-xl border border-key-active/10 bg-key-active/[0.06] px-3 py-2.5 text-center transition-all duration-500 hover:bg-key-active/[0.09] hover:shadow-lg hover:shadow-key-active/5 hover:-translate-y-0.5">
+        <div class="stat-card rounded-xl border border-key-active/10 bg-key-active/6 px-3 py-2.5 text-center transition-all duration-500 hover:bg-key-active/9 hover:shadow-lg hover:shadow-key-active/5 hover:-translate-y-0.5">
           <p class="text-lg font-bold tabular-nums text-key-active">{{ n(octavesComplete) }}/{{ n(NOTE_GROUPS.length) }}</p>
           <p class="mt-0.5 text-[11px] text-stone-500">{{ t('settings.shortcuts.statOctaves') }}</p>
         </div>
@@ -226,9 +226,9 @@ onUnmounted(() => window.removeEventListener('keydown', onGlobalKey))
     </div>
 
     <!-- تولبار سرچ + فیلتر -->
-    <div class="animate-rise mt-4 flex flex-col gap-3 rounded-2xl border border-white/[0.06] bg-stone-950/70 p-3 shadow-lg shadow-black/10 backdrop-blur-xl sm:flex-row sm:items-center" style="animation-delay: 140ms">
+    <div class="animate-rise mt-4 flex flex-col gap-3 rounded-2xl border border-white/6 bg-stone-950/70 p-3 shadow-lg shadow-black/10 backdrop-blur-xl sm:flex-row sm:items-center" style="animation-delay: 140ms">
       <div class="relative flex-1">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-500 transition-colors duration-300 peer-focus:text-primary-400">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pointer-events-none absolute inset-s-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-500 transition-colors duration-300 peer-focus:text-primary-400">
           <circle cx="11" cy="11" r="8" />
           <path d="m21 21-4.3-4.3" />
         </svg>
@@ -240,10 +240,10 @@ onUnmounted(() => window.removeEventListener('keydown', onGlobalKey))
           class="peer w-full rounded-xl border border-stone-800 bg-stone-900/60 py-2.5 pe-16 ps-10 text-sm text-stone-200 outline-none transition-all duration-500 placeholder:text-stone-600 focus:border-primary-400/50 focus:bg-stone-900 focus:ring-4 focus:ring-primary-400/10 focus:shadow-lg focus:shadow-primary-400/5"
           @keydown.escape="search = ''"
         />
-        <button v-if="search" type="button" class="absolute end-9 top-1/2 grid h-6 w-6 -translate-y-1/2 place-items-center rounded-full bg-white/5 text-stone-400 transition-all duration-300 hover:bg-white/10 hover:text-stone-200 hover:rotate-90 active:scale-90" @click="search = ''" :aria-label="t('settings.shortcuts.clearSearch')">
+        <button v-if="search" type="button" class="absolute inset-e-9 top-1/2 grid h-6 w-6 -translate-y-1/2 place-items-center rounded-full bg-white/5 text-stone-400 transition-all duration-300 hover:bg-white/10 hover:text-stone-200 hover:rotate-90 active:scale-90" @click="search = ''" :aria-label="t('settings.shortcuts.clearSearch')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="h-3.5 w-3.5"><path d="M18 6 6 18M6 6l12 12" /></svg>
         </button>
-        <kbd class="kbd absolute end-3 top-1/2 -translate-y-1/2 animate-kbd-breathe">/</kbd>
+        <kbd class="kbd absolute inset-e-3 top-1/2 -translate-y-1/2 animate-kbd-breathe">/</kbd>
       </div>
 
       <div class="flex items-center gap-1 rounded-xl bg-stone-900/80 p-1 ring-1 ring-white/5">
@@ -255,7 +255,7 @@ onUnmounted(() => window.removeEventListener('keydown', onGlobalKey))
           :class="filterMode === opt.value ? 'text-stone-950 shadow-lg shadow-key-active/20' : 'text-stone-400 hover:bg-white/5 hover:text-stone-200'"
           @click="filterMode = opt.value"
         >
-          <span v-if="filterMode === opt.value" class="filter-active-bg absolute inset-0 rounded-lg bg-gradient-to-r from-key-active to-primary-400" />
+          <span v-if="filterMode === opt.value" class="filter-active-bg absolute inset-0 rounded-lg bg-linear-to-r from-key-active to-primary-400" />
           <span class="relative z-10 flex items-center gap-1.5">
             {{ opt.label }}
             <span class="rounded-full px-1.5 py-0.5 text-[10px] font-bold tabular-nums transition-colors duration-300" :class="filterMode === opt.value ? 'bg-white/20 text-white' : 'bg-white/5 text-stone-500'">
@@ -275,10 +275,10 @@ onUnmounted(() => window.removeEventListener('keydown', onGlobalKey))
         class="animate-rise group/card overflow-hidden rounded-2xl border border-stone-800/70 bg-stone-900/40 shadow-sm backdrop-blur-sm transition-all duration-500 hover:border-stone-700/90 hover:shadow-2xl hover:shadow-black/40 hover:-translate-y-0.5"
         :style="{ animationDelay: `${180 + gi * 70}ms` }"
       >
-        <button type="button" class="flex w-full items-center justify-between gap-4 p-4 text-start transition-colors duration-300 hover:bg-white/[0.02]" :aria-expanded="!collapsed[g.octave]" @click="toggleOctave(g.octave)">
+        <button type="button" class="flex w-full items-center justify-between gap-4 p-4 text-start transition-colors duration-300 hover:bg-white/2" :aria-expanded="!collapsed[g.octave]" @click="toggleOctave(g.octave)">
           <div class="flex min-w-0 items-center gap-3.5">
-            <div class="relative grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-xl bg-gradient-to-br from-stone-800 to-stone-900 text-sm font-bold tabular-nums text-stone-200 ring-1 ring-white/10 transition-all duration-500 group-hover/card:scale-110 group-hover/card:shadow-lg group-hover/card:shadow-key-active/10">
-              <span class="absolute inset-0 bg-gradient-to-br from-key-active/20 to-primary-400/20 opacity-0 transition-opacity duration-500 group-hover/card:opacity-100" />
+            <div class="relative grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-xl bg-linear-to-br from-stone-800 to-stone-900 text-sm font-bold tabular-nums text-stone-200 ring-1 ring-white/10 transition-all duration-500 group-hover/card:scale-110 group-hover/card:shadow-lg group-hover/card:shadow-key-active/10">
+              <span class="absolute inset-0 bg-linear-to-br from-key-active/20 to-primary-400/20 opacity-0 transition-opacity duration-500 group-hover/card:opacity-100" />
               <span class="absolute inset-0 animate-shimmer opacity-0 transition-opacity duration-500 group-hover/card:opacity-100" />
               <span class="relative">{{ n(g.octave) }}</span>
             </div>
@@ -305,11 +305,11 @@ onUnmounted(() => window.removeEventListener('keydown', onGlobalKey))
           <div class="flex shrink-0 items-center gap-4">
             <div dir="ltr" class="hidden w-28 sm:block">
               <div class="h-1.5 overflow-hidden rounded-full bg-stone-800">
-                <div class="h-full rounded-full bg-gradient-to-r from-key-active to-primary-400 transition-all duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)]" :style="{ width: octaveProgress(g.notes) + '%' }" />
+                <div class="h-full rounded-full bg-linear-to-r from-key-active to-primary-400 transition-all duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)]" :style="{ width: octaveProgress(g.notes) + '%' }" />
               </div>
               <p class="mt-1 text-end text-[11px] tabular-nums text-stone-500">{{ n(Math.round(octaveProgress(g.notes))) }}%</p>
             </div>
-            <span class="grid h-8 w-8 place-items-center rounded-full border border-white/5 bg-white/[0.03] text-stone-400 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]" :class="{ 'rotate-180 bg-white/[0.06] text-stone-200': collapsed[g.octave] }">
+            <span class="grid h-8 w-8 place-items-center rounded-full border border-white/5 bg-white/3 text-stone-400 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]" :class="{ 'rotate-180 bg-white/6 text-stone-200': collapsed[g.octave] }">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><path d="m6 9 6 6 6-6" /></svg>
             </span>
           </div>
@@ -317,7 +317,7 @@ onUnmounted(() => window.removeEventListener('keydown', onGlobalKey))
 
         <div class="collapse-wrap" :class="{ collapsed: collapsed[g.octave] }">
           <div class="overflow-hidden">
-            <div class="border-t border-white/[0.04] px-3 pb-3 pt-2 sm:px-4 sm:pb-4">
+            <div class="border-t border-white/4 px-3 pb-3 pt-2 sm:px-4 sm:pb-4">
               <ul class="grid grid-cols-[repeat(auto-fill,minmax(13rem,1fr))] gap-1.5">
                 <li v-for="(note, ni) in g.notes" :key="note" class="animate-stagger-rise" :style="{ animationDelay: `${ni * 40}ms` }">
                   <div
@@ -328,7 +328,7 @@ onUnmounted(() => window.removeEventListener('keydown', onGlobalKey))
                         ? 'animate-shake-spring bg-rose-500/[0.07] ring-1 ring-rose-500/30 shadow-lg shadow-rose-500/10'
                         : justSaved[note]
                           ? 'animate-save-flash bg-emerald-500/[0.07] shadow-[0_0_32px_-8px_rgba(16,185,129,0.5)] ring-1 ring-emerald-500/30'
-                          : 'hover:bg-white/[0.03] hover:ring-1 hover:ring-white/[0.06] hover:shadow-md hover:shadow-black/10 hover:-translate-y-px',
+                          : 'hover:bg-white/30 hover:ring-1 hover:ring-white/60 hover:shadow-md hover:shadow-black/10 hover:-translate-y-px',
                     ]"
                   >
                     <SettingsKeyBindingRow
@@ -368,7 +368,7 @@ onUnmounted(() => window.removeEventListener('keydown', onGlobalKey))
     </div>
 
     <!-- راهنما -->
-    <div class="animate-rise mt-6 flex items-start gap-3.5 rounded-2xl border border-key-active/10 bg-gradient-to-br from-key-active/[0.07] to-primary-400/[0.05] p-4 sm:p-5 animate-tip-glow" style="animation-delay: 320ms">
+    <div class="animate-rise mt-6 flex items-start gap-3.5 rounded-2xl border border-key-active/10 bg-linear-to-br from-key-active/[0.07] to-primary-400/5 p-4 sm:p-5 animate-tip-glow" style="animation-delay: 320ms">
       <div class="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-key-active/15 text-key-active ring-1 ring-key-active/20 animate-icon-breathe">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
           <path d="M9 18h6M10 21h4" /><path d="M12 3a6 6 0 0 0-4 10.5c.8.7 1 1.5 1 2.5h6c0-1 .2-1.8 1-2.5A6 6 0 0 0 12 3z" />

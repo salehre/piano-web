@@ -38,16 +38,16 @@ function onKeydown(e: KeyboardEvent) {
                transition-all duration-300 ease-out
                group-hover:scale-105 group-hover:shadow-lg"
         :class="isBlack
-          ? 'bg-gradient-to-br from-stone-700 to-stone-900 text-stone-100 ring-1 ring-white/10'
-          : 'bg-gradient-to-br from-stone-50 to-stone-200 text-stone-900 ring-1 ring-stone-300/60'"
+          ? 'bg-linear-to-br from-stone-700 to-stone-900 text-stone-100 ring-1 ring-white/10'
+          : 'bg-linear-to-br from-stone-50 to-stone-200 text-stone-900 ring-1 ring-stone-300/60'"
       >
         <!-- shine overlay -->
         <span
           class="pointer-events-none absolute inset-0 rounded-xl opacity-0
                  transition-opacity duration-300 group-hover:opacity-100"
           :class="isBlack
-            ? 'bg-gradient-to-tr from-transparent via-white/10 to-transparent'
-            : 'bg-gradient-to-tr from-transparent via-white/60 to-transparent'"
+            ? 'bg-linear-to-tr from-transparent via-white/10 to-transparent'
+            : 'bg-linear-to-tr from-transparent via-white/60 to-transparent'"
         />
         <span class="relative z-10">{{ note }}</span>
       </span>
