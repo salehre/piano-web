@@ -34,6 +34,8 @@ export default defineNuxtConfig({
     locales: [
       { code: 'fa', language: 'fa-IR', dir: 'rtl', name: 'فا', file: 'fa.json' },
       { code: 'en', language: 'en-US', dir: 'ltr', name: 'EN', file: 'en.json' },
+      { code: 'fr', language: 'fr-FR', dir: 'ltr', name: 'FR', file: 'fr.json' },
+      { code: 'tr', language: 'tr-TR', dir: 'ltr', name: 'TR', file: 'tr.json' },
     ],
     // نسبت به i18n/ (restructureDir پیش‌فرض ماژول) => فایل‌ها از i18n/locales/** خونده می‌شن
     langDir: 'locales',

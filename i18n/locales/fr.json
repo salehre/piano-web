@@ -1,0 +1,703 @@
+{
+  "auth": {
+    "login": {
+      "steps": {
+        "phone": {
+          "title": "Connexion ou inscription",
+          "hint": "Saisissez votre numéro de mobile pour continuer.",
+          "button": "Continuer"
+        },
+        "password": {
+          "title": "Bon retour",
+          "hint": "Saisissez votre mot de passe pour vous connecter.",
+          "button": "Se connecter"
+        },
+        "code": {
+          "title": "Saisissez le code",
+          "hint": "Nous avons envoyé un code à {length} chiffres au {phone}.",
+          "button": "Vérifier"
+        },
+        "newPassword": {
+          "title": "Choisissez un mot de passe",
+          "hint": "Vous l'utiliserez pour vous connecter la prochaine fois.",
+          "button": "Créer le compte"
+        },
+        "resetPassword": {
+          "title": "Choisissez un nouveau mot de passe",
+          "hint": "Vous l'utiliserez pour vous connecter la prochaine fois.",
+          "button": "Enregistrer et se connecter"
+        }
+      },
+      "mobileLabel": "Numéro de mobile",
+      "passwordLabel": "Mot de passe",
+      "confirmLabel": "Confirmer le mot de passe",
+      "passwordHint": "Au moins {min} caractères, dont une lettre et un chiffre.",
+      "forgot": "Mot de passe oublié ? Connectez-vous avec un code",
+      "devMode": "Mode développeur : aucun SMS n'est envoyé. Votre code est {code}",
+      "codeLabel": "Code de vérification",
+      "resendIn": "Renvoyer le code dans {seconds} s",
+      "resend": "Renvoyer le code",
+      "differentNumber": "Utiliser un autre numéro"
+    },
+    "profile": {
+      "loading": "Chargement de votre profil…",
+      "defaultName": "Votre profil",
+      "photoAlt": "Votre photo de profil",
+      "changePhoto": "Changer la photo de profil",
+      "removePhoto": "Supprimer la photo",
+      "logout": "Se déconnecter",
+      "completion": "Complétion du profil",
+      "fillRest": "Remplissez les autres champs ci-dessous pour le compléter.",
+      "complete": "Votre profil est complet.",
+      "sections": {
+        "about": "À propos de vous",
+        "piano": "Votre piano",
+        "account": "Compte"
+      },
+      "fields": {
+        "name": "Nom",
+        "email": "E-mail",
+        "emailPlaceholder": "nom{'@'}exemple.com",
+        "country": "Pays",
+        "nationalId": "Numéro d'identité nationale",
+        "nationalIdPlaceholder": "10 chiffres",
+        "address": "Adresse",
+        "yearsPlaying": "Années de pratique",
+        "yearsHint": "Laissez vide si vous préférez ne pas le dire.",
+        "mobile": "Mobile",
+        "memberSince": "Membre depuis"
+      },
+      "actions": {
+        "save": "Enregistrer les modifications",
+        "saving": "Enregistrement…",
+        "discard": "Annuler les modifications",
+        "saved": "Profil enregistré."
+      },
+      "avatar": {
+        "notImage": "Veuillez choisir un fichier image.",
+        "tooLarge": "L'image est trop volumineuse (max. {max} Mo).",
+        "unreadable": "Impossible de lire cette image. Essayez-en une autre."
+      },
+      "logoutDialog": {
+        "title": "Se déconnecter ?",
+        "message": "Voulez-vous vraiment vous déconnecter de votre compte ?",
+        "confirm": "Se déconnecter",
+        "cancel": "Rester connecté"
+      }
+    },
+    "validation": {
+      "phoneRequired": "Le numéro de mobile est obligatoire.",
+      "phoneInvalid": "Saisissez un numéro de mobile valide.",
+      "passwordRequired": "Le mot de passe est obligatoire.",
+      "passwordMin": "Le mot de passe doit contenir au moins {min} caractères.",
+      "passwordMix": "Utilisez au moins une lettre et un chiffre.",
+      "passwordMismatch": "Les mots de passe ne correspondent pas.",
+      "nameRequired": "Le nom est obligatoire.",
+      "nameMin": "Le nom doit contenir au moins {min} caractères.",
+      "nameMax": "Le nom doit contenir au plus {max} caractères.",
+      "emailMax": "L'e-mail doit contenir au plus {max} caractères.",
+      "emailInvalid": "Saisissez une adresse e-mail valide.",
+      "nationalIdLength": "Le numéro d'identité nationale doit contenir exactement {length} chiffres.",
+      "nationalIdInvalid": "Saisissez un numéro d'identité nationale valide.",
+      "yearsRange": "Saisissez un nombre entier entre {min} et {max}.",
+      "codeRequired": "Saisissez le code à {length} chiffres."
+    },
+    "errors": {
+      "waitResend": "Veuillez patienter {seconds} s avant de demander un nouveau code.",
+      "requestCodeFirst": "Demandez d'abord un nouveau code.",
+      "codeExpired": "Ce code a expiré. Demandez-en un nouveau.",
+      "tooManyAttempts": "Trop de tentatives incorrectes. Demandez un nouveau code.",
+      "wrongCode": "Code incorrect. Réessayez.",
+      "verificationExpired": "La vérification de votre téléphone a expiré. Veuillez recommencer.",
+      "savePassword": "Impossible d'enregistrer votre mot de passe.",
+      "login": "Impossible de vous connecter.",
+      "incorrectPassword": "Mot de passe incorrect.",
+      "notLoggedIn": "Vous n'êtes pas connecté.",
+      "saveProfile": "Impossible d'enregistrer votre profil.",
+      "secureContext": "Une connexion sécurisée est requise (utilisez HTTPS ou localhost)."
+    }
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Conseils, guides et idées pour profiter de votre pratique du piano et progresser.",
+    "back": "Retour au blog",
+    "minRead": "{n} min de lecture",
+    "notFound": "Article introuvable",
+    "cta": {
+      "title": "Prêt à jouer ?",
+      "text": "Mettez-le en pratique sur le piano virtuel. Aucune installation requise.",
+      "button": "Jouer au piano virtuel"
+    },
+    "tags": {
+      "beginners": "Débutants",
+      "guides": "Guides",
+      "tips": "Conseils",
+      "practice": "Pratique"
+    },
+    "posts": {
+      "startLearning": {
+        "title": "Comment commencer à apprendre le piano en ligne",
+        "excerpt": "Nul besoin d'un vrai piano pour débuter. Voici un plan simple pour vos premières semaines.",
+        "content": [
+          {
+            "type": "p",
+            "text": "Se lancer dans le piano peut sembler intimidant, mais les premiers pas sont modestes. Avec un piano virtuel dans votre navigateur, vous pouvez vous familiariser avec le clavier, travailler votre oreille et votre rythme avant même d'acheter un instrument."
+          },
+          {
+            "type": "h2",
+            "text": "Apprenez d'abord la disposition"
+          },
+          {
+            "type": "p",
+            "text": "Le clavier répète le même motif de touches blanches et noires. Les touches noires sont groupées par deux et par trois, et la touche blanche juste avant un groupe de deux est toujours un do (C). Une fois que vous savez trouver le do, vous pouvez trouver toutes les autres notes."
+          },
+          {
+            "type": "h2",
+            "text": "Pratiquez un peu chaque jour"
+          },
+          {
+            "type": "ul",
+            "items": [
+              "Dix à quinze minutes concentrées valent mieux qu'une longue séance par semaine.",
+              "Commencez par une seule main, lentement, et n'accélérez que lorsque cela devient facile.",
+              "Dites les noms des notes à voix haute en les jouant.",
+              "Terminez chaque séance par un morceau que vous aimez, même s'il est simple."
+            ]
+          },
+          {
+            "type": "h2",
+            "text": "Essayez de vous enregistrer"
+          },
+          {
+            "type": "p",
+            "text": "Enregistrer une courte phrase musicale et la réécouter est l'un des moyens les plus rapides de repérer un rythme irrégulier ou de fausses notes. Cela vous permet aussi de suivre vos progrès au fil des semaines."
+          }
+        ]
+      },
+      "choosingKeys": {
+        "title": "25, 49, 61 ou 88 touches ? Choisir la bonne taille de piano",
+        "excerpt": "Plus de touches n'est pas toujours mieux. Voici comment choisir une taille adaptée à votre musique.",
+        "content": [
+          {
+            "type": "p",
+            "text": "Un piano complet compte 88 touches, soit sept octaves plus quelques notes, du la 0 (A0) au do 8 (C8). Les claviers plus petits suppriment simplement les octaves les plus graves et les plus aiguës."
+          },
+          {
+            "type": "h2",
+            "text": "À quoi sert chaque taille"
+          },
+          {
+            "type": "ul",
+            "items": [
+              "25 et 37 touches : mélodies rapides et idées simples, le plus pratique sur petit écran.",
+              "49 touches : un choix polyvalent et confortable pour les débutants et pour la plupart des mélodies pop et de films.",
+              "61 touches : cinq octaves, suffisant pour de nombreux morceaux à deux mains.",
+              "76 et 88 touches : nécessaires pour une grande partie du répertoire classique qui utilise les notes extrêmes, graves et aiguës."
+            ]
+          },
+          {
+            "type": "h2",
+            "text": "Laissez la musique décider"
+          },
+          {
+            "type": "p",
+            "text": "Regardez les notes les plus graves et les plus aiguës des morceaux que vous voulez jouer. Si elles tiennent en cinq octaves, un clavier de 61 touches suffit largement. En cas de doute, le guide de choix de piano de la page d'accueil peut vous suggérer une taille selon vos objectifs et votre niveau."
+          }
+        ]
+      },
+      "customShortcuts": {
+        "title": "Faites de votre clavier d'ordinateur un vrai piano",
+        "excerpt": "Les raccourcis personnalisés vous aident à jouer plus vite et plus confortablement. Voici comment les configurer.",
+        "content": [
+          {
+            "type": "p",
+            "text": "Jouer avec le clavier de l'ordinateur est rapide, mais seulement si la disposition est naturelle pour vos mains. C'est pourquoi chaque note de Web Piano peut être associée à la touche de votre choix."
+          },
+          {
+            "type": "h2",
+            "text": "Définir vos propres raccourcis"
+          },
+          {
+            "type": "ul",
+            "items": [
+              "Ouvrez les Paramètres et trouvez l'octave que vous voulez modifier.",
+              "Cliquez sur le champ à côté d'une note, puis appuyez sur la touche à utiliser.",
+              "Si une touche est déjà utilisée, supprimez d'abord l'autre raccourci.",
+              "Utilisez « Rétablir les valeurs par défaut » quand vous voulez repartir de zéro."
+            ]
+          },
+          {
+            "type": "h2",
+            "text": "Conseils d'agencement"
+          },
+          {
+            "type": "p",
+            "text": "Gardez les notes blanches sur une rangée et les notes noires correspondantes sur la rangée du dessus, comme sur un vrai clavier. Regroupez chaque octave sur des touches voisines pour que vos doigts suivent un schéma prévisible."
+          }
+        ]
+      },
+      "earTraining": {
+        "title": "Des exercices d'oreille de cinq minutes à faire n'importe où",
+        "excerpt": "Entraîner son oreille facilite tout le reste. Ces exercices courts s'intègrent à n'importe quelle pause.",
+        "content": [
+          {
+            "type": "p",
+            "text": "Travailler l'oreille, c'est apprendre à reconnaître les notes, les intervalles et les accords à l'écoute. Cela accélère l'apprentissage des morceaux et rend l'improvisation plus naturelle."
+          },
+          {
+            "type": "h2",
+            "text": "Trois exercices rapides"
+          },
+          {
+            "type": "ul",
+            "items": [
+              "Chanter puis jouer : chantez une note, puis retrouvez-la au piano.",
+              "Plus haut ou plus bas : jouez deux notes et décidez si la seconde est plus aiguë ou plus grave, puis vérifiez.",
+              "Copier une mélodie : choisissez un air que vous connaissez et retrouvez-le à l'oreille, note après note."
+            ]
+          },
+          {
+            "type": "h2",
+            "text": "Faites-en une habitude"
+          },
+          {
+            "type": "p",
+            "text": "Cinq minutes par jour suffisent. Gardez les exercices légers et ludiques, et vous verrez des progrès en quelques semaines."
+          }
+        ]
+      }
+    }
+  },
+  "app": {
+    "name": "Web Piano"
+  },
+  "nav": {
+    "home": "Accueil",
+    "virtualPiano": "Piano virtuel",
+    "blog": "Blog",
+    "settings": "Paramètres",
+    "profile": "Profil",
+    "main": "Principal",
+    "explore": "Explorer",
+    "loginOrSignup": "Connexion ou inscription",
+    "openProfile": "Ouvrir votre profil",
+    "dock": "Navigation rapide"
+  },
+  "language": {
+    "switchTo": "Changer la langue pour {name}"
+  },
+  "theme": {
+    "switchToLight": "Passer au thème clair",
+    "switchToDark": "Passer au thème sombre"
+  },
+  "ui": {
+    "confirm": "Confirmer",
+    "cancel": "Annuler",
+    "dismiss": "Fermer",
+    "showPassword": "Afficher le mot de passe",
+    "hidePassword": "Masquer le mot de passe",
+    "otpDigit": "Chiffre {index} sur {total}",
+    "rotateToast": "Faites pivoter votre téléphone pour une meilleure expérience.",
+    "pleaseWait": "Veuillez patienter…"
+  },
+  "footer": {
+    "description": "Un piano qui vit dans votre navigateur. Suivez-nous pour découvrir de nouveaux sons, des conseils et des nouveautés.",
+    "social": "Réseaux sociaux",
+    "nav": "Pied de page",
+    "clubName": "Club Web Piano",
+    "clubText": "Rejoignez le club pour accéder en avant-première aux nouvelles fonctionnalités, aux conseils de pratique et aux actualités réservées aux membres.",
+    "emailLabel": "Adresse e-mail",
+    "join": "Rejoindre le club",
+    "joined": "Bienvenue au club ! Merci de votre inscription.",
+    "invalidEmail": "Veuillez saisir une adresse e-mail valide.",
+    "rights": "© {year} Web Piano. Tous droits réservés.",
+    "poweredBy": "Propulsé par Saleh Rezaei"
+  },
+  "finder": {
+    "title": "Trouvez votre piano",
+    "intro": "Quelques questions rapides, puis nous vous suggérerons la bonne taille et comment bien démarrer.",
+    "questionOf": "Question {current} sur {total}",
+    "selectAll": "Sélectionnez toutes les réponses qui conviennent",
+    "back": "Retour",
+    "continue": "Continuer",
+    "startOver": "Recommencer",
+    "keysCount": "{n} touches",
+    "unsure": "Je ne sais pas",
+    "steps": {
+      "goals": {
+        "title": "Que souhaitez-vous faire ?"
+      },
+      "level": {
+        "title": "Comment décririez-vous votre niveau au piano ?"
+      },
+      "genres": {
+        "title": "Quel type de musique voulez-vous jouer ?"
+      },
+      "input": {
+        "title": "Comment allez-vous jouer ici ?",
+        "subtitle": "La taille la plus confortable dépend de votre appareil"
+      },
+      "instrument": {
+        "title": "Avez-vous un piano ou un clavier chez vous ?",
+        "subtitle": "Si oui, nous pouvons adapter la taille pour que ce soit familier"
+      },
+      "instrumentKeys": {
+        "title": "Combien de touches a-t-il ?"
+      }
+    },
+    "goals": {
+      "songs": "Jouer des morceaux précis",
+      "theory": "Lire la musique et apprendre la théorie",
+      "chords": "Apprendre les accords et accompagner le chant",
+      "scales": "Travailler les gammes et la technique",
+      "improvise": "Improviser ou composer",
+      "ear": "Entraîner mon oreille",
+      "record": "Enregistrer mon jeu",
+      "teach": "J'enseigne le piano",
+      "fun": "Jouer simplement pour le plaisir"
+    },
+    "levels": {
+      "never": {
+        "label": "Jamais joué",
+        "hint": "Je n'ai jamais touché un piano"
+      },
+      "beginner": {
+        "label": "Débutant",
+        "hint": "J'apprends les notes et des morceaux simples"
+      },
+      "lateBeginner": {
+        "label": "Débutant avancé",
+        "hint": "Je sais jouer des morceaux faciles à deux mains"
+      },
+      "intermediate": {
+        "label": "Intermédiaire",
+        "hint": "À l'aise avec la plupart des morceaux que je travaille"
+      },
+      "advanced": {
+        "label": "Avancé",
+        "hint": "Je joue des morceaux complexes avec assurance"
+      },
+      "professional": {
+        "label": "Professionnel",
+        "hint": "Je me produis ou j'étudie la musique sérieusement"
+      }
+    },
+    "genres": {
+      "classical": "Classique",
+      "jazz": "Jazz",
+      "pop": "Pop",
+      "rock": "Rock",
+      "film": "Musique de films et de jeux",
+      "folk": "Folk",
+      "other": "Autre"
+    },
+    "inputs": {
+      "keyboard": {
+        "label": "Clavier d'ordinateur",
+        "hint": "Les touches du clavier jouent les notes"
+      },
+      "mouse": {
+        "label": "Souris ou pavé tactile",
+        "hint": "Cliquez et faites glisser sur les touches"
+      },
+      "tablet": {
+        "label": "Écran tactile de tablette",
+        "hint": "Touchez les touches"
+      },
+      "phone": {
+        "label": "Écran tactile de téléphone",
+        "hint": "Petit écran, petites touches"
+      }
+    },
+    "instruments": {
+      "none": {
+        "label": "Non, seulement celui-ci",
+        "hint": "Le site est mon piano principal"
+      },
+      "digital": {
+        "label": "Piano numérique ou clavier",
+        "hint": "Nous pouvons adapter sa taille"
+      },
+      "acoustic": {
+        "label": "Piano acoustique",
+        "hint": "Droit ou à queue"
+      }
+    },
+    "sizeNotes": {
+      "s25": "Deux octaves. Petit et simple, idéal pour essayer des mélodies.",
+      "s37": "Trois octaves. Suffisant pour des morceaux faciles à deux mains.",
+      "s49": "Quatre octaves. Une taille équilibrée pour apprendre et jouer des morceaux.",
+      "s61": "Cinq octaves. La plupart des morceaux pop, rock et de films y tiennent confortablement.",
+      "s76": "Plus de six octaves. De la place pour un répertoire exigeant.",
+      "s88": "L'étendue complète d'un piano à queue. Rien n'est hors de portée."
+    },
+    "result": {
+      "weRecommend": "Nous vous recommandons",
+      "goodToKnow": "Bon à savoir",
+      "alsoPoints": "Vos réponses indiquent aussi {keys} touches. {link} (les touches hors de vos raccourcis nécessitent la souris ou le toucher).",
+      "trySize": "Essayer cette taille",
+      "play": "Jouer au piano à {n} touches"
+    },
+    "reasons": {
+      "level": {
+        "never": "Pour un premier essai, trois octaves sont un point de départ accueillant.",
+        "beginner": "En tant que débutant, un clavier de taille moyenne suffit largement pour apprendre.",
+        "lateBeginner": "À votre niveau, quatre à cinq octaves couvrent les morceaux que vous travaillez.",
+        "intermediate": "À votre niveau, cinq octaves permettent de jouer la plupart de ce que vous travaillez.",
+        "advanced": "Les morceaux avancés couvrent souvent une grande étendue, il vous faut donc plus de place.",
+        "professional": "En tant que professionnel, vous voudrez l'étendue complète."
+      },
+      "genre": {
+        "classical": "La musique classique parcourt tout le clavier, donc une plus grande étendue aide.",
+        "fiveOctaves": "La musique {genres} tient confortablement en cinq octaves."
+      },
+      "goal": {
+        "improvise": "Improviser demande de la place pour se déplacer sur le clavier.",
+        "teach": "Enseigner implique de démontrer sur toute l'étendue.",
+        "scales": "Les gammes sur plusieurs octaves demandent un clavier plus large.",
+        "light": "Pour les accords, le travail de l'oreille et le jeu plaisir, cinq octaves suffisent."
+      },
+      "cap": {
+        "never": "Puisque vous n'avez jamais joué, un clavier plus petit est moins déroutant.",
+        "early": "Vous débutez encore, inutile donc de prendre le plus grand clavier."
+      },
+      "instrument": {
+        "acoustic": "Un piano acoustique a 88 touches, cette disposition vous serait donc familière.",
+        "digital": "Votre clavier a {n} touches, cette taille vous serait donc familière."
+      },
+      "input": {
+        "keyboard": "Environ trois octaves tiennent confortablement sur les touches de l'ordinateur ; le reste nécessite la souris.",
+        "tablet": "Sur tablette, les touches restent faciles à toucher jusqu'à environ cinq octaves.",
+        "phone": "Sur un téléphone, les touches deviennent vite petites, nous avons donc gardé un clavier compact."
+      }
+    },
+    "tips": {
+      "shortcuts": "Par défaut, seules les notes do 4 à mi 5 (C4 à E5) ont des raccourcis clavier. Attribuez le reste de vos touches dans les Paramètres.",
+      "openSettings": "Ouvrir les paramètres",
+      "rotate": "Tournez votre téléphone en mode paysage pour élargir les touches.",
+      "noteNames": "Chaque note jouée affiche son nom au-dessus du clavier.",
+      "recorder": "Utilisez l'enregistreur sous le piano pour capturer une prise, la réécouter ou la télécharger."
+    }
+  },
+  "home": {
+    "hero": {
+      "line1": "Jouez du piano",
+      "line2": "dans votre navigateur",
+      "text": "Un piano web moderne avec de vrais sons de piano. Jouez avec votre souris, votre écran tactile ou le clavier de votre ordinateur. Branchez un appareil MIDI et allez encore plus loin.",
+      "cta": "Commencer à jouer"
+    },
+    "highlights": {
+      "touch": {
+        "title": "Souris et toucher",
+        "text": "Jouez avec vos doigts"
+      },
+      "keyboard": {
+        "title": "Clavier",
+        "text": "Utilisez les touches de votre ordinateur"
+      },
+      "midi": {
+        "title": "Compatible MIDI",
+        "text": "Connectez votre appareil"
+      },
+      "install": {
+        "title": "Aucune installation",
+        "text": "Fonctionne dans votre navigateur"
+      }
+    }
+  },
+  "faq": {
+    "badge": "FAQ",
+    "title": "Questions fréquentes",
+    "subtitle": "Des réponses rapides aux questions les plus posées.",
+    "items": {
+      "install": {
+        "question": "Dois-je installer quelque chose ou créer un compte ?",
+        "answer": "Non. Web Piano fonctionne entièrement dans votre navigateur : ouvrez la page Piano virtuel et commencez à jouer tout de suite. Un compte est facultatif et ne sert que pour votre page de profil."
+      },
+      "loadSounds": {
+        "question": "Pourquoi dois-je d'abord appuyer sur « Charger le piano » ?",
+        "answer": "Le piano utilise des échantillons enregistrés d'un piano à queue. Ils sont téléchargés une seule fois lorsque vous appuyez sur « Charger le piano », ce qui permet à la page de s'ouvrir vite et de ne rien charger tant que vous ne voulez pas jouer. Une fois le chargement terminé, chaque note sonne instantanément."
+      },
+      "play": {
+        "question": "Comment jouer du piano ?",
+        "answer": "Vous pouvez cliquer sur les touches avec la souris, les faire glisser pour un glissando, les toucher sur un écran tactile, utiliser le clavier de votre ordinateur ou brancher un clavier MIDI. Chaque touche de l'ordinateur correspond à une note de piano."
+      },
+      "shortcuts": {
+        "question": "Puis-je changer la touche de l'ordinateur qui joue chaque note ?",
+        "answer": "Oui. Ouvrez les Paramètres, cliquez sur le champ à côté d'une note et appuyez sur la touche voulue. Les touches sont identifiées par leur position, les raccourcis fonctionnent donc avec n'importe quelle langue de clavier, et l'application vous avertit si une touche est déjà utilisée. Vos choix sont enregistrés dans ce navigateur et vous pouvez tout rétablir par défaut."
+      },
+      "size": {
+        "question": "Quelle taille de piano choisir ?",
+        "answer": "Web Piano propose 25, 37, 49, 61, 76 et 88 touches, et 49 touches est la valeur par défaut. Si vous débutez, 49 ou 61 touches sont un choix confortable. Utilisez le guide de choix de piano sur cette page pour obtenir une recommandation selon vos objectifs et votre niveau."
+      },
+      "record": {
+        "question": "Puis-je enregistrer ce que je joue ?",
+        "answer": "Oui. Sur la page Piano virtuel, appuyez sur enregistrer, jouez votre morceau, puis arrêtez. Vous pouvez réécouter l'enregistrement, le télécharger en fichier audio ou l'effacer pour recommencer."
+      },
+      "midi": {
+        "question": "Puis-je jouer avec un clavier MIDI ?",
+        "answer": "Oui. Ouvrez les Paramètres, appuyez sur « Connecter le MIDI » et autorisez l'accès dans votre navigateur. Les notes sont jouées avec leur vraie vélocité et vous pouvez choisir l'appareil à écouter. Web MIDI fonctionne dans Chrome et Edge, en HTTPS ou sur localhost."
+      },
+      "noSound": {
+        "question": "Pourquoi n'y a-t-il pas de son quand j'appuie sur une touche ?",
+        "answer": "Assurez-vous d'abord d'avoir appuyé sur « Charger le piano » et que les sons ont fini de se charger. Vérifiez ensuite que votre appareil n'est pas en sourdine et que le volume de l'application est supérieur à zéro et n'est pas coupé. Si le chargement a échoué, appuyez sur « Réessayer le chargement »."
+      },
+      "mobile": {
+        "question": "Cela fonctionne-t-il sur mon téléphone ou ma tablette ?",
+        "answer": "Oui. Le toucher est pris en charge : vous pouvez toucher et glisser sur les touches. Sur un téléphone, passer en mode paysage ou choisir une taille de piano plus petite facilite la frappe des touches."
+      }
+    }
+  },
+  "blogPreview": {
+    "title": "Depuis le blog",
+    "subtitle": "Conseils, guides et idées pour mieux jouer.",
+    "viewAll": "Voir tous les articles"
+  },
+  "piano": {
+    "title": "{name}",
+    "names": {
+      "25": "Mini (piano portable)",
+      "37": "Piano compact",
+      "49": "Petit contrôleur MIDI",
+      "61": "Standard (piano à action synthé)",
+      "76": "Étendu (piano workstation)",
+      "88": "Taille réelle (piano à toucher lesté)"
+    },
+    "range": "Étendue de {from} à {to}",
+    "rangeShort": "{from} à {to}",
+    "keys": "{n} touches",
+    "sizes": "Tailles de piano",
+    "sizeDialog": {
+      "title": "Choisir la taille du piano",
+      "subtitle": "Choisissez le nombre de touches de votre piano virtuel",
+      "apply": "Appliquer"
+    },
+    "volume": "Volume",
+    "mute": "Couper le son",
+    "unmute": "Rétablir le son",
+    "loadPiano": "Charger le piano",
+    "loading": "Chargement des sons…",
+    "retry": "Réessayer le chargement",
+    "loadingOverlay": "Chargement des sons",
+    "recorder": {
+      "record": "Enregistrer",
+      "stopRecording": "Arrêter l'enregistrement",
+      "play": "Lire l'enregistrement",
+      "stopPlayback": "Arrêter la lecture",
+      "download": "Télécharger l'enregistrement",
+      "downloadShort": "Télécharger",
+      "clear": "Effacer l'enregistrement",
+      "clearShort": "Effacer"
+    },
+    "screen": {
+      "record": "Enregistrer l'écran",
+      "stop": "Arrêter l'enregistrement de l'écran",
+      "download": "Télécharger l'enregistrement de l'écran",
+      "clear": "Effacer l'enregistrement de l'écran",
+      "failed": "Impossible de démarrer l'enregistrement"
+    }
+  },
+  "settings": {
+    "title": "Paramètres",
+    "appearance": {
+      "title": "Apparence",
+      "description": "Choisissez votre langue et votre thème préféré.",
+      "language": "Langue",
+      "theme": "Thème",
+      "languages": {
+        "fa": "فارسی",
+        "en": "English",
+        "fr": "Français",
+        "tr": "Türkçe"
+      },
+      "themes": {
+        "navy": {
+          "name": "Bleu nuit",
+          "description": "Frais et apaisant"
+        },
+        "dark": {
+          "name": "Brun",
+          "description": "Chaleureux et naturel"
+        },
+        "wine": {
+          "name": "Bordeaux",
+          "description": "Élégant et profond"
+        },
+        "light": {
+          "name": "Clair",
+          "description": "Net et lumineux"
+        }
+      }
+    },
+    "shortcuts": {
+      "title": "Raccourcis clavier",
+      "description": "Les {total} touches du piano sont listées par octave. Cliquez sur un champ, puis appuyez sur la touche de l'ordinateur voulue pour cette note. Les raccourcis des notes hors de la taille de piano sélectionnée sont ignorés. Les touches sont identifiées par leur position, elles fonctionnent donc avec n'importe quelle langue de clavier.",
+      "reset": "Rétablir les valeurs par défaut",
+      "resetTitle": "Rétablir tous les raccourcis ?",
+      "resetMessage": "Tous vos raccourcis clavier personnalisés seront remplacés par les valeurs par défaut. Cette action est irréversible.",
+      "resetConfirm": "Rétablir",
+      "resetCancel": "Annuler",
+      "octave": "Octave {n}",
+      "assigned": "{set} / {total} définis",
+      "clash": "{key} joue déjà {note}."
+    },
+    "row": {
+      "keyAria": "Touche de l'ordinateur pour {note}. Cliquez, puis appuyez sur une touche.",
+      "pressKey": "Appuyez sur une touche",
+      "clear": "Effacer",
+      "clearAria": "Effacer le raccourci de {note}"
+    },
+    "midi": {
+      "title": "Appareils MIDI",
+      "description": "Connectez et gérez vos appareils MIDI",
+      "connect": "Connecter le MIDI",
+      "tryAgain": "Réessayer",
+      "status": {
+        "idle": "Pas encore connecté.",
+        "requesting": "En attente de votre autorisation…",
+        "readyDevices": "Connecté. Jouez une touche sur votre appareil MIDI.",
+        "readyNone": "Connecté, mais aucun appareil MIDI n'a été trouvé. Branchez-en un ou démarrez un port MIDI virtuel.",
+        "denied": "L'accès MIDI est bloqué. Autorisez-le pour ce site dans les paramètres de votre navigateur, puis rechargez la page.",
+        "unsupported": "Ce navigateur ne prend pas en charge Web MIDI. Essayez Chrome ou Edge.",
+        "insecure": "Web MIDI ne fonctionne qu'en HTTPS ou sur localhost.",
+        "error": "Impossible de démarrer le MIDI. Réessayez."
+      },
+      "listenTo": "Écouter",
+      "allDevices": "Tous les appareils",
+      "unknownDevice": "Appareil inconnu",
+      "connected": "Connecté",
+      "disconnected": "Déconnecté",
+      "missingDevice": "L'appareil choisi n'est pas connecté pour le moment : rien ne sera joué tant qu'il ne revient pas ou que vous ne choisissez pas « Tous les appareils ».",
+      "loadSounds": "Charger les sons du piano",
+      "loadingSounds": "Chargement des sons…",
+      "testNote": "Jouer une note de test",
+      "lastNote": "Dernière note : {note}, vélocité {velocity} depuis {source}",
+      "noNotes": "Aucune note reçue pour l'instant.",
+      "sourceTest": "le bouton de test",
+      "sourceAny": "un appareil MIDI",
+      "deviceCount": "aucun appareil | {n} appareil | {n} appareils",
+      "inputOnly": "Entrée",
+      "velocity": "Vélocité",
+      "liveInput": "Entrée MIDI en direct",
+      "lastNoteLabel": "Dernière note",
+      "message": "Message",
+      "testTitle": "Testez votre appareil MIDI",
+      "testHint": "Assurez-vous que votre appareil fonctionne correctement.",
+      "testHintLoad": "Chargez d'abord les sons du piano, puis jouez une note de test.",
+      "state": {
+        "active": "Actif",
+        "standby": "En veille",
+        "off": "Déconnecté"
+      }
+    },
+    "nav": {
+      "general": "Général",
+      "appearance": "Apparence",
+      "midi": "MIDI"
+    },
+    "general": {
+      "title": "Général",
+      "description": "Choisissez la touche de l'ordinateur qui joue chaque note du piano."
+    }
+  }
+}

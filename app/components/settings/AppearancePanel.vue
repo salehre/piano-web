@@ -76,7 +76,7 @@ const off = 'border-stone-700/60 bg-stone-950/30 text-stone-200 hover:bg-stone-8
         {{ t('settings.appearance.language') }}
       </h3>
 
-      <div class="mt-3 flex flex-wrap gap-2">
+      <div class="mt-3 grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
         <button
           v-for="(l, i) in langs"
           :key="l.code"

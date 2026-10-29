@@ -1,0 +1,703 @@
+{
+  "auth": {
+    "login": {
+      "steps": {
+        "phone": {
+          "title": "Giriş yap veya kayıt ol",
+          "hint": "Devam etmek için cep telefonu numaranızı girin.",
+          "button": "Devam"
+        },
+        "password": {
+          "title": "Tekrar hoş geldiniz",
+          "hint": "Giriş yapmak için şifrenizi girin.",
+          "button": "Giriş yap"
+        },
+        "code": {
+          "title": "Kodu girin",
+          "hint": "{phone} numarasına {length} haneli bir kod gönderdik.",
+          "button": "Doğrula"
+        },
+        "newPassword": {
+          "title": "Bir şifre seçin",
+          "hint": "Bir sonraki girişinizde bunu kullanacaksınız.",
+          "button": "Hesap oluştur"
+        },
+        "resetPassword": {
+          "title": "Yeni bir şifre seçin",
+          "hint": "Bir sonraki girişinizde bunu kullanacaksınız.",
+          "button": "Kaydet ve giriş yap"
+        }
+      },
+      "mobileLabel": "Cep telefonu numarası",
+      "passwordLabel": "Şifre",
+      "confirmLabel": "Şifreyi onayla",
+      "passwordHint": "En az {min} karakter; bir harf ve bir rakam içermeli.",
+      "forgot": "Şifrenizi mi unuttunuz? Kodla giriş yapın",
+      "devMode": "Geliştirici modu: SMS gönderilmez. Kodunuz {code}",
+      "codeLabel": "Doğrulama kodu",
+      "resendIn": "Kodu {seconds} sn sonra tekrar gönder",
+      "resend": "Kodu tekrar gönder",
+      "differentNumber": "Başka bir numara kullan"
+    },
+    "profile": {
+      "loading": "Profiliniz yükleniyor…",
+      "defaultName": "Profiliniz",
+      "photoAlt": "Profil fotoğrafınız",
+      "changePhoto": "Profil fotoğrafını değiştir",
+      "removePhoto": "Fotoğrafı kaldır",
+      "logout": "Çıkış yap",
+      "completion": "Profil tamamlanma oranı",
+      "fillRest": "Tamamlamak için aşağıdaki diğer alanları doldurun.",
+      "complete": "Profiliniz tamamlandı.",
+      "sections": {
+        "about": "Hakkınızda",
+        "piano": "Piyanonuz",
+        "account": "Hesap"
+      },
+      "fields": {
+        "name": "Ad",
+        "email": "E-posta",
+        "emailPlaceholder": "ad{'@'}ornek.com",
+        "country": "Ülke",
+        "nationalId": "Ulusal kimlik numarası",
+        "nationalIdPlaceholder": "10 hane",
+        "address": "Adres",
+        "yearsPlaying": "Çalma süresi (yıl)",
+        "yearsHint": "Belirtmek istemiyorsanız boş bırakın.",
+        "mobile": "Cep telefonu",
+        "memberSince": "Üyelik tarihi"
+      },
+      "actions": {
+        "save": "Değişiklikleri kaydet",
+        "saving": "Kaydediliyor…",
+        "discard": "Değişiklikleri iptal et",
+        "saved": "Profil kaydedildi."
+      },
+      "avatar": {
+        "notImage": "Lütfen bir resim dosyası seçin.",
+        "tooLarge": "Resim çok büyük (en fazla {max} MB).",
+        "unreadable": "Bu resim okunamadı. Başka bir resim deneyin."
+      },
+      "logoutDialog": {
+        "title": "Çıkış yapılsın mı?",
+        "message": "Hesabınızdan çıkış yapmak istediğinizden emin misiniz?",
+        "confirm": "Çıkış yap",
+        "cancel": "Oturumu açık tut"
+      }
+    },
+    "validation": {
+      "phoneRequired": "Cep telefonu numarası gerekli.",
+      "phoneInvalid": "Geçerli bir cep telefonu numarası girin.",
+      "passwordRequired": "Şifre gerekli.",
+      "passwordMin": "Şifre en az {min} karakter olmalı.",
+      "passwordMix": "En az bir harf ve bir rakam kullanın.",
+      "passwordMismatch": "Şifreler eşleşmiyor.",
+      "nameRequired": "Ad gerekli.",
+      "nameMin": "Ad en az {min} karakter olmalı.",
+      "nameMax": "Ad en fazla {max} karakter olabilir.",
+      "emailMax": "E-posta en fazla {max} karakter olabilir.",
+      "emailInvalid": "Geçerli bir e-posta adresi girin.",
+      "nationalIdLength": "Ulusal kimlik numarası tam olarak {length} haneli olmalı.",
+      "nationalIdInvalid": "Geçerli bir ulusal kimlik numarası girin.",
+      "yearsRange": "{min} ile {max} arasında bir tam sayı girin.",
+      "codeRequired": "{length} haneli kodu girin."
+    },
+    "errors": {
+      "waitResend": "Yeni kod istemeden önce lütfen {seconds} sn bekleyin.",
+      "requestCodeFirst": "Önce yeni bir kod isteyin.",
+      "codeExpired": "Bu kodun süresi doldu. Yeni bir kod isteyin.",
+      "tooManyAttempts": "Çok fazla hatalı deneme. Yeni bir kod isteyin.",
+      "wrongCode": "Yanlış kod. Tekrar deneyin.",
+      "verificationExpired": "Telefon doğrulamanızın süresi doldu. Lütfen baştan başlayın.",
+      "savePassword": "Şifreniz kaydedilemedi.",
+      "login": "Giriş yapılamadı.",
+      "incorrectPassword": "Şifre yanlış.",
+      "notLoggedIn": "Giriş yapmadınız.",
+      "saveProfile": "Profiliniz kaydedilemedi.",
+      "secureContext": "Güvenli bağlantı gerekli (HTTPS veya localhost kullanın)."
+    }
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Piyano çalmaktan keyif almanıza ve gelişmenize yardımcı olacak ipuçları, rehberler ve fikirler.",
+    "back": "Bloga dön",
+    "minRead": "{n} dk okuma",
+    "notFound": "Yazı bulunamadı",
+    "cta": {
+      "title": "Çalmaya hazır mısınız?",
+      "text": "Sanal piyanoda uygulamaya dökün. Kurulum gerekmez.",
+      "button": "Sanal piyano çal"
+    },
+    "tags": {
+      "beginners": "Yeni başlayanlar",
+      "guides": "Rehberler",
+      "tips": "İpuçları",
+      "practice": "Pratik"
+    },
+    "posts": {
+      "startLearning": {
+        "title": "Çevrimiçi piyano öğrenmeye nasıl başlanır",
+        "excerpt": "Başlamak için gerçek bir piyanoya ihtiyacınız yok. İlk haftalarınız için basit bir plan.",
+        "content": [
+          {
+            "type": "p",
+            "text": "Piyanoya başlamak gözünüzü korkutabilir, ama ilk adımlar küçüktür. Tarayıcınızdaki sanal piyanoyla, bir enstrüman satın almadan önce parmaklarınızı klavyeye alıştırabilir, kulağınızı ve ritim duygunuzu geliştirebilirsiniz."
+          },
+          {
+            "type": "h2",
+            "text": "Önce dizilimi öğrenin"
+          },
+          {
+            "type": "p",
+            "text": "Klavye, aynı beyaz ve siyah tuş desenini tekrar eder. Siyah tuşlar ikili ve üçlü gruplar halindedir; ikili grubun hemen solundaki beyaz tuş her zaman do (C) notasıdır. Do'yu bulabiliyorsanız diğer tüm notaları da bulabilirsiniz."
+          },
+          {
+            "type": "h2",
+            "text": "Her gün biraz çalışın"
+          },
+          {
+            "type": "ul",
+            "items": [
+              "Haftada bir uzun seans yerine on on beş dakikalık odaklı çalışma daha iyidir.",
+              "Tek elle, yavaş başlayın; hızı ancak kolaylaştığında artırın.",
+              "Çalarken nota adlarını yüksek sesle söyleyin.",
+              "Her seansı, basit de olsa sevdiğiniz bir parçayla bitirin."
+            ]
+          },
+          {
+            "type": "h2",
+            "text": "Kendinizi kaydetmeyi deneyin"
+          },
+          {
+            "type": "p",
+            "text": "Kısa bir pasajı kaydedip geri dinlemek, düzensiz ritmi veya yanlış notaları fark etmenin en hızlı yollarından biridir. Ayrıca haftalar içindeki ilerlemenizi takip etmenizi sağlar."
+          }
+        ]
+      },
+      "choosingKeys": {
+        "title": "25, 49, 61 veya 88 tuş? Doğru piyano boyutunu seçmek",
+        "excerpt": "Daha fazla tuş her zaman daha iyi değildir. Müziğinize uygun boyutu nasıl seçeceğinizi anlatıyoruz.",
+        "content": [
+          {
+            "type": "p",
+            "text": "Tam bir piyano, yedi oktav ve birkaç ek nota olmak üzere A0'dan C8'e kadar 88 tuştan oluşur. Daha küçük klavyeler en pes ve en tiz oktavları kırpar."
+          },
+          {
+            "type": "h2",
+            "text": "Her boyut ne için uygun"
+          },
+          {
+            "type": "ul",
+            "items": [
+              "25 ve 37 tuş: hızlı melodiler ve basit fikirler; küçük ekranlarda en kolayı.",
+              "49 tuş: yeni başlayanlar ile çoğu pop ve film melodisi için rahat, çok yönlü bir seçim.",
+              "61 tuş: beş oktav; iki elle çalınan birçok şarkı için yeterli.",
+              "76 ve 88 tuş: en pes ve en tiz notaları kullanan klasik repertuarın büyük bölümü için gerekli."
+            ]
+          },
+          {
+            "type": "h2",
+            "text": "Kararı müzik versin"
+          },
+          {
+            "type": "p",
+            "text": "Çalmak istediğiniz parçalardaki en pes ve en tiz notalara bakın. Beş oktava sığıyorlarsa 61 tuşlu bir düzen fazlasıyla yeterlidir. Emin değilseniz, ana sayfadaki piyano bulucu hedeflerinize ve seviyenize göre bir boyut önerebilir."
+          }
+        ]
+      },
+      "customShortcuts": {
+        "title": "Bilgisayar klavyenizi piyano gibi hissettirin",
+        "excerpt": "Özel kısayollar daha hızlı ve daha rahat çalmanıza yardımcı olur. Nasıl ayarlanacağını anlatıyoruz.",
+        "content": [
+          {
+            "type": "p",
+            "text": "Bilgisayar klavyesiyle çalmak hızlıdır, ancak dizilim ellerinize doğal geliyorsa. Bu yüzden Web Piano'daki her nota istediğiniz herhangi bir tuşa atanabilir."
+          },
+          {
+            "type": "h2",
+            "text": "Kendi kısayollarınızı ayarlayın"
+          },
+          {
+            "type": "ul",
+            "items": [
+              "Ayarlar'ı açın ve değiştirmek istediğiniz oktavı bulun.",
+              "Bir notanın yanındaki alana tıklayın, ardından kullanmak istediğiniz tuşa basın.",
+              "Bir tuş zaten kullanılıyorsa önce diğer kısayolu temizleyin.",
+              "Baştan başlamak istediğinizde «Varsayılana sıfırla»yı kullanın."
+            ]
+          },
+          {
+            "type": "h2",
+            "text": "Tasarım ipuçları"
+          },
+          {
+            "type": "p",
+            "text": "Beyaz notaları bir sırada, karşılık gelen siyah notaları da gerçek bir klavyedeki gibi üstteki sırada tutun. Her oktavı birbirine yakın tuşlarda toplayın; böylece parmaklarınız öngörülebilir bir düzende hareket eder."
+          }
+        ]
+      },
+      "earTraining": {
+        "title": "Her yerde yapabileceğiniz beş dakikalık kulak eğitimi alıştırmaları",
+        "excerpt": "Kulağınızı eğitmek diğer her şeyi kolaylaştırır. Bu kısa alıştırmalar her molaya sığar.",
+        "content": [
+          {
+            "type": "p",
+            "text": "Kulak eğitimi; notaları, aralıkları ve akorları sesten tanımayı öğrenmektir. Şarkı öğrenmeyi hızlandırır ve doğaçlamayı daha doğal hale getirir."
+          },
+          {
+            "type": "h2",
+            "text": "Üç hızlı alıştırma"
+          },
+          {
+            "type": "ul",
+            "items": [
+              "Mırıldan, sonra çal: bir nota söyleyin, sonra piyanoda bulun.",
+              "Yukarı mı aşağı mı: iki nota çalın, ikincisinin daha tiz mi daha pes mi olduğuna karar verin, sonra kontrol edin.",
+              "Melodiyi kopyala: bildiğiniz bir ezgiyi seçin ve nota nota kulaktan bulun."
+            ]
+          },
+          {
+            "type": "h2",
+            "text": "Alışkanlık haline getirin"
+          },
+          {
+            "type": "p",
+            "text": "Günde beş dakika yeterlidir. Alıştırmaları hafif ve eğlenceli tutun; birkaç hafta içinde ilerlemeyi fark edeceksiniz."
+          }
+        ]
+      }
+    }
+  },
+  "app": {
+    "name": "Web Piano"
+  },
+  "nav": {
+    "home": "Ana sayfa",
+    "virtualPiano": "Sanal piyano",
+    "blog": "Blog",
+    "settings": "Ayarlar",
+    "profile": "Profil",
+    "main": "Ana",
+    "explore": "Keşfet",
+    "loginOrSignup": "Giriş yap veya kayıt ol",
+    "openProfile": "Profilinizi açın",
+    "dock": "Hızlı gezinme"
+  },
+  "language": {
+    "switchTo": "Dili {name} olarak değiştir"
+  },
+  "theme": {
+    "switchToLight": "Açık temaya geç",
+    "switchToDark": "Koyu temaya geç"
+  },
+  "ui": {
+    "confirm": "Onayla",
+    "cancel": "İptal",
+    "dismiss": "Kapat",
+    "showPassword": "Şifreyi göster",
+    "hidePassword": "Şifreyi gizle",
+    "otpDigit": "{total} haneden {index}. hane",
+    "rotateToast": "Daha iyi bir deneyim için telefonunuzu döndürün.",
+    "pleaseWait": "Lütfen bekleyin…"
+  },
+  "footer": {
+    "description": "Tarayıcınızda yaşayan bir piyano. Yeni sesler, ipuçları ve güncellemeler için bizi takip edin.",
+    "social": "Sosyal medya",
+    "nav": "Alt bilgi",
+    "clubName": "Web Piano Kulübü",
+    "clubText": "Yeni özelliklere erken erişim, pratik ipuçları ve yalnızca üyelere özel haberler için kulübe katılın.",
+    "emailLabel": "E-posta adresi",
+    "join": "Kulübe katıl",
+    "joined": "Kulübe hoş geldiniz! Katıldığınız için teşekkürler.",
+    "invalidEmail": "Lütfen geçerli bir e-posta adresi girin.",
+    "rights": "© {year} Web Piano. Tüm hakları saklıdır.",
+    "poweredBy": "Geliştiren: Saleh Rezaei"
+  },
+  "finder": {
+    "title": "Piyanonuzu bulun",
+    "intro": "Birkaç kısa soru soracağız, ardından size uygun boyutu ve nasıl başlayacağınızı önereceğiz.",
+    "questionOf": "Soru {current} / {total}",
+    "selectAll": "Uygun olanların hepsini seçin",
+    "back": "Geri",
+    "continue": "Devam",
+    "startOver": "Baştan başla",
+    "keysCount": "{n} tuş",
+    "unsure": "Emin değilim",
+    "steps": {
+      "goals": {
+        "title": "Ne yapmak istersiniz?"
+      },
+      "level": {
+        "title": "Piyano seviyenizi nasıl tanımlarsınız?"
+      },
+      "genres": {
+        "title": "Ne tür müzik çalmak istiyorsunuz?"
+      },
+      "input": {
+        "title": "Burada nasıl çalacaksınız?",
+        "subtitle": "Size uygun boyut cihazınıza bağlıdır"
+      },
+      "instrument": {
+        "title": "Evinizde piyano veya klavye var mı?",
+        "subtitle": "Varsa, tanıdık gelsin diye boyutunu eşleştirebiliriz"
+      },
+      "instrumentKeys": {
+        "title": "Kaç tuşu var?"
+      }
+    },
+    "goals": {
+      "songs": "Belirli şarkıları çalmak",
+      "theory": "Nota okumak ve teori öğrenmek",
+      "chords": "Akorları öğrenmek ve şarkıya eşlik etmek",
+      "scales": "Gam ve teknik çalışmak",
+      "improvise": "Doğaçlama yapmak veya beste yapmak",
+      "ear": "Kulağımı eğitmek",
+      "record": "Çalışımı kaydetmek",
+      "teach": "Piyano öğretiyorum",
+      "fun": "Sadece eğlence için çalmak"
+    },
+    "levels": {
+      "never": {
+        "label": "Hiç çalmadım",
+        "hint": "Daha önce hiç piyanoya dokunmadım"
+      },
+      "beginner": {
+        "label": "Başlangıç",
+        "hint": "Notaları ve basit şarkıları öğreniyorum"
+      },
+      "lateBeginner": {
+        "label": "İleri başlangıç",
+        "hint": "Kolay parçaları iki elle çalabiliyorum"
+      },
+      "intermediate": {
+        "label": "Orta",
+        "hint": "Çalıştığım çoğu parçada rahatım"
+      },
+      "advanced": {
+        "label": "İleri",
+        "hint": "Karmaşık parçaları güvenle çalıyorum"
+      },
+      "professional": {
+        "label": "Profesyonel",
+        "hint": "Sahne alıyorum veya müziği ciddi şekilde öğreniyorum"
+      }
+    },
+    "genres": {
+      "classical": "Klasik",
+      "jazz": "Caz",
+      "pop": "Pop",
+      "rock": "Rock",
+      "film": "Film ve oyun müziği",
+      "folk": "Halk müziği",
+      "other": "Diğer"
+    },
+    "inputs": {
+      "keyboard": {
+        "label": "Bilgisayar klavyesi",
+        "hint": "Klavye tuşları notaları çalar"
+      },
+      "mouse": {
+        "label": "Fare veya dokunmatik yüzey",
+        "hint": "Tuşlara tıklayın ve sürükleyin"
+      },
+      "tablet": {
+        "label": "Tablet dokunmatik ekranı",
+        "hint": "Tuşlara dokunun"
+      },
+      "phone": {
+        "label": "Telefon dokunmatik ekranı",
+        "hint": "Küçük ekran, küçük tuşlar"
+      }
+    },
+    "instruments": {
+      "none": {
+        "label": "Hayır, sadece bu",
+        "hint": "Bu site benim ana piyanom"
+      },
+      "digital": {
+        "label": "Dijital piyano veya klavye",
+        "hint": "Boyutunu eşleştirebiliriz"
+      },
+      "acoustic": {
+        "label": "Akustik piyano",
+        "hint": "Duvar tipi veya kuyruklu"
+      }
+    },
+    "sizeNotes": {
+      "s25": "İki oktav. Küçük ve basit, melodileri denemek için ideal.",
+      "s37": "Üç oktav. İki elle çalınan kolay şarkılar için yeterli.",
+      "s49": "Dört oktav. Öğrenmek ve şarkı çalmak için dengeli bir boyut.",
+      "s61": "Beş oktav. Çoğu pop, rock ve film parçası rahatça sığar.",
+      "s76": "Altı oktavdan fazla. Zorlu bir repertuvar için yer var.",
+      "s88": "Kuyruklu piyanonun tam aralığı. Ulaşılamayacak nota yok."
+    },
+    "result": {
+      "weRecommend": "Önerimiz",
+      "goodToKnow": "Bilmekte fayda var",
+      "alsoPoints": "Cevaplarınız ayrıca {keys} tuşu işaret ediyor. {link} (kısayollarınızın dışındaki tuşlar için fare veya dokunmatik ekran gerekir).",
+      "trySize": "Bu boyutu dene",
+      "play": "{n} tuşlu piyanoyu çal"
+    },
+    "reasons": {
+      "level": {
+        "never": "İlk kez çalacaklar için üç oktav, rahat bir başlangıç noktasıdır.",
+        "beginner": "Yeni başlayan biri olarak, orta boy bir klavye öğrenmek için fazlasıyla yeterli.",
+        "lateBeginner": "Seviyenizde dört ila beş oktav, üzerinde çalıştığınız parçaları karşılar.",
+        "intermediate": "Seviyenizde beş oktav, çalıştığınız çoğu parçayı çalmanıza izin verir.",
+        "advanced": "İleri seviye parçalar genellikle geniş bir aralık kullanır, bu yüzden daha fazla yere ihtiyacınız var.",
+        "professional": "Bir profesyonel olarak tam aralığı isteyeceksiniz."
+      },
+      "genre": {
+        "classical": "Klasik müzik tüm klavyeyi dolaşır, bu yüzden daha geniş bir aralık işe yarar.",
+        "fiveOctaves": "{genres} müziği beş oktava rahatça sığar."
+      },
+      "goal": {
+        "improvise": "Doğaçlama, klavyede dolaşmak için alan gerektirir.",
+        "teach": "Öğretmek, tüm aralıkta gösterim yapmak demektir.",
+        "scales": "Birkaç oktavlık gamlar daha geniş bir klavye gerektirir.",
+        "light": "Akorlar, kulak eğitimi ve eğlence için çalmada beş oktav fazlasıyla yeterli."
+      },
+      "cap": {
+        "never": "Daha önce hiç çalmadığınız için daha küçük bir klavye gözünüzü korkutmaz.",
+        "early": "Henüz işin başındasınız, bu yüzden en büyük klavyeye şimdilik gerek yok."
+      },
+      "instrument": {
+        "acoustic": "Akustik piyanoda 88 tuş vardır, bu yüzden bu düzen size tanıdık gelir.",
+        "digital": "Klavyenizde {n} tuş var, bu yüzden bu boyut size tanıdık gelir."
+      },
+      "input": {
+        "keyboard": "Bilgisayar tuşlarına yaklaşık üç oktav rahatça sığar; gerisi için fare gerekir.",
+        "tablet": "Tablette tuşlara dokunmak yaklaşık beş oktava kadar kolay kalır.",
+        "phone": "Telefonda tuşlar hızla küçülür, bu yüzden kompakt tuttuk."
+      }
+    },
+    "tips": {
+      "shortcuts": "Varsayılan olarak yalnızca C4'ten E5'e kadar olan notaların bilgisayar tuşu kısayolu vardır. Diğer tuşlarınızı Ayarlar'dan atayın.",
+      "openSettings": "Ayarları aç",
+      "rotate": "Tuşlar genişlesin diye telefonunuzu yan çevirin.",
+      "noteNames": "Bastığınız her notanın adı klavyenin üstünde görünür.",
+      "recorder": "Bir kayıt almak, dinlemek veya indirmek için piyanonun altındaki kaydediciyi kullanın."
+    }
+  },
+  "home": {
+    "hero": {
+      "line1": "Piyanoyu",
+      "line2": "tarayıcınızda çalın",
+      "text": "Gerçek piyano sesleriyle modern bir web piyanosu. Farenizle, dokunmatik ekranınız veya bilgisayar klavyenizle çalın. Bir MIDI cihazı bağlayın ve daha fazlasını deneyimleyin.",
+      "cta": "Çalmaya başla"
+    },
+    "highlights": {
+      "touch": {
+        "title": "Fare ve dokunmatik",
+        "text": "Parmaklarınızla çalın"
+      },
+      "keyboard": {
+        "title": "Klavye",
+        "text": "Bilgisayar tuşlarınızı kullanın"
+      },
+      "midi": {
+        "title": "MIDI desteği",
+        "text": "Cihazınızı bağlayın"
+      },
+      "install": {
+        "title": "Kurulum yok",
+        "text": "Tarayıcınızda çalışır"
+      }
+    }
+  },
+  "faq": {
+    "badge": "SSS",
+    "title": "Sıkça sorulan sorular",
+    "subtitle": "En çok sorulan sorulara hızlı yanıtlar.",
+    "items": {
+      "install": {
+        "question": "Bir şey kurmam veya hesap oluşturmam gerekiyor mu?",
+        "answer": "Hayır. Web Piano tamamen tarayıcınızda çalışır; Sanal piyano sayfasını açıp hemen çalmaya başlayabilirsiniz. Hesap isteğe bağlıdır ve yalnızca profil sayfanız için gereklidir."
+      },
+      "loadSounds": {
+        "question": "Neden önce «Piyanoyu yükle» düğmesine basmam gerekiyor?",
+        "answer": "Piyano, kaydedilmiş kuyruklu piyano örneklerini kullanır. Bunlar «Piyanoyu yükle» düğmesine bastığınızda bir kez indirilir; böylece sayfa hızlı açılır ve siz çalmak istemeden hiçbir şey indirilmez. Yükleme bittikten sonra her nota anında çalar."
+      },
+      "play": {
+        "question": "Piyanoyu nasıl çalabilirim?",
+        "answer": "Tuşlara fareyle tıklayabilir, glissando için üzerlerinde sürükleyebilir, dokunmatik ekranda dokunabilir, bilgisayar klavyenizi kullanabilir veya bir MIDI klavye bağlayabilirsiniz. Her bilgisayar tuşu bir piyano notasına atanmıştır."
+      },
+      "shortcuts": {
+        "question": "Hangi bilgisayar tuşunun hangi notayı çaldığını değiştirebilir miyim?",
+        "answer": "Evet. Ayarlar'ı açın, bir notanın yanındaki alana tıklayın ve istediğiniz tuşa basın. Tuşlar konumlarına göre eşleştirilir, bu yüzden kısayollar her klavye diliyle çalışır ve bir tuş zaten kullanılıyorsa uygulama sizi uyarır. Seçimleriniz bu tarayıcıda saklanır ve her şeyi varsayılana sıfırlayabilirsiniz."
+      },
+      "size": {
+        "question": "Hangi piyano boyutunu seçmeliyim?",
+        "answer": "Web Piano 25, 37, 49, 61, 76 ve 88 tuş seçenekleri sunar; varsayılan 49 tuştur. Yeni başlıyorsanız 49 veya 61 tuş rahat bir seçimdir. Hedeflerinize ve seviyenize göre öneri almak için bu sayfadaki piyano bulucuyu kullanın."
+      },
+      "record": {
+        "question": "Çaldıklarımı kaydedebilir miyim?",
+        "answer": "Evet. Sanal piyano sayfasında kaydet'e basın, parçanızı çalın, sonra durdurun. Kaydı tekrar dinleyebilir, ses dosyası olarak indirebilir veya silip baştan başlayabilirsiniz."
+      },
+      "midi": {
+        "question": "MIDI klavyeyle çalabilir miyim?",
+        "answer": "Evet. Ayarlar'ı açın, «MIDI'yi bağla»ya basın ve tarayıcınızda erişime izin verin. Notalar gerçek vuruş şiddetiyle (velocity) çalınır ve hangi cihazı dinleyeceğinizi seçebilirsiniz. Web MIDI, Chrome ve Edge'de, HTTPS veya localhost üzerinde çalışır."
+      },
+      "noSound": {
+        "question": "Bir tuşa bastığımda neden ses çıkmıyor?",
+        "answer": "Önce «Piyanoyu yükle»ye bastığınızdan ve seslerin yüklenmesinin bittiğinden emin olun. Ardından cihazınızın sessizde olmadığını, uygulama içi ses seviyesinin sıfırın üstünde ve kapalı olmadığını kontrol edin. Yükleme başarısız olduysa «Yüklemeyi tekrar dene»ye basın."
+      },
+      "mobile": {
+        "question": "Telefonumda veya tabletimde çalışır mı?",
+        "answer": "Evet. Dokunmatik desteklenir; tuşlara dokunabilir ve üzerlerinde kaydırabilirsiniz. Telefonda yatay moda geçmek veya daha küçük bir piyano boyutu seçmek tuşlara basmayı kolaylaştırır."
+      }
+    }
+  },
+  "blogPreview": {
+    "title": "Bloga göz atın",
+    "subtitle": "Daha iyi çalmanıza yardımcı olacak ipuçları, rehberler ve fikirler.",
+    "viewAll": "Tüm yazıları gör"
+  },
+  "piano": {
+    "title": "{name}",
+    "names": {
+      "25": "Mini (taşınabilir piyano)",
+      "37": "Kompakt piyano",
+      "49": "Küçük MIDI kontrolcü",
+      "61": "Standart (sentezleyici tuşlu piyano)",
+      "76": "Genişletilmiş (workstation piyano)",
+      "88": "Tam boy (ağırlıklı tuşlu piyano)"
+    },
+    "range": "{from} - {to} aralığı",
+    "rangeShort": "{from} - {to}",
+    "keys": "{n} tuş",
+    "sizes": "Piyano boyutları",
+    "sizeDialog": {
+      "title": "Piyano boyutunu seçin",
+      "subtitle": "Sanal piyanonuz için tuş sayısını seçin",
+      "apply": "Uygula"
+    },
+    "volume": "Ses",
+    "mute": "Sesi kapat",
+    "unmute": "Sesi aç",
+    "loadPiano": "Piyanoyu yükle",
+    "loading": "Sesler yükleniyor…",
+    "retry": "Yüklemeyi tekrar dene",
+    "loadingOverlay": "Sesler yükleniyor",
+    "recorder": {
+      "record": "Kaydet",
+      "stopRecording": "Kaydı durdur",
+      "play": "Kaydı oynat",
+      "stopPlayback": "Oynatmayı durdur",
+      "download": "Kaydı indir",
+      "downloadShort": "İndir",
+      "clear": "Kaydı sil",
+      "clearShort": "Sil"
+    },
+    "screen": {
+      "record": "Ekranı kaydet",
+      "stop": "Ekran kaydını durdur",
+      "download": "Ekran kaydını indir",
+      "clear": "Ekran kaydını sil",
+      "failed": "Kayıt başlatılamadı"
+    }
+  },
+  "settings": {
+    "title": "Ayarlar",
+    "appearance": {
+      "title": "Görünüm",
+      "description": "Dilinizi ve favori temanızı seçin.",
+      "language": "Dil",
+      "theme": "Tema",
+      "languages": {
+        "fa": "فارسی",
+        "en": "English",
+        "fr": "Français",
+        "tr": "Türkçe"
+      },
+      "themes": {
+        "navy": {
+          "name": "Lacivert",
+          "description": "Serin ve sakin"
+        },
+        "dark": {
+          "name": "Kahverengi",
+          "description": "Sıcak ve doğal"
+        },
+        "wine": {
+          "name": "Şarap",
+          "description": "Zarif ve derin"
+        },
+        "light": {
+          "name": "Açık",
+          "description": "Temiz ve parlak"
+        }
+      }
+    },
+    "shortcuts": {
+      "title": "Klavye kısayolları",
+      "description": "Tüm {total} piyano tuşu oktavlara göre listelenir. Bir alana tıklayın, ardından o nota için istediğiniz bilgisayar tuşuna basın. Seçili piyano boyutunun dışındaki notaların kısayolları yok sayılır. Tuşlar konumlarına göre eşleştirilir, bu yüzden her klavye diliyle çalışır.",
+      "reset": "Varsayılana sıfırla",
+      "resetTitle": "Tüm kısayollar sıfırlansın mı?",
+      "resetMessage": "Tüm özel klavye kısayollarınız varsayılanlarla değiştirilecek. Bu işlem geri alınamaz.",
+      "resetConfirm": "Sıfırla",
+      "resetCancel": "İptal",
+      "octave": "Oktav {n}",
+      "assigned": "{set} / {total} atandı",
+      "clash": "{key} zaten {note} notasını çalıyor."
+    },
+    "row": {
+      "keyAria": "{note} için bilgisayar tuşu. Tıklayın, ardından bir tuşa basın.",
+      "pressKey": "Bir tuşa basın",
+      "clear": "Temizle",
+      "clearAria": "{note} kısayolunu temizle"
+    },
+    "midi": {
+      "title": "MIDI cihazları",
+      "description": "MIDI cihazlarınızı bağlayın ve yönetin",
+      "connect": "MIDI'yi bağla",
+      "tryAgain": "Tekrar dene",
+      "status": {
+        "idle": "Henüz bağlı değil.",
+        "requesting": "İzniniz bekleniyor…",
+        "readyDevices": "Bağlandı. MIDI cihazınızda bir tuşa basın.",
+        "readyNone": "Bağlandı, ancak MIDI cihazı bulunamadı. Bir cihaz takın veya sanal bir MIDI portu başlatın.",
+        "denied": "MIDI erişimi engellendi. Tarayıcı ayarlarınızdan bu site için izin verin, ardından sayfayı yenileyin.",
+        "unsupported": "Bu tarayıcı Web MIDI'yi desteklemiyor. Chrome veya Edge'i deneyin.",
+        "insecure": "Web MIDI yalnızca HTTPS veya localhost üzerinde çalışır.",
+        "error": "MIDI başlatılamadı. Tekrar deneyin."
+      },
+      "listenTo": "Dinlenecek cihaz",
+      "allDevices": "Tüm cihazlar",
+      "unknownDevice": "Bilinmeyen cihaz",
+      "connected": "Bağlı",
+      "disconnected": "Bağlı değil",
+      "missingDevice": "Seçtiğiniz cihaz şu anda bağlı değil; geri gelene veya «Tüm cihazlar»ı seçene kadar hiçbir şey çalınmaz.",
+      "loadSounds": "Piyano seslerini yükle",
+      "loadingSounds": "Sesler yükleniyor…",
+      "testNote": "Test notası çal",
+      "lastNote": "Son nota: {note}, vuruş şiddeti {velocity}, kaynak: {source}",
+      "noNotes": "Henüz nota alınmadı.",
+      "sourceTest": "test düğmesi",
+      "sourceAny": "bir MIDI cihazı",
+      "deviceCount": "cihaz yok | {n} cihaz | {n} cihaz",
+      "inputOnly": "Giriş",
+      "velocity": "Vuruş şiddeti",
+      "liveInput": "Canlı MIDI girişi",
+      "lastNoteLabel": "Son nota",
+      "message": "Mesaj",
+      "testTitle": "MIDI cihazınızı test edin",
+      "testHint": "Cihazınızın doğru çalıştığından emin olun.",
+      "testHintLoad": "Önce piyano seslerini yükleyin, ardından bir test notası çalın.",
+      "state": {
+        "active": "Etkin",
+        "standby": "Beklemede",
+        "off": "Bağlı değil"
+      }
+    },
+    "nav": {
+      "general": "Genel",
+      "appearance": "Görünüm",
+      "midi": "MIDI"
+    },
+    "general": {
+      "title": "Genel",
+      "description": "Her piyano notasını hangi bilgisayar tuşunun çalacağını seçin."
+    }
+  }
+}

@@ -606,7 +606,9 @@
       "theme": "Theme",
       "languages": {
         "fa": "فارسی",
-        "en": "English"
+        "en": "English",
+        "fr": "Français",
+        "tr": "Türkçe"
       },
       "themes": {
         "navy": {

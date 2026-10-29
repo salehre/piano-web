@@ -10,9 +10,11 @@ export default defineI18nConfig(() => ({
   fallbackLocale: 'en',
   datetimeFormats: {
     en: { long: dateLong },
+    fr: { long: dateLong },
+    tr: { long: dateLong },
     // تقویم شمسی برای فارسی؛ اگه میلادی می‌خوای calendar: 'gregory' بذار
     fa: { long: { ...dateLong, calendar: 'persian' } },
   },
   // ارقام فارسی به‌صورت خودکار توی n() و d() برای زبان fa اعمال می‌شن
-  numberFormats: { en: numbers, fa: numbers },
+  numberFormats: { en: numbers, fa: numbers, fr: numbers, tr: numbers },
 }))

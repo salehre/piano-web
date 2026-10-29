@@ -24,7 +24,9 @@ body {
   min-height: 100%;
 }
 
-html[lang|='en'] {
+html[lang|='en'],
+html[lang|='fr'],
+html[lang|='tr'] {
   --font-sans: ui-sans-serif, system-ui, sans-serif;
 }
 
