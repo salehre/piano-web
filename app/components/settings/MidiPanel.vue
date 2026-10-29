@@ -175,7 +175,7 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
 <template>
   <div class="space-y-4">
     <!-- وضعیت اتصال + انتخاب دستگاه -->
-    <section :class="[card, 'px-5 py-4 hover:border-stone-700/60']" aria-live="polite">
+    <section :class="[card, 'px-5 py-4 hover:border-stone-700/60', isDeviceMenuOpen && 'relative z-40']" aria-live="polite">
       <div class="flex flex-wrap items-center justify-between gap-3">
         <div class="flex min-w-0 items-center gap-3">
           <div class="relative flex items-center justify-center">

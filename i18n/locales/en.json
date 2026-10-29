@@ -506,6 +506,7 @@
     }
   },
   "faq": {
+    "badge": "FAQs",
     "title": "Frequently asked questions",
     "subtitle": "Quick answers to the things people ask most.",
     "items": {
