@@ -28,7 +28,7 @@ function onKeydown(e: KeyboardEvent) {
 </script>
 
 <template>
-  <div class="group py-2.5">
+  <div class="group py-2.5 ps-2">
     <div class="flex items-center gap-3">
 
       <!-- ───── Note Badge ───── -->
