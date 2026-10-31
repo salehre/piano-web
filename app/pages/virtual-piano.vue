@@ -59,6 +59,9 @@ useHead({ title: () => t('piano.title', { name: pianoName.value }) })
       <div class="flex flex-wrap items-center gap-3">
         <LayoutPianoSizeMenu />
 
+        <!-- آهنگ‌ها: کنار سایز پیانو؛ فقط وقتی صداها لود شدن -->
+        <LayoutSongsMenu v-if="status === 'ready'" />
+
         <!-- نوار صدا همیشه چپ‌به‌راست (کم‌صدا → پرصدا) -->
         <div v-if="status === 'ready'" dir="ltr" class="flex items-center gap-2">
           <button

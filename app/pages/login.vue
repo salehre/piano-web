@@ -233,139 +233,138 @@ const copy = computed(() => ({
 </script>
 
 <template>
-  <main
-      class="relative isolate flex min-h-dvh items-center justify-center overflow-hidden bg-stone-950 px-6 py-12"
-  >
-    <!-- لایه‌ی پشتی: همان عکس، بزرگ‌شده و تار، فقط برای پر کردن فضای خالی دور عکس اصلی -->
-    <div
-        v-if="!bgFailed"
-        class="absolute inset-0 -z-30 scale-110 bg-cover bg-center blur-2xl"
-        :style="{ backgroundImage: `url(${BG_IMAGE})` }"
-        aria-hidden="true"
-    />
-    <!-- عکس اصلی بدون زوم و بدون برش (object-contain)؛ اگه خواستی دوباره تمام‌صفحه بشه، object-cover بذار -->
-    <img
-        v-if="!bgFailed"
-        ref="bgEl"
-        :src="BG_IMAGE"
-        alt=""
-        aria-hidden="true"
-        class="absolute inset-0 -z-20 h-full w-full select-none object-cover object-center"
-        @error="bgFailed = true"
-    />
-    <!-- لایه‌ی تیره روی عکس؛ اگه عکس نبود فقط همین گرادینت دیده می‌شه -->
-    <div
-        class="absolute inset-0 -z-10 bg-linear-to-b from-stone-950/40 via-stone-950/25 to-stone-950/70"
-        aria-hidden="true"
-    />
+  <!-- دو نیمه: یک طرف فرم، طرف دیگه عکس (روی موبایل فقط فرم) -->
+  <main class="grid min-h-dvh bg-stone-950 lg:grid-cols-2">
+    <!-- نیمه‌ی فرم -->
+    <div class="relative isolate flex items-center justify-center overflow-hidden px-6 py-12">
+      <div
+          class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_30%_10%,rgb(255_255_255/0.05),transparent_55%)]"
+          aria-hidden="true"
+      />
 
-    <section
-        class="glass-card relative w-full max-w-md p-6 sm:p-8"
-        aria-labelledby="login-title"
-    >
-      <header class="border-b border-stone-800 pb-5">
-        <h1 id="login-title" class="text-2xl font-semibold">{{ copy.title }}</h1>
-        <p class="mt-1.5 text-sm text-stone-400">{{ copy.hint }}</p>
-      </header>
+      <section class="glass-card relative w-full max-w-sm p-6 sm:p-8" aria-labelledby="login-title">
+        <header class="text-center">
+          <img src="/icon.svg" alt="" class="mx-auto size-10" aria-hidden="true">
+          <h1 id="login-title" class="mt-4 text-2xl font-semibold">{{ copy.title }}</h1>
+          <p class="mt-1.5 text-sm text-stone-400">{{ copy.hint }}</p>
+        </header>
 
-      <form ref="formEl" class="mt-6 space-y-5" novalidate @submit.prevent="submit">
-        <Transition name="step" mode="out-in" appear @after-enter="focusFirst">
-          <div :key="step" class="space-y-5">
-            <UiTextField
-                v-model="form.phone"
-                :label="t('auth.login.mobileLabel')"
-                ltr
-                type="tel"
-                inputmode="tel"
-                :maxlength="11"
-                autocomplete="tel"
-                placeholder="09123456789"
-                :error="isPhoneError ? tr(error) : ''"
-            />
-            <UiTextField
-                v-model="form.password"
-                :label="t('auth.login.passwordLabel')"
-                type="password"
-                autocomplete="current-password"
-                :hint="t('auth.login.passwordHint', { min: n(PASSWORD_MIN) })"
-                :error="isPhoneError ? '' : tr(error)"
-            />
-
-            <!-- TODO(backend): مراحل کد پیامکی؛ وقتی بک‌اند اومد برگردون
-            <button
-                type="button"
-                class="text-sm text-key-active underline-offset-2 hover:underline disabled:opacity-60"
-                :disabled="submitting"
-                @click="forgotPassword"
-            >
-              {{ t('auth.login.forgot') }}
-            </button>
-
-            <template v-else-if="step === 'code'">
-              <p v-if="devCode" class="rounded-md bg-stone-900 px-3 py-2 text-xs text-stone-300" role="status">
-                <i18n-t keypath="auth.login.devMode" scope="global">
-                  <template #code><span class="font-mono text-key-active">{{ devCode }}</span></template>
-                </i18n-t>
-              </p>
-              <UiOtpInput
-                  ref="otpEl"
-                  v-model="form.code"
-                  :label="t('auth.login.codeLabel')"
-                  :length="OTP_LENGTH"
-                  :error="tr(error)"
-                  :success="codeOk"
-              />
-              <button
-                  type="button"
-                  class="text-sm text-key-active underline-offset-2 hover:underline disabled:text-stone-400 disabled:no-underline"
-                  :disabled="resendIn > 0 || submitting"
-                  @click="resend"
-              >
-                {{ resendIn > 0 ? t('auth.login.resendIn', { seconds: n(resendIn) }) : t('auth.login.resend') }}
-              </button>
-            </template>
-
-            <template v-else>
+        <form ref="formEl" class="mt-7 space-y-5" novalidate @submit.prevent="submit">
+          <Transition name="step" mode="out-in" appear @after-enter="focusFirst">
+            <div :key="step" class="space-y-5">
               <UiTextField
-                  v-model="form.newPassword"
+                  v-model="form.phone"
+                  :label="t('auth.login.mobileLabel')"
+                  ltr
+                  type="tel"
+                  inputmode="tel"
+                  :maxlength="11"
+                  autocomplete="tel"
+                  placeholder="09123456789"
+                  :error="isPhoneError ? tr(error) : ''"
+              />
+              <UiTextField
+                  v-model="form.password"
                   :label="t('auth.login.passwordLabel')"
                   type="password"
-                  autocomplete="new-password"
+                  autocomplete="current-password"
                   :hint="t('auth.login.passwordHint', { min: n(PASSWORD_MIN) })"
-                  :error="error?.key === MISMATCH_KEY ? '' : tr(error)"
+                  :error="isPhoneError ? '' : tr(error)"
               />
-              <UiTextField
-                  v-model="form.confirmPassword"
-                  :label="t('auth.login.confirmLabel')"
-                  type="password"
-                  autocomplete="new-password"
-                  :error="error?.key === MISMATCH_KEY ? tr(error) : ''"
-              />
-            </template>
-            -->
-          </div>
-        </Transition>
 
-        <button
-            type="submit"
-            class="w-full rounded-lg bg-key-active px-5 py-3 font-medium text-stone-950 transition-opacity hover:opacity-90 disabled:opacity-60"
-            :disabled="submitting"
-        >
-          {{ submitting ? t('ui.pleaseWait') : copy.button }}
-        </button>
+              <!-- TODO(backend): مراحل کد پیامکی؛ وقتی بک‌اند اومد برگردون
+              <button
+                  type="button"
+                  class="text-sm text-key-active underline-offset-2 hover:underline disabled:opacity-60"
+                  :disabled="submitting"
+                  @click="forgotPassword"
+              >
+                {{ t('auth.login.forgot') }}
+              </button>
 
-        <!-- TODO(backend): دکمه‌ی «شماره‌ی دیگر» مخصوص مراحل رمز/کد بود
-        <button
-            v-if="step === 'password' || step === 'code'"
-            type="button"
-            class="w-full text-sm text-stone-400 hover:text-key-active"
-            @click="goTo('phone')"
-        >
-          {{ t('auth.login.differentNumber') }}
-        </button>
-        -->
-      </form>
-    </section>
+              <template v-else-if="step === 'code'">
+                <p v-if="devCode" class="rounded-md bg-stone-900 px-3 py-2 text-xs text-stone-300" role="status">
+                  <i18n-t keypath="auth.login.devMode" scope="global">
+                    <template #code><span class="font-mono text-key-active">{{ devCode }}</span></template>
+                  </i18n-t>
+                </p>
+                <UiOtpInput
+                    ref="otpEl"
+                    v-model="form.code"
+                    :label="t('auth.login.codeLabel')"
+                    :length="OTP_LENGTH"
+                    :error="tr(error)"
+                    :success="codeOk"
+                />
+                <button
+                    type="button"
+                    class="text-sm text-key-active underline-offset-2 hover:underline disabled:text-stone-400 disabled:no-underline"
+                    :disabled="resendIn > 0 || submitting"
+                    @click="resend"
+                >
+                  {{ resendIn > 0 ? t('auth.login.resendIn', { seconds: n(resendIn) }) : t('auth.login.resend') }}
+                </button>
+              </template>
+
+              <template v-else>
+                <UiTextField
+                    v-model="form.newPassword"
+                    :label="t('auth.login.passwordLabel')"
+                    type="password"
+                    autocomplete="new-password"
+                    :hint="t('auth.login.passwordHint', { min: n(PASSWORD_MIN) })"
+                    :error="error?.key === MISMATCH_KEY ? '' : tr(error)"
+                />
+                <UiTextField
+                    v-model="form.confirmPassword"
+                    :label="t('auth.login.confirmLabel')"
+                    type="password"
+                    autocomplete="new-password"
+                    :error="error?.key === MISMATCH_KEY ? tr(error) : ''"
+                />
+              </template>
+              -->
+            </div>
+          </Transition>
+
+          <button
+              type="submit"
+              class="w-full rounded-lg bg-key-active px-5 py-3 font-medium text-stone-950 transition-opacity hover:opacity-90 disabled:opacity-60"
+              :disabled="submitting"
+          >
+            {{ submitting ? t('ui.pleaseWait') : copy.button }}
+          </button>
+
+          <!-- TODO(backend): دکمه‌ی «شماره‌ی دیگر» مخصوص مراحل رمز/کد بود
+          <button
+              v-if="step === 'password' || step === 'code'"
+              type="button"
+              class="w-full text-sm text-stone-400 hover:text-key-active"
+              @click="goTo('phone')"
+          >
+            {{ t('auth.login.differentNumber') }}
+          </button>
+          -->
+        </form>
+      </section>
+    </div>
+
+    <!-- نیمه‌ی عکس (از lg به بالا)؛ اگه عکس نبود فقط گرادینت دیده می‌شه -->
+    <aside
+        class="relative hidden overflow-hidden bg-linear-to-br from-stone-900 to-stone-950 lg:block"
+        aria-hidden="true"
+    >
+      <img
+          v-if="!bgFailed"
+          ref="bgEl"
+          :src="BG_IMAGE"
+          alt=""
+          class="absolute inset-0 size-full select-none object-cover object-center"
+          @error="bgFailed = true"
+      >
+      <!-- کمی تیره‌کردن عکس تا با فرم هماهنگ بشه -->
+      <div class="absolute inset-0 bg-linear-to-t from-stone-950/70 via-stone-950/10 to-stone-950/30" />
+    </aside>
   </main>
 </template>
 
