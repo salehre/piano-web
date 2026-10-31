@@ -49,7 +49,7 @@ useHead({ title: () => t('piano.title', { name: pianoName.value }) })
 </script>
 
 <template>
-  <main class="mx-auto flex max-w-screen-2xl flex-col gap-6 px-6 py-8">
+  <main class="mx-auto flex min-h-[calc(100dvh-7rem)] max-w-screen-2xl flex-col gap-6 px-6 py-8">
     <section class="flex flex-wrap items-center justify-between gap-4">
       <div>
         <h1 class="text-2xl font-semibold">{{ t('piano.title', { name: pianoName }) }}</h1>
@@ -115,7 +115,8 @@ useHead({ title: () => t('piano.title', { name: pianoName.value }) })
     </section>
 
     <!-- کیبورد پیانو توی صفحه‌ی راست‌به‌چپ هم باید چپ‌به‌راست بمونه (بم ← زیر) -->
-    <div dir="ltr">
+    <!-- flex-1: فضای خالیِ صفحه رو فضای مشکیِ بالای پیانو می‌گیره و پیانو می‌آد پایین -->
+    <div dir="ltr" class="flex flex-1 flex-col">
       <ClientOnly>
         <PianoKeyboard :type="piano" />
       </ClientOnly>

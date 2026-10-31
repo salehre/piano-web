@@ -58,6 +58,18 @@ const centers = computed(() => {
 })
 const pressedNotes = computed(() => active.value.filter((n) => n in centers.value))
 
+// مرکز و عرض هر کلید (درصد) برای فضای مشکیِ بالای پیانو
+const stageLayout = computed(() => {
+  const map: Record<string, { x: number; w: number }> = {}
+  whiteKeys.value.forEach((k, i) => {
+    map[k.note] = { x: (i + 0.5) * whiteWidth.value, w: whiteWidth.value }
+  })
+  blackKeys.value.forEach((k) => {
+    map[k.note] = { x: k.left + blackWidth.value / 2, w: blackWidth.value }
+  })
+  return map
+})
+
 // فقط نت‌های داخل محدوده‌ی همین پیانو با کیبورد کامپیوتر نواخته می‌شن
 const playable = computed(() => new Set(keys.value.map((k) => k.note)))
 useKeyboardInput((note) => playable.value.has(note))
@@ -122,10 +134,16 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="flex flex-col shadow-[0_12px_30px_-12px_rgb(0_0_0/0.7)]">
+  <!-- justify-end: تا قبل از لود، پیانو پایینِ صفحه می‌مونه و جای کادر مشکی خالیه (پرش نداریم) -->
+  <div class="flex flex-1 flex-col justify-end shadow-[0_12px_30px_-12px_rgb(0_0_0/0.7)]">
+    <!-- فضای مشکی بالای پیانو: فقط بعد از لود شدن صداها ظاهر می‌شه -->
+    <Transition name="stage-fade">
+      <PianoNoteStage v-if="status === 'ready'" :layout="stageLayout" />
+    </Transition>
+
     <!-- باکس نمایش نت‌های فشرده‌شده؛ بعد از لود صداها ظاهر می‌شه -->
     <div
-        class="note-display h-8 rounded-t-lg px-3 transition-opacity duration-500"
+        class="note-display h-8 px-3 transition-opacity duration-500"
         :class="status === 'ready' ? 'opacity-100' : 'opacity-0'"
         aria-hidden="true"
     >
@@ -144,12 +162,9 @@ onBeforeUnmount(() => {
     </div>
 
     <!-- کل کیبورد توی عرض صفحه جا می‌شه و اسکرول افقی نداره -->
-    <div
-        class="keybed relative px-3 pb-4 pt-2 transition-[border-radius] duration-500"
-        :class="status === 'ready' ? 'rounded-b-lg' : 'rounded-lg'"
-    >
-      <div class="cheek cheek-l" :class="status === 'ready' ? 'rounded-bl-lg' : 'rounded-l-lg'" />
-      <div class="cheek cheek-r" :class="status === 'ready' ? 'rounded-br-lg' : 'rounded-r-lg'" />
+    <div class="keybed relative rounded-b-lg px-3 pb-4 pt-2">
+      <div class="cheek cheek-l rounded-bl-lg" />
+      <div class="cheek cheek-r rounded-br-lg" />
       <div
           :key="type.keys"
           class="relative h-56 touch-none select-none sm:h-72"
@@ -329,6 +344,13 @@ onBeforeUnmount(() => {
   .key-rise {
     animation: none;
   }
+}
+
+.stage-fade-enter-active {
+  transition: opacity 0.6s ease;
+}
+.stage-fade-enter-from {
+  opacity: 0;
 }
 
 .note-label-enter-active,

@@ -265,6 +265,25 @@ export const usePiano = () => {
     canDownload.value = false
   }
 
+  /** ساعت صوتی (ثانیه)؛ نت‌های آهنگ با همین ساعت زمان‌بندی می‌شن تا صدا و تصویر هم‌زمان باشن */
+  function getClock(): number {
+    return Tone ? Tone.getContext().currentTime : 0
+  }
+
+  /**
+   * نواختن یک نت در زمان مشخص (ساعت صوتی)، بدون اینکه کلید «فشرده‌شده» حساب بشه.
+   * برای پخش آهنگ‌ها؛ ستون‌های بالارونده‌ی نواختن کاربر رو فعال نمی‌کنه.
+   */
+  function playNoteAt(note: string, duration: number, time: number, velocity = 0.6) {
+    if (status.value !== 'ready' || !sampler) return
+    sampler.triggerAttackRelease(note, duration, time, velocity)
+  }
+
+  /** همه‌ی نت‌هایی که الان در حال پخش هستن رو رها می‌کنه */
+  function releaseAll() {
+    sampler?.releaseAll()
+  }
+
   /** طیف فرکانسی لحظه‌ای خروجی پیانو (برای نمایشگر) */
   function getSpectrum() {
     if (!analyser || !Tone) return null
@@ -298,5 +317,6 @@ export const usePiano = () => {
     recording, playing, saving, canDownload, recordedCount, recordedMs, timerMs,
     startRecording, stopRecording, play, stopPlayback, clearRecording, downloadRecording,
     getSpectrum, getAudioStream, volume, setVolume,
+    getClock, playNoteAt, releaseAll,
   }
 }
