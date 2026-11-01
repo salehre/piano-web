@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { SONG_SPEEDS } from '~/composables/useSongPlayer'
 
-// نوار بالای فضای مشکی: نوار پیشرفت + پخش/توقف + سرعت.
-// انتخاب آهنگ از دکمه‌ی «آهنگ‌ها» کنار سایز پیانو انجام می‌شه (LayoutSongsMenu).
 const { ui, titleOf } = useSongText()
 const { song, playing, speed, positionMs, play, pause, stop, setSpeed } = useSongPlayer()
 
@@ -31,7 +29,7 @@ onBeforeUnmount(stop)
     </div>
 
     <div class="flex flex-wrap items-center gap-2 px-3 pt-2">
-      <span class="max-w-[12rem] truncate text-xs font-medium text-neutral-300 sm:max-w-xs" :title="titleOf(song)">
+      <span class="max-w-48 truncate text-xs font-medium text-neutral-300 sm:max-w-xs" :title="titleOf(song)">
         {{ titleOf(song) }}
       </span>
 
