@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 
 const { t, te } = useI18n()
-const HERO_IMAGE = '/images/1.png'
+const HERO_IMAGE = '/images/hero.png'
 
 const highlights = [
   {
@@ -95,7 +95,19 @@ onMounted(() => {
     <section ref="heroSection" class="relative isolate">
       <!-- لایهٔ بک‌گراند: تا نصف کادر هایلایت‌ها میاد و بقیهٔ کادر می‌افته بیرون زیرش -->
       <div class="hero-bg absolute inset-x-0 top-0 -z-10 overflow-hidden">
-        <div class="parallax-bg absolute inset-0">
+        <!-- ادامه‌ی عکس: همون عکس، خیلی بزرگ و تار؛ سمت خالیِ هیرو رنگ و حال‌وهوای عکس رو ادامه می‌ده -->
+        <img
+          :src="HERO_IMAGE"
+          alt=""
+          aria-hidden="true"
+          decoding="async"
+          draggable="false"
+          class="absolute inset-0 size-full scale-150 object-cover opacity-45 blur-3xl select-none"
+        />
+        <div class="absolute inset-0 bg-stone-950/65" aria-hidden="true" />
+
+        <!-- خود عکس: یک طرف هیرو و لبه‌ی سمت متن به‌تدریج محو می‌شه (جهتش با زبان عوض می‌شه) -->
+        <div class="parallax-bg hero-photo absolute inset-y-0 inset-e-0 w-full opacity-60 lg:w-[68%] lg:opacity-100">
           <img
             :src="HERO_IMAGE"
             alt=""
@@ -106,12 +118,10 @@ onMounted(() => {
             class="hero-zoom size-full scale-105 object-cover object-[70%_center] select-none"
           />
         </div>
+
+        <!-- محو شدن بالا و پایین؛ پایین هیرو توی رنگ صفحه حل می‌شه -->
         <div
-          class="absolute inset-0 bg-linear-to-r from-stone-950 via-stone-950/70 to-stone-950/10"
-          aria-hidden="true"
-        />
-        <div
-          class="absolute inset-0 bg-linear-to-t from-stone-950 via-transparent to-stone-950/40"
+          class="absolute inset-0 bg-linear-to-t from-stone-950 via-transparent to-stone-950/50"
           aria-hidden="true"
         />
         <!-- glow -->
@@ -147,7 +157,7 @@ onMounted(() => {
             {{ t('home.hero.badge') }}
           </div>
 
-          <h1 class="font-sans text-4xl leading-[1.1] font-medium text-balance text-white drop-shadow-sm sm:text-6xl">
+          <h1 class="hero-title text-4xl leading-[1.1] font-medium text-balance text-[#f6ead6] drop-shadow-sm sm:text-6xl">
             <span class="block overflow-hidden pb-1">
               <span class="hero-line" style="--d: 100ms">{{ t('home.hero.line1') }}</span>
             </span>
@@ -227,6 +237,26 @@ onMounted(() => {
 /* بک‌گراند هیرو تا نصف کادر هایلایت‌ها */
 .hero-bg {
   bottom: calc(var(--card-h, 10rem) / 2);
+}
+
+/* عکس هیرو: لبه‌ی سمت متن محو می‌شه (LTR: چپ، RTL: راست) */
+.hero-photo {
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, rgb(0 0 0 / 0.5) 22%, #000 58%);
+  mask-image: linear-gradient(to right, transparent 0%, rgb(0 0 0 / 0.5) 22%, #000 58%);
+}
+:global(html[dir='rtl']) .hero-photo {
+  -webkit-mask-image: linear-gradient(to left, transparent 0%, rgb(0 0 0 / 0.5) 22%, #000 58%);
+  mask-image: linear-gradient(to left, transparent 0%, rgb(0 0 0 / 0.5) 22%, #000 58%);
+}
+
+/* تیتر هیرو: فونت سریف برای زبان‌های لاتین (فارسی با فونت وزیرمتن می‌مونه) */
+.hero-title {
+  font-family: ui-serif, Georgia, Cambria, 'Times New Roman', serif;
+  letter-spacing: -0.01em;
+}
+:global(html[lang|='fa']) .hero-title {
+  font-family: var(--font-sans);
+  letter-spacing: normal;
 }
 
 /* ورود هیرو */
