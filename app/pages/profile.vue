@@ -402,113 +402,104 @@ function onLogout() {
                 <UiTextField v-model="form.nationalId" :label="t('auth.profile.fields.nationalId')" :ltr="locale !== 'fa'" inputmode="numeric" autocomplete="off" :maxlength="10" :placeholder="t('auth.profile.fields.nationalIdPlaceholder')" :error="tr(errors.nationalId)" />
                 <UiTextField v-model="form.address" :label="t('auth.profile.fields.address')" multiline :rows="3" autocomplete="street-address" :maxlength="ADDRESS_MAX" :hint="`${n(form.address.length)} / ${n(ADDRESS_MAX)}`" class="sm:col-span-2" />
               </div>
-            </section>
 
-            <!-- پیانو -->
-            <section
-              class="card-in rounded-2xl border border-stone-700/40 bg-stone-900/70 p-5 shadow-xl shadow-black/10 sm:p-6"
-              style="animation-delay: 280ms"
-              aria-labelledby="piano-title"
-            >
-              <div class="mb-6 flex items-center gap-3">
-                <span class="flex size-10 items-center justify-center rounded-xl bg-key-active/10 text-key-active ring-1 ring-inset ring-key-active/20">
-                  <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <rect x="3" y="5" width="18" height="14" rx="2" />
-                    <path d="M8 5v8m4-8v8m4-8v8M7 19v-6h10v6" />
-                  </svg>
-                </span>
-                <h2 id="piano-title" class="text-lg font-semibold">{{ t('auth.profile.sections.piano') }}</h2>
-              </div>
-
-              <div
-                v-if="connectedPianos.length"
-                class="mb-5 flex flex-col gap-3 rounded-xl border border-key-active/20 bg-key-active/5 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
-              >
-                <span class="flex items-center gap-2.5 text-sm font-medium text-key-active">
-                  <span class="relative flex size-2" aria-hidden="true">
-                    <span class="ping-ring absolute inset-0 rounded-full bg-key-active" />
-                    <span class="relative size-2 rounded-full bg-key-active" />
+              <section class="mt-7 border-t border-stone-700/40 pt-6" aria-labelledby="piano-title">
+                <div class="mb-6 flex items-center gap-3">
+                  <span class="flex size-10 items-center justify-center rounded-xl bg-key-active/10 text-key-active ring-1 ring-inset ring-key-active/20">
+                    <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <rect x="3" y="5" width="18" height="14" rx="2" />
+                      <path d="M8 5v8m4-8v8m4-8v8M7 19v-6h10v6" />
+                    </svg>
                   </span>
-                  <span>{{ t('settings.midi.connected') }}</span>
-                  <span class="flex h-3.5 items-end gap-0.5 text-key-active" aria-hidden="true">
-                    <span class="eq-bar" style="animation-delay: 0ms" />
-                    <span class="eq-bar" style="animation-delay: 140ms" />
-                    <span class="eq-bar" style="animation-delay: 280ms" />
-                    <span class="eq-bar" style="animation-delay: 420ms" />
-                  </span>
-                </span>
-                <div class="flex flex-wrap gap-2">
-                  <span
-                    v-for="device in connectedPianos"
-                    :key="device.id"
-                    class="rounded-full border border-stone-700/40 bg-stone-950/20 px-3 py-1 text-xs text-stone-300"
-                  >
-                    {{ device.name || t('settings.midi.unknownDevice') }}
-                  </span>
+                  <h2 id="piano-title" class="text-lg font-semibold">{{ t('auth.profile.sections.piano') }}</h2>
                 </div>
-              </div>
 
-              <p v-else class="mb-5 flex items-center gap-2 rounded-xl border border-stone-700/30 bg-stone-950/10 px-4 py-3 text-sm text-stone-400" role="status">
-                <span class="size-2 rounded-full bg-stone-600 ring-4 ring-stone-600/10" aria-hidden="true" />
-                {{ t('settings.midi.disconnected') }}
-              </p>
+                <div
+                  v-if="connectedPianos.length"
+                  class="mb-5 flex flex-col gap-3 rounded-xl border border-key-active/20 bg-key-active/5 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
+                >
+                  <span class="flex items-center gap-2.5 text-sm font-medium text-key-active">
+                    <span class="relative flex size-2" aria-hidden="true">
+                      <span class="ping-ring absolute inset-0 rounded-full bg-key-active" />
+                      <span class="relative size-2 rounded-full bg-key-active" />
+                    </span>
+                    <span>{{ t('settings.midi.connected') }}</span>
+                    <span class="flex h-3.5 items-end gap-0.5 text-key-active" aria-hidden="true">
+                      <span class="eq-bar" style="animation-delay: 0ms" />
+                      <span class="eq-bar" style="animation-delay: 140ms" />
+                      <span class="eq-bar" style="animation-delay: 280ms" />
+                      <span class="eq-bar" style="animation-delay: 420ms" />
+                    </span>
+                  </span>
+                  <div class="flex flex-wrap gap-2">
+                    <span
+                      v-for="device in connectedPianos"
+                      :key="device.id"
+                      class="rounded-full border border-stone-700/40 bg-stone-950/20 px-3 py-1 text-xs text-stone-300"
+                    >
+                      {{ device.name || t('settings.midi.unknownDevice') }}
+                    </span>
+                  </div>
+                </div>
 
-              <UiTextField
-                v-model="form.yearsPlaying"
-                :label="t('auth.profile.fields.yearsPlaying')"
-                ltr
-                type="number"
-                :hint="t('auth.profile.fields.yearsHint')"
-                :error="tr(errors.yearsPlaying)"
-              />
-            </section>
+                <p v-else class="mb-5 flex items-center gap-2 rounded-xl border border-stone-700/30 bg-stone-950/10 px-4 py-3 text-sm text-stone-400" role="status">
+                  <span class="size-2 rounded-full bg-stone-600 ring-4 ring-stone-600/10" aria-hidden="true" />
+                  {{ t('settings.midi.disconnected') }}
+                </p>
 
-            <!-- نوار ذخیره -->
-            <div
-              class="card-in flex flex-wrap items-center gap-3 rounded-2xl border border-stone-700/30 bg-stone-900/20 p-3 sm:p-4"
-              style="animation-delay: 360ms"
-            >
-              <button
-                type="submit"
-                :class="[
-                  'inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-key-active px-5 font-semibold text-stone-950 shadow-lg shadow-key-active/10 transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-key-active/60',
-                  dirty && !saving && !saved ? 'btn-pulse' : '',
-                ]"
-                :disabled="saving || !dirty"
-              >
-                <Transition name="icon-swap" mode="out-in">
-                  <svg v-if="saved && !dirty" key="saved" class="check-pop size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="m5 12 4 4L19 6" />
-                  </svg>
-                  <svg v-else-if="!saving" key="check" class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M5 12.5 9.5 17 19 7.5" />
-                  </svg>
-                  <span v-else key="spinner" class="spinner size-4" aria-hidden="true" />
-                </Transition>
-                <span>{{ saving ? t('auth.profile.actions.saving') : t('auth.profile.actions.save') }}</span>
-              </button>
+                <UiTextField
+                  v-model="form.yearsPlaying"
+                  :label="t('auth.profile.fields.yearsPlaying')"
+                  ltr
+                  type="number"
+                  :hint="t('auth.profile.fields.yearsHint')"
+                  :error="tr(errors.yearsPlaying)"
+                />
+              </section>
 
-              <Transition name="fade-up" mode="out-in">
-                <button v-if="dirty" key="discard" type="button" class="min-h-11 rounded-xl px-4 text-sm text-stone-400 transition hover:bg-stone-800/50 hover:text-stone-100" @click="revert">
-                  {{ t('auth.profile.actions.discard') }}
+              <div class="mt-6 flex flex-wrap items-center justify-end gap-3 border-t border-stone-700/40 pt-4">
+                <button
+                  type="submit"
+                  :class="[
+                    'inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-key-active px-5 font-semibold text-stone-950 shadow-lg shadow-key-active/10 transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-key-active/60',
+                    dirty && !saving && !saved ? 'btn-pulse' : '',
+                  ]"
+                  :disabled="saving || !dirty"
+                >
+                  <Transition name="icon-swap" mode="out-in">
+                    <svg v-if="saved && !dirty" key="saved" class="check-pop size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="m5 12 4 4L19 6" />
+                    </svg>
+                    <svg v-else-if="!saving" key="check" class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M5 12.5 9.5 17 19 7.5" />
+                    </svg>
+                    <span v-else key="spinner" class="spinner size-4" aria-hidden="true" />
+                  </Transition>
+                  <span>{{ saving ? t('auth.profile.actions.saving') : t('auth.profile.actions.save') }}</span>
                 </button>
-              </Transition>
 
-              <Transition name="fade-up" mode="out-in">
-                <span v-if="saved" key="saved" class="inline-flex items-center gap-2 text-sm text-key-active" role="status">
-                  <svg class="check-pop size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="m5 12 4 4L19 6" />
-                  </svg>
-                  {{ t('auth.profile.actions.saved') }}
-                </span>
-              </Transition>
+                <Transition name="fade-up" mode="out-in">
+                  <button v-if="dirty" key="discard" type="button" class="min-h-11 rounded-xl px-4 text-sm text-stone-400 transition hover:bg-stone-800/50 hover:text-stone-100" @click="revert">
+                    {{ t('auth.profile.actions.discard') }}
+                  </button>
+                </Transition>
 
-              <Transition name="fade-up" mode="out-in">
-                <span v-if="formError" :key="formErrorKey" class="text-sm text-red-400" role="alert">
-                  {{ tr(formError) }}
-                </span>
-              </Transition>
-            </div>
+                <Transition name="fade-up" mode="out-in">
+                  <span v-if="saved" key="saved" class="inline-flex items-center gap-2 text-sm text-key-active" role="status">
+                    <svg class="check-pop size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="m5 12 4 4L19 6" />
+                    </svg>
+                    {{ t('auth.profile.actions.saved') }}
+                  </span>
+                </Transition>
+
+                <Transition name="fade-up" mode="out-in">
+                  <span v-if="formError" :key="formErrorKey" class="text-sm text-red-400" role="alert">
+                    {{ tr(formError) }}
+                  </span>
+                </Transition>
+              </div>
+            </section>
           </form>
         </div>
       </template>

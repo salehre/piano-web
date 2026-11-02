@@ -107,7 +107,7 @@ onMounted(() => {
         <div class="absolute inset-0 bg-stone-950/65" aria-hidden="true" />
 
         <!-- خود عکس: یک طرف هیرو و لبه‌ی سمت متن به‌تدریج محو می‌شه (جهتش با زبان عوض می‌شه) -->
-        <div class="parallax-bg hero-photo absolute inset-y-0 inset-e-0 w-full opacity-60 lg:opacity-100">
+        <div class="parallax-bg hero-photo absolute inset-y-0 inset-e-0 w-full opacity-60 lg:opacity-100 rtl:-scale-x-100">
           <img
             :src="HERO_IMAGE"
             alt=""
