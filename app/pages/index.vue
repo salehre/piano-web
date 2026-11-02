@@ -107,7 +107,7 @@ onMounted(() => {
         <div class="absolute inset-0 bg-stone-950/65" aria-hidden="true" />
 
         <!-- خود عکس: یک طرف هیرو و لبه‌ی سمت متن به‌تدریج محو می‌شه (جهتش با زبان عوض می‌شه) -->
-        <div class="parallax-bg hero-photo absolute inset-y-0 inset-e-0 w-full opacity-60 lg:w-[68%] lg:opacity-100">
+        <div class="parallax-bg hero-photo absolute inset-y-0 inset-e-0 w-full opacity-60 lg:opacity-100">
           <img
             :src="HERO_IMAGE"
             alt=""
@@ -239,14 +239,10 @@ onMounted(() => {
   bottom: calc(var(--card-h, 10rem) / 2);
 }
 
-/* عکس هیرو: لبه‌ی سمت متن محو می‌شه (LTR: چپ، RTL: راست) */
+/* عکس هیرو: لبه‌ی سمت متن محو می‌شه (فقط LTR؛ توی RTL سایه حذف شده) */
 .hero-photo {
   -webkit-mask-image: linear-gradient(to right, transparent 0%, rgb(0 0 0 / 0.5) 22%, #000 58%);
   mask-image: linear-gradient(to right, transparent 0%, rgb(0 0 0 / 0.5) 22%, #000 58%);
-}
-:global(html[dir='rtl']) .hero-photo {
-  -webkit-mask-image: linear-gradient(to left, transparent 0%, rgb(0 0 0 / 0.5) 22%, #000 58%);
-  mask-image: linear-gradient(to left, transparent 0%, rgb(0 0 0 / 0.5) 22%, #000 58%);
 }
 
 /* تیتر هیرو: فونت سریف برای زبان‌های لاتین (فارسی با فونت وزیرمتن می‌مونه) */
