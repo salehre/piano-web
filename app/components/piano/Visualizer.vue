@@ -1,17 +1,15 @@
 <script setup lang="ts">
-// ستون‌های عمودیِ طیف صدا (spectrum analyzer) که با صدای پیانو بالا و پایین می‌رن
 const { getSpectrum, active } = usePiano()
 const { theme } = useTheme()
 
 const canvas = ref<HTMLCanvasElement | null>(null)
 
 const BARS = 32
-const FMIN = 40 // پایین‌ترین فرکانس نمایش داده‌شده (Hz)
-const FMAX = 9000 // بالاترین فرکانس نمایش داده‌شده (Hz)
-const DB_MIN = -90 // سطح صدایی که ستون صفر حساب می‌شه
-const DB_MAX = -28 // سطح صدایی که ستون پر حساب می‌شه
+const FMIN = 40
+const FMAX = 9000
+const DB_MIN = -90
+const DB_MAX = -28
 
-// رنگ ستون‌ها به تفکیک تم: [پایین، وسط، بالا]
 const BAR_COLORS: Record<string, [string, string, string]> = {
   dark: ['#6f523c', '#c4a98a', '#F5E6C8'],
   navy: ['#4d6482', '#94a9c4', '#F5E6C8'],
@@ -19,15 +17,15 @@ const BAR_COLORS: Record<string, [string, string, string]> = {
   light: ['#c4a98a', '#6f523c', '#4a2c1d'],
 }
 
-const levels = new Float32Array(BARS) // ارتفاع فعلی هر ستون (۰ تا ۱)
-const peaks = new Float32Array(BARS) // نوک‌های کوچیکی که آروم میفتن
+const levels = new Float32Array(BARS)
+const peaks = new Float32Array(BARS)
 
 let ctx: CanvasRenderingContext2D | null = null
 let width = 0
 let height = 0
 let raf = 0
-let running = false // حلقه‌ی انیمیشن فقط وقتی صدایی هست یا ستون‌ها دارن پایین میان می‌چرخه
-let grad: CanvasGradient | null = null // گرادیان فقط با تغییر اندازه یا تم دوباره ساخته می‌شه، نه هر فریم
+let running = false
+let grad: CanvasGradient | null = null
 let observer: ResizeObserver | null = null
 
 function resize() {
@@ -42,7 +40,7 @@ function resize() {
   ctx = c.getContext('2d')
   ctx?.setTransform(dpr, 0, 0, dpr, 0, 0)
   buildGradient()
-  if (!running) draw() // تغییر اندازه بوم رو پاک می‌کنه؛ وقتی حلقه خوابه یک بار دوباره می‌کشیم
+  if (!running) draw()
 }
 
 function buildGradient() {
@@ -62,7 +60,6 @@ function update() {
     let target = 0
 
     if (s) {
-      // هر ستون یک بازه‌ی فرکانسی لگاریتمی (مثل گوش انسان) رو نشون می‌ده
       const binHz = s.sampleRate / 2 / s.data.length
       const f0 = FMIN * ratio ** (i / BARS)
       const f1 = FMIN * ratio ** ((i + 1) / BARS)
@@ -75,14 +72,12 @@ function update() {
         if (v > db) db = v
       }
 
-      // فرکانس‌های بالا انرژی کمتری دارن؛ کمی تقویتشون می‌کنیم تا ستون‌های سمت راست هم زنده باشن
       db += (i / BARS) * 22
       const t = Math.min(1, Math.max(0, (db - DB_MIN) / (DB_MAX - DB_MIN)))
       target = t ** 1.2
     }
 
     const prev = levels[i]!
-    // بالا رفتن سریع، پایین اومدن نرم
     levels[i] = target > prev ? prev + (target - prev) * 0.6 : prev * 0.9
     peaks[i] = Math.max(levels[i]!, peaks[i]! - 0.012)
   }
@@ -98,7 +93,6 @@ function draw() {
   const barW = (width - gap * (BARS - 1)) / BARS
   const radius = Math.min(barW / 2, 2.5)
 
-  // رنگ ستون‌ها از تم فعلی می‌آد: توی تم روشن قهوه‌ای (روی کرم دیده بشن)، توی بقیه از تیره به کرم
   const light = theme.value === 'light'
   if (!grad) buildGradient()
 
@@ -107,7 +101,6 @@ function draw() {
     const bh = Math.max(2, lv * height)
     const x = i * (barW + gap)
 
-    // ستون‌های ساکت کم‌رنگ‌ترن
     g.globalAlpha = 0.3 + 0.7 * Math.min(1, lv * 1.5)
     g.fillStyle = grad!
     g.beginPath()
@@ -115,7 +108,6 @@ function draw() {
     else g.rect(x, height - bh, barW, bh)
     g.fill()
 
-    // نوک کوچیکِ بالای ستون
     const pk = peaks[i]!
     if (pk > 0.06) {
       g.globalAlpha = 0.9
@@ -126,7 +118,6 @@ function draw() {
   g.globalAlpha = 1
 }
 
-// ساکت و بی‌حرکت: نت فعالی نیست و همه‌ی ستون‌ها و نوک‌ها به ته رسیدن
 function isIdle() {
   if (active.value.length) return false
   for (let i = 0; i < BARS; i++) if (levels[i]! > 0.004 || peaks[i]! > 0.06) return false
@@ -150,12 +141,10 @@ function start() {
   raf = requestAnimationFrame(frame)
 }
 
-// با اولین نت (کیبورد، موس، MIDI یا پخش ضبط) حلقه بیدار می‌شه
 watch(() => active.value.length, (count) => {
   if (count > 0) start()
 })
 
-// عوض شدن تم: گرادیان رو دوباره بساز و اگه حلقه خوابه یک بار بکش
 watch(theme, () => {
   buildGradient()
   if (!running) draw()
@@ -179,7 +168,6 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <!-- قاب شیشه‌ای کوچیک؛ اندازه‌اش رو صفحه‌ی بالادستی با class می‌ده (مثلاً h-9 w-32) -->
   <div
       class="rounded-xl bg-black/25 px-2 py-1 ring-1 ring-white/15 shadow-[inset_0_0_6px_-3px_rgba(255,255,255,0.7)]"
   >

@@ -3,7 +3,6 @@ const { t } = useI18n()
 const route = useRoute()
 const { status: midiStatus, connect } = useMidi()
 
-// آیکون هر بخش (viewBox 20×20)
 const sections = [
   {
     id: 'general',
@@ -21,13 +20,11 @@ const sections = [
 
 type SectionId = (typeof sections)[number]['id']
 
-// بخش فعلی از آدرس: /settings/midi → midi
 const current = computed<SectionId>(() => {
   const seg = route.path.split('/').filter(Boolean)[1]
   return sections.find((s) => s.id === seg)?.id ?? 'general'
 })
 
-// دکمه‌ی اتصال MIDI فقط وقتی لازمه که هنوز وصل نیستیم
 const showConnect = computed(
   () => current.value === 'midi' && ['idle', 'error', 'denied'].includes(midiStatus.value),
 )
@@ -37,7 +34,6 @@ useHead({ title: () => `${t(`settings.${current.value}.title`)} · ${t('settings
 
 <template>
   <main class="mx-auto max-w-5xl px-6 py-8">
-    <!-- سربرگ بخش فعلی -->
     <header class="flex flex-wrap items-start justify-between gap-4">
       <div class="min-w-0">
         <h1 class="text-2xl font-semibold">{{ t(`settings.${current}.title`) }}</h1>
@@ -56,7 +52,6 @@ useHead({ title: () => `${t(`settings.${current.value}.title`)} · ${t('settings
     </header>
 
     <div class="mt-6 flex flex-col gap-6 md:flex-row md:gap-8">
-      <!-- سایدبار: توی موبایل افقی، توی دسکتاپ کنار صفحه -->
       <nav
         class="flex shrink-0 gap-1 overflow-x-auto md:sticky md:top-20 md:w-52 md:flex-col md:self-start md:overflow-visible md:border-e md:border-stone-700/40 md:pe-4"
         :aria-label="t('settings.title')"
@@ -75,7 +70,6 @@ useHead({ title: () => `${t(`settings.${current.value}.title`)} · ${t('settings
         </NuxtLink>
       </nav>
 
-      <!-- محتوای بخش -->
       <section class="min-w-0 flex-1">
         <NuxtPage />
       </section>

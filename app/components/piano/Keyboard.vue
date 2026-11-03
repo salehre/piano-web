@@ -19,7 +19,6 @@ const BLACK_OFFSET: Record<string, number> = {
   'A#': 0.146,
 }
 
-// موقعیت هر کلید مشکی نسبت به کلیدهای سفید قبلی‌اش
 const blackKeys = computed(() => {
   let whitesBefore = 0
   const result: { note: string; left: number; gap: number; style: Record<string, string> }[] = []
@@ -32,7 +31,6 @@ const blackKeys = computed(() => {
         note: k.note,
         left,
         gap,
-        // استایل یک بار با نوع پیانو ساخته می‌شه، نه با هر نت که زده می‌شه
         style: {
           left: `${left}%`,
           width: `${blackWidth.value}%`,
@@ -45,7 +43,6 @@ const blackKeys = computed(() => {
   return result
 })
 
-// مرکز هر کلید به درصدِ عرض کیبورد (برای قرار دادن اسم نت بالای همون کلید)
 const centers = computed(() => {
   const map: Record<string, number> = {}
   whiteKeys.value.forEach((k, i) => {
@@ -58,7 +55,6 @@ const centers = computed(() => {
 })
 const pressedNotes = computed(() => active.value.filter((n) => n in centers.value))
 
-// مرکز و عرض هر کلید (درصد) برای فضای مشکیِ بالای پیانو
 const stageLayout = computed(() => {
   const map: Record<string, { x: number; w: number }> = {}
   whiteKeys.value.forEach((k, i) => {
@@ -70,15 +66,12 @@ const stageLayout = computed(() => {
   return map
 })
 
-// فقط نت‌های داخل محدوده‌ی همین پیانو با کیبورد کامپیوتر نواخته می‌شن
 const playable = computed(() => new Set(keys.value.map((k) => k.note)))
 useKeyboardInput((note) => playable.value.has(note))
 
-// Set: هر ۸۸ کلید با O(1) چک می‌شن، نه includes روی آرایه
 const activeSet = computed(() => new Set(active.value))
 const isActive = (note: string) => activeSet.value.has(note)
 
-// کلیدهای مشکی جدا و با تأخیر و سرعت تصادفی خودشون میان
 function rand(seed: number) {
   const x = Math.sin(seed * 12.9898) * 43758.5453
   return x - Math.floor(x)
@@ -91,7 +84,6 @@ function riseStyle(seed: number) {
   }
 }
 
-// کشیدن روی کلیدها (glissando): هر pointer (موس یا انگشت) نتی که الان زیرشه رو نگه می‌داره
 const held = new Map<number, string | null>()
 
 function noteAt(e: PointerEvent): string | null {
@@ -134,14 +126,11 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <!-- justify-end: تا قبل از لود، پیانو پایینِ صفحه می‌مونه و جای کادر مشکی خالیه (پرش نداریم) -->
   <div class="flex flex-1 flex-col justify-end shadow-[0_12px_30px_-12px_rgb(0_0_0/0.7)]">
-    <!-- فضای مشکی بالای پیانو: فقط بعد از لود شدن صداها ظاهر می‌شه -->
     <Transition name="stage-fade">
       <PianoNoteStage v-if="status === 'ready'" :layout="stageLayout" />
     </Transition>
 
-    <!-- باکس نمایش نت‌های فشرده‌شده؛ بعد از لود صداها ظاهر می‌شه -->
     <div
         class="note-display h-8 px-3 transition-opacity duration-500"
         :class="status === 'ready' ? 'opacity-100' : 'opacity-0'"
@@ -161,7 +150,6 @@ onBeforeUnmount(() => {
       </div>
     </div>
 
-    <!-- کل کیبورد توی عرض صفحه جا می‌شه و اسکرول افقی نداره -->
     <div class="keybed relative rounded-b-lg px-3 pb-4 pt-2">
       <div class="cheek cheek-l rounded-bl-lg" />
       <div class="cheek cheek-r rounded-br-lg" />
@@ -173,7 +161,6 @@ onBeforeUnmount(() => {
           @pointerup="onUp"
           @pointercancel="onUp"
       >
-        <!-- کلیدهای سفید -->
         <div class="flex h-full">
           <button
               v-for="k in whiteKeys"
@@ -188,10 +175,8 @@ onBeforeUnmount(() => {
           </button>
         </div>
 
-        <!-- نوار نمدی بالای کلیدها (زیر کلیدهای مشکی) -->
         <div class="felt pointer-events-none absolute inset-x-0 top-0" />
 
-        <!-- کلیدهای مشکی -->
         <button
             v-for="k in blackKeys"
             :key="k.note"
@@ -230,7 +215,6 @@ onBeforeUnmount(() => {
   background: linear-gradient(to bottom, #2e0a0a, #4a1212);
 }
 
-/* دو طرف کلیدها: تکه‌های چوبی (cheek block) */
 .cheek {
   position: absolute;
   top: 0;
@@ -248,7 +232,6 @@ onBeforeUnmount(() => {
   box-shadow: inset 1px 0 0 rgb(255 255 255 / 0.07);
 }
 
-/* کلیدهای سفید: سفید خنثی، فقط بالا زیر سایه‌ی نوار نمدی کمی خاکستری */
 .key-white {
   margin-inline: var(--half-gap);
   border-radius: 0 0 4px 4px;
@@ -271,7 +254,6 @@ onBeforeUnmount(() => {
   transform: translateY(2px);
 }
 
-/* کلیدهای مشکی: بدنه‌ی سیاه براق، خط دور سیاه، سایه‌ی نرم روی کلیدهای سفید کنارش */
 .key-black {
   border-radius: 0 0 3px 3px;
   background: linear-gradient(to bottom, #040404 0%, #0a0a0b 60%, #111112 100%);
@@ -282,7 +264,6 @@ onBeforeUnmount(() => {
   transition: transform 60ms ease-out;
 }
 
-/* قاب باریک و روشن‌تر داخل بدنه‌ی کلید (برق سطح) */
 .key-black::before {
   content: '';
   position: absolute;
@@ -293,12 +274,6 @@ onBeforeUnmount(() => {
   background: linear-gradient(to bottom, transparent 50%, rgb(255 255 255 / 0.06));
 }
 
-/*
-  پنجه‌ی کلید: سطح خاکستری براق + برق گوشه‌ی راست + یک سایه‌ی نرم و محو
-  دقیقاً در موقعیت شکافِ واقعیِ بین کلیدهای سفید زیرین (--gap).
-  به‌جای یه خط تیزِ قهوه‌ای، اینجا یه بیضیِ باریک و کم‌رنگِ مشکی‌ـ‌محو
-  استفاده شده که بازتابِ طبیعیِ شکاف روی سطح لاکیِ کلید مشکی رو شبیه‌سازی می‌کنه.
-*/
 .key-black::after {
   content: '';
   position: absolute;

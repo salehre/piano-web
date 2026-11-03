@@ -25,13 +25,11 @@ function focusFirst() {
   formEl.value?.querySelector('input')?.focus()
 }
 
-// لینک «ساخت حساب» redirect اولیه رو حفظ می‌کنه
 const registerTo = computed(() => ({
   path: '/register',
   query: route.query.redirect ? { redirect: route.query.redirect as string } : undefined,
 }))
 
-// ---------- ورود ----------
 async function submitCredentials() {
   const invalid = validatePhone(form.phone)
   if (invalid) return void (error.value = invalid)
@@ -110,7 +108,6 @@ const copy = computed(() => ({
         {{ submitting ? t('ui.pleaseWait') : copy.button }}
       </button>
 
-      <!-- یا: ساخت حساب جدید -->
       <div class="flex items-center gap-3 text-xs text-stone-500" aria-hidden="true">
         <span class="h-px flex-1 bg-stone-800" />
         {{ text.or }}

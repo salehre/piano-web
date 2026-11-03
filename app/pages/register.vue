@@ -53,7 +53,6 @@ async function submit() {
       errors.value = { password: result.error }
       return
     }
-    // نام همون لحظه توی پروفایل ذخیره می‌شه
     await updateProfile(createEmptyProfile(form.name.trim()))
     toast.success(t('toast.registered'))
     await navigateTo('/profile')
@@ -62,7 +61,6 @@ async function submit() {
   }
 }
 
-// تایپ‌کردن توی هر فیلد، خطای همون فیلد رو پاک می‌کنه
 watch(() => form.name, () => delete errors.value.name)
 watch(() => form.phone, () => delete errors.value.phone)
 watch(() => form.password, () => delete errors.value.password)

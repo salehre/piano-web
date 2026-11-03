@@ -6,7 +6,7 @@ defineProps<{
 
 const BG_IMAGE = '/images/download.webp'
 const bgEl = ref<HTMLImageElement>()
-const bgFailed = ref(false) // عکس نبود → بدون آیکون خراب، فقط زمینه‌ی ساده
+const bgFailed = ref(false)
 onMounted(() => {
   if (bgEl.value?.complete && bgEl.value.naturalWidth === 0) bgFailed.value = true
 })
@@ -16,7 +16,6 @@ const titleId = useId()
 
 <template>
   <main class="grid min-h-dvh bg-stone-950 lg:grid-cols-2">
-    <!-- نیمه‌ی فرم -->
     <div class="relative isolate flex items-center justify-center overflow-hidden px-6 py-12">
       <div
           class="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_30%_10%,rgb(255_255_255/0.05),transparent_55%)]"

@@ -1,9 +1,5 @@
 <script setup lang="ts">
-// فضای مشکیِ بالای پیانو: با فشردن هر نت، یک ستون از بالای همون کلید شروع می‌شه،
-// تا وقتی نگه داشته‌ایم بلندتر می‌شه و بعد از رها کردن بالا می‌ره و محو می‌شه.
-// وقتی آهنگ انتخاب شده، نت‌های آهنگ هم از بالا می‌آن پایین و لحظه‌ی صدا شدن به کلید می‌رسن.
 const props = defineProps<{
-  /** مرکز و عرض هر کلید به درصدِ عرض کیبورد (همون هندسه‌ی کلیدها) */
   layout: Record<string, { x: number; w: number }>
 }>()
 
@@ -12,15 +8,15 @@ const player = useSongPlayer()
 
 const canvas = ref<HTMLCanvasElement | null>(null)
 
-const SPEED = 0.14 // سرعت بالا رفتن ستون‌ها (پیکسل بر میلی‌ثانیه)
-const FALL = 0.2 // سرعت سقوط نت‌های آهنگ (پیکسل بر میلی‌ثانیه‌ی آهنگ)
-const MAX_BARS = 160 // سقف ستون‌ها تا موقع نواختن خیلی سریع کند نشه
+const SPEED = 0.14
+const FALL = 0.2
+const MAX_BARS = 160
 
 interface Bar {
   note: string
   black: boolean
-  start: number // لحظه‌ی فشردن
-  end: number | null // لحظه‌ی رها کردن (null یعنی هنوز نگه داشته شده)
+  start: number
+  end: number | null
 }
 
 let bars: Bar[] = []
@@ -31,7 +27,6 @@ let raf = 0
 let running = false
 let observer: ResizeObserver | null = null
 
-// اسم بزرگ وسط صفحه: آخرین نتی که زده شده
 const label = ref('')
 let labelTimer: ReturnType<typeof setTimeout> | undefined
 const prettyLabel = computed(() => label.value.replace('#', '♯'))
@@ -50,13 +45,11 @@ function resize() {
   if (!running) draw()
 }
 
-// رنگ نت‌های آهنگ: دست راست فیروزه‌ای، دست چپ آبی (جدا از ستون‌های طلاییِ نواختن کاربر)
 const SONG_COLORS = {
   r: { fill: '#2dd4bf', glow: 'rgba(94, 234, 212, 0.65)' },
   l: { fill: '#38bdf8', glow: 'rgba(125, 211, 252, 0.65)' },
 } as const
 
-// نت‌های آهنگ: از بالا می‌افتن؛ لبه‌ی پایین ستون = لحظه‌ی شروع نت و وقتی به کلید برسه صداش میاد
 function drawSong() {
   const g = ctx
   const s = player.song.value
@@ -65,22 +58,22 @@ function drawSong() {
 
   for (const n of s.notes) {
     const ahead = n.t - T
-    if (ahead * FALL > height) break // نت‌ها به ترتیب زمان مرتب هستن؛ بقیه هنوز بالای صفحه‌ان
+    if (ahead * FALL > height) break
     const endAhead = n.t + n.d - T
-    if (endAhead <= 0) continue // تموم شده و رد شده
+    if (endAhead <= 0) continue
 
     const pos = props.layout[n.note]
-    if (!pos) continue // این نت توی محدوده‌ی پیانوی انتخاب‌شده نیست
+    if (!pos) continue
 
     const yBottom = Math.min(height, height - ahead * FALL)
-    const yTop = height - endAhead * FALL + 2 // ۲ پیکسل فاصله بین دو نت پشت‌سرهم
+    const yTop = height - endAhead * FALL + 2
     const h = Math.max(4, yBottom - yTop)
     if (yBottom <= 0) continue
 
     const w = Math.max(2, (pos.w / 100) * width - 2)
     const x = (pos.x / 100) * width - w / 2
     const c = SONG_COLORS[n.hand]
-    const hit = ahead <= 0 // الان داره صدا می‌ده
+    const hit = ahead <= 0
 
     g.globalAlpha = hit ? 1 : 0.85
     g.shadowColor = c.glow
@@ -107,10 +100,8 @@ function draw() {
 
   for (const b of bars) {
     const pos = props.layout[b.note]
-    // کف ستون: وقتی نگه داشته شده روی کلیده؛ بعد از رها کردن بالا می‌ره
     const bottomOffset = b.end === null ? 0 : (now - b.end) * SPEED
     const topOffset = (now - b.start) * SPEED
-    // کاملاً از بالای صفحه رد شده؛ حذف می‌شه
     if (bottomOffset > height) continue
     next.push(b)
     if (!pos) continue
@@ -124,7 +115,6 @@ function draw() {
     const x = (pos.x / 100) * width - w / 2
     const radius = Math.min(w / 2, 4)
 
-    // هرچی بالاتر می‌ره کم‌رنگ‌تر می‌شه
     const fade = 1 - Math.min(1, (height - yBottom) / height) * 0.85
     g.globalAlpha = Math.max(0.05, fade)
 
@@ -166,7 +156,6 @@ function start() {
   raf = requestAnimationFrame(frame)
 }
 
-// تفاوت نت‌های فعال قبلی و فعلی: نت تازه → ستون جدید، نت رها شده → پایان ستون
 watch(active, (cur, prev) => {
   const now = performance.now()
   const before = new Set(prev)
@@ -182,7 +171,6 @@ watch(active, (cur, prev) => {
 
   for (const note of prev) {
     if (after.has(note)) continue
-    // آخرین ستونِ بازِ همون نت رو می‌بندیم
     for (let i = bars.length - 1; i >= 0; i--) {
       const b = bars[i]!
       if (b.note === note && b.end === null) {
@@ -192,7 +180,6 @@ watch(active, (cur, prev) => {
     }
   }
 
-  // وقتی دیگه هیچ نتی نگه داشته نشده، اسم بزرگ بعد از مدتی محو می‌شه
   if (cur.length === 0) {
     clearTimeout(labelTimer)
     labelTimer = setTimeout(() => (label.value = ''), 1400)
@@ -201,7 +188,6 @@ watch(active, (cur, prev) => {
   if (bars.length) start()
 })
 
-// آهنگ انتخاب/پخش/متوقف شد یا موقعیتش عوض شد: اگه حلقه خوابه بیدارش کن (حداقل یک بار می‌کشه)
 watch(
   () => [player.songId.value, player.playing.value, player.positionMs.value],
   () => start(),
@@ -224,11 +210,9 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <!-- پس‌زمینه‌ی مشکیِ ثابت (مستقل از تم)؛ px-3 هم‌اندازه‌ی کادر کلیدهاست تا ستون‌ها دقیقاً بالای کلید خودشون بیفتن -->
   <div class="note-stage relative min-h-72 flex-1 overflow-hidden rounded-t-lg bg-black px-3">
     <canvas ref="canvas" class="absolute inset-y-0 left-3 right-3 block h-full w-[calc(100%-1.5rem)]" aria-hidden="true" />
 
-    <!-- انتخاب آهنگ و کنترل پخش -->
     <PianoSongPanel />
 
     <div class="pointer-events-none absolute inset-0 grid place-items-center" aria-hidden="true">

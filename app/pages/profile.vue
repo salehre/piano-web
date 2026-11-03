@@ -11,7 +11,6 @@ const { user, ready, updateProfile, logout } = useAuth()
 const { devices } = useMidi()
 const connectedPianos = computed(() => devices.value.filter(device => device.connected))
 
-/** فرم همه‌ی فیلدها رو رشته نگه می‌داره تا v-model ساده بمونه */
 interface ProfileForm {
   displayName: string
   email: string
@@ -43,7 +42,6 @@ const toProfile = (f: ProfileForm): UserProfile => ({
 })
 
 const form = reactive<ProfileForm>(toForm(createEmptyProfile()))
-// خطاها ارجاع به پیام‌اند تا با عوض شدن زبان ترجمه‌شون عوض بشه
 const errors = reactive<{ displayName?: MessageRef; email?: MessageRef; nationalId?: MessageRef; yearsPlaying?: MessageRef }>({})
 const showLogoutConfirm = ref(false)
 const loggingOut = ref(false)
@@ -51,7 +49,6 @@ const saving = ref(false)
 const saved = ref(false)
 let initialised = false
 
-// فرم یک بار با اطلاعات کاربر پر می‌شه (بعد از mount که کاربر از حافظه لود شد)
 watch(
     user,
     (u) => {
@@ -62,7 +59,6 @@ watch(
     { immediate: true },
 )
 
-// نشست قدیمی یا کاربر حذف‌شده
 watch(
     [ready, user],
     ([isReady, u]) => {
@@ -92,14 +88,12 @@ function validateYears(value: string): MessageRef | null {
   return null
 }
 
-// ---------- عکس پروفایل ----------
 const fileInput = ref<HTMLInputElement | null>(null)
 
 function pickAvatar() {
   fileInput.value?.click()
 }
 
-/** عکس انتخاب‌شده رو وسط‌چین و مربع می‌کنه و به JPEG کوچیک تبدیل می‌کنه تا توی localStorage جا بشه */
 function resizeToAvatar(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const url = URL.createObjectURL(file)
@@ -135,7 +129,7 @@ function resizeToAvatar(file: File): Promise<string> {
 async function onAvatarChange(e: Event) {
   const input = e.target as HTMLInputElement
   const file = input.files?.[0]
-  input.value = '' // تا انتخاب دوباره‌ی همون فایل هم change بده
+  input.value = ''
   if (!file) return
   if (!file.type.startsWith('image/')) {
     toast.error(tr(msgRef('auth.profile.avatar.notImage')) ?? '')
@@ -172,7 +166,6 @@ async function save() {
     toast.error(tr(result.error) ?? '')
     return
   }
-  // فرم با مقدارهای تمیزشده (trim) هماهنگ می‌شه
   Object.assign(form, toForm(toProfile(form)))
   saved.value = true
   toast.success(t('auth.profile.actions.saved'))
@@ -187,8 +180,6 @@ function revert() {
   errors.yearsPlaying = undefined
 }
 
-// اول logout (تا کوکی تا وقتی صفحه mount هست پاک بشه)، بعد رفتن به خانه.
-// loggingOut جلوی ریدایرکت watch پایین به /login رو می‌گیره.
 function onLogout() {
   loggingOut.value = true
   logout()
@@ -205,7 +196,6 @@ function onLogout() {
     />
 
     <div class="relative z-10 mx-auto max-w-6xl">
-      <!-- ══════ حالت بارگذاری: کلیدهای پیانو ══════ -->
       <div v-if="!user" class="flex min-h-[70vh] flex-col items-center justify-center gap-6 text-stone-400" role="status">
         <div class="flex h-12 items-end gap-1.5" aria-hidden="true">
           <span v-for="i in 5" :key="i" class="loader-key" :style="{ animationDelay: `${(i - 1) * 120}ms` }" />
@@ -214,14 +204,12 @@ function onLogout() {
       </div>
 
       <template v-else>
-        <!-- ══════ کارت هدر ══════ -->
         <section
           class="card-in relative isolate overflow-hidden rounded-[1.75rem] border border-stone-700/40 bg-linear-to-br from-stone-900 via-stone-950 to-stone-900 shadow-2xl shadow-black/30"
         >
           <div class="pointer-events-none absolute -top-24 right-0 size-64 translate-x-1/3 rounded-full bg-key-active/10 blur-3xl" aria-hidden="true" />
           <div class="pointer-events-none absolute inset-y-0 right-0 w-1/3 bg-linear-to-l from-white/2.5 to-transparent" aria-hidden="true" />
 
-          <!-- نُت‌های شناور -->
           <div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
             <span class="float-note" style="left: 5%; animation-delay: 0s">♪</span>
             <span class="float-note" style="left: 22%; animation-delay: 3.2s; font-size: 1.1rem">♫</span>
@@ -230,7 +218,6 @@ function onLogout() {
             <span class="float-note" style="left: 45%; animation-delay: 9s; font-size: 0.9rem">♪</span>
           </div>
 
-          <!-- کیبورد پیانو ↓ لبهٔ پایین -->
           <div class="pointer-events-none absolute inset-x-0 bottom-0 flex h-2 gap-px opacity-40" aria-hidden="true">
             <span v-for="i in 30" :key="i" class="piano-key" :style="{ animationDelay: `${i * 60}ms` }" />
           </div>
@@ -308,10 +295,8 @@ function onLogout() {
           </div>
         </section>
 
-        <!-- ══════ گرید اصلی ══════ -->
         <div class="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-start">
           <aside class="order-1 space-y-5 lg:sticky lg:top-6 lg:col-start-2 lg:row-start-1">
-            <!-- تکمیل پروفایل -->
             <section
               class="card-in relative overflow-hidden rounded-2xl border border-stone-700/40 bg-stone-900/70 p-5 shadow-xl shadow-black/10"
               style="animation-delay: 80ms"
@@ -346,7 +331,6 @@ function onLogout() {
               </div>
             </section>
 
-            <!-- حساب کاربری -->
             <section
               class="card-in rounded-2xl border border-stone-700/40 bg-stone-900/70 p-5 shadow-xl shadow-black/10"
               style="animation-delay: 160ms"
@@ -369,7 +353,6 @@ function onLogout() {
           </aside>
 
           <form class="order-2 min-w-0 space-y-5 lg:col-start-1 lg:row-start-1" novalidate @submit.prevent="save">
-            <!-- اطلاعات شخصی -->
             <section
               class="card-in rounded-2xl border border-stone-700/40 bg-stone-900/70 p-5 shadow-xl shadow-black/10 sm:p-6"
               style="animation-delay: 200ms"
@@ -495,14 +478,12 @@ function onLogout() {
 </template>
 
 <style scoped>
-/* ───── پس‌زمینه: نفس‌کشیدن آرام ───── */
 @keyframes breathe {
   0%, 100% { opacity: 0.35; transform: translateX(-50%) scale(1); }
   50%      { opacity: 0.65; transform: translateX(-50%) scale(1.08); }
 }
 .animate-breathe { animation: breathe 12s ease-in-out infinite; }
 
-/* ───── بارگذاری: کلیدهای پیانو ───── */
 .loader-key {
   display: block;
   width: 10px;
@@ -518,7 +499,6 @@ function onLogout() {
   50%      { transform: scaleY(1);    opacity: 1;   }
 }
 
-/* ───── ورود پله‌ای کارت‌ها ───── */
 @keyframes card-in {
   from { opacity: 0; transform: translateY(18px); filter: blur(3px); }
   to   { opacity: 1; transform: translateY(0);    filter: blur(0);   }
@@ -527,7 +507,6 @@ function onLogout() {
   animation: card-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* ───── نُت‌های شناور ───── */
 .float-note {
   position: absolute;
   bottom: -2rem;
@@ -545,7 +524,6 @@ function onLogout() {
   100% { transform: translate3d(20px, -230px, 0) rotate(12deg); opacity: 0; }
 }
 
-/* ───── نوار کلیدهای پیانو ───── */
 .piano-key {
   flex: 1;
   min-width: 4px;
@@ -559,13 +537,11 @@ function onLogout() {
   50%      { transform: scaleY(1);    opacity: 0.75; }
 }
 
-/* ───── آواتار ───── */
 .avatar-fade-enter-active { transition: opacity 0.28s ease, transform 0.28s ease; }
 .avatar-fade-leave-active { transition: opacity 0.18s ease; }
 .avatar-fade-enter-from   { opacity: 0; transform: scale(0.9); }
 .avatar-fade-leave-to     { opacity: 0; }
 
-/* ───── درخشش موجی نوار پیشرفت ───── */
 .progress-shimmer { position: relative; overflow: hidden; }
 .progress-shimmer::after {
   content: '';
@@ -577,7 +553,6 @@ function onLogout() {
 }
 @keyframes shimmer { to { transform: translateX(100%); } }
 
-/* ───── MIDI متصل: پالس + اکولایزر ───── */
 .ping-ring { animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite; }
 @keyframes ping {
   0%       { transform: scale(1);   opacity: 0.7; }
@@ -597,14 +572,12 @@ function onLogout() {
   50%      { transform: scaleY(1);   }
 }
 
-/* ───── دکمهٔ ذخیره ───── */
 @keyframes btn-pulse {
   0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-key-active) 40%, transparent), 0 10px 15px -3px color-mix(in srgb, var(--color-key-active) 10%, transparent); }
   50%      { box-shadow: 0 0 0 8px transparent, 0 10px 15px -3px color-mix(in srgb, var(--color-key-active) 10%, transparent); }
 }
 .btn-pulse { animation: btn-pulse 2.4s ease-in-out infinite; }
 
-/* ───── اسپینر ───── */
 .spinner {
   display: inline-block;
   border-radius: 9999px;
@@ -614,7 +587,6 @@ function onLogout() {
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ───── تیک بعد از ذخیره ───── */
 @keyframes check-pop {
   0%   { transform: scale(0.4) rotate(-25deg); opacity: 0; }
   60%  { transform: scale(1.15) rotate(5deg);  opacity: 1; }
@@ -622,7 +594,6 @@ function onLogout() {
 }
 .check-pop { animation: check-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
 
-/* ───── ترنزیشن‌های Vue ───── */
 .fade-up-enter-active { transition: opacity 0.28s ease, transform 0.28s ease; }
 .fade-up-leave-active { transition: opacity 0.18s ease, transform 0.18s ease; }
 .fade-up-enter-from   { opacity: 0; transform: translateY(6px);  }
@@ -633,7 +604,6 @@ function onLogout() {
 .icon-swap-enter-from   { opacity: 0; transform: scale(0.6) rotate(-40deg); }
 .icon-swap-leave-to     { opacity: 0; transform: scale(0.6) rotate(40deg);  }
 
-/* ───── احترام به prefers-reduced-motion ───── */
 @media (prefers-reduced-motion: reduce) {
   .animate-breathe,
   .card-in,

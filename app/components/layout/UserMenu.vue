@@ -2,8 +2,6 @@
 const { t } = useI18n()
 const { isLoggedIn, initial } = useAuth()
 
-// لاگین‌نکرده: میدلور auth می‌فرستدش به /login?redirect=/profile (و از اونجا لینک ثبت‌نام)
-// لاگین‌کرده: مستقیم میره توی پروفایل و تنظیمات حساب
 const label = computed(() => (isLoggedIn.value ? t('nav.openProfile') : t('nav.loginOrSignup')))
 </script>
 

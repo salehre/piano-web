@@ -9,17 +9,13 @@ const progress = computed(() => {
   if (!s) return 0
   return Math.min(1, Math.max(0, positionMs.value / s.durationMs))
 })
-// قبل از اولین نت (صبر برای رسیدن نت‌ها) نوار کم‌رنگه
 const waiting = computed(() => playing.value && positionMs.value < 0)
 
 onBeforeUnmount(stop)
 </script>
 
 <template>
-  <!-- فقط وقتی آهنگ انتخاب شده -->
-  <!-- mousedown.prevent: دکمه‌ها فوکوس نمی‌گیرن و کلیدهای کیبورد همچنان پیانو رو می‌زنن -->
   <div v-if="song" class="absolute inset-x-0 top-0 z-10 text-neutral-100" @mousedown.prevent>
-    <!-- نوار پیشرفت -->
     <div class="h-0.5 w-full bg-white/10">
       <div
           class="h-full bg-teal-300 transition-[width] duration-100 ease-linear"
@@ -56,7 +52,6 @@ onBeforeUnmount(stop)
         <span class="size-3 rounded-sm bg-neutral-100" />
       </button>
 
-      <!-- سرعت؛ فقط وقتی پخش نمی‌شه قابل تغییره -->
       <div dir="ltr" class="flex items-center overflow-hidden rounded-lg bg-white/10 ring-1 ring-white/10" :title="ui.speed">
         <button
             v-for="v in SONG_SPEEDS"

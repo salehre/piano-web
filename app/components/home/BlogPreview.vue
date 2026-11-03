@@ -6,13 +6,11 @@ const latest = computed(() => posts.value.slice(0, 3))
 
 <template>
   <section aria-labelledby="blog-title" class="relative isolate">
-    <!-- هاله‌ی نور ملایم پشت کارت‌ها -->
     <div
       aria-hidden="true"
       class="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-72 w-160 max-w-full -translate-x-1/2 -translate-y-1/2 rounded-full bg-key-active/10 blur-3xl"
     />
 
-    <!-- هدر -->
     <div class="flex flex-wrap items-end justify-between gap-x-8 gap-y-5">
       <div class="max-w-xl">
         <span
@@ -41,7 +39,6 @@ const latest = computed(() => posts.value.slice(0, 3))
       </NuxtLink>
     </div>
 
-    <!-- کارت‌ها -->
     <ul class="mt-10 grid gap-5 md:grid-cols-3">
       <li
         v-for="(p, i) in latest"
@@ -53,7 +50,6 @@ const latest = computed(() => posts.value.slice(0, 3))
           :to="`/blog/${p.slug}`"
           class="glass-card group relative flex h-full flex-col overflow-hidden rounded-4xl ring-1 ring-white/10 transition-all duration-500 ease-out hover:-translate-y-1.5 hover:ring-key-active/40 hover:shadow-[0_30px_60px_-25px_rgba(245,230,200,0.35)] focus-visible:outline-none"
         >
-          <!-- تصویر -->
           <div class="relative aspect-16/10 overflow-hidden">
             <img
               :src="p.image"
@@ -67,14 +63,12 @@ const latest = computed(() => posts.value.slice(0, 3))
               class="absolute inset-0 bg-linear-to-t from-stone-950/70 via-stone-950/10 to-transparent"
             />
 
-            <!-- برچسب روی تصویر -->
             <span
               class="absolute inset-s-4 top-4 rounded-full border border-white/15 bg-stone-950/50 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-key-active backdrop-blur-md"
             >
               {{ p.tag }}
             </span>
 
-            <!-- فلشی که با هاور ظاهر می‌شود -->
             <span
               aria-hidden="true"
               class="absolute bottom-4 inset-e-4 flex size-9 translate-y-2 items-center justify-center rounded-full bg-key-active text-stone-950 opacity-0 shadow-lg transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 rtl:rotate-180"
@@ -83,7 +77,6 @@ const latest = computed(() => posts.value.slice(0, 3))
             </span>
           </div>
 
-          <!-- متن -->
           <div class="flex flex-1 flex-col p-6">
             <h3
               class="line-clamp-2 text-lg font-semibold leading-snug text-stone-100 transition-colors duration-300 group-hover:text-key-active"

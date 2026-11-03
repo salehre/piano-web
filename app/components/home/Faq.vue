@@ -1,5 +1,4 @@
 <script setup lang="ts">
-/** سؤال‌های متداول به‌صورت آکاردئونی؛ هر بار فقط یک مورد باز می‌مونه */
 const { t } = useI18n()
 const openIndex = ref<number | null>(null)
 const uid = useId()
@@ -11,7 +10,6 @@ function toggle(i: number) {
 
 <template>
   <section aria-labelledby="faq-title">
-    <!-- ─── هدر ─── -->
     <header class="max-w-xl">
       <span class="inline-flex items-center gap-2 rounded-full border border-key-active/25 bg-key-active/10 px-3.5 py-1 text-xs font-medium text-key-active">
         <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -30,7 +28,6 @@ function toggle(i: number) {
       </p>
     </header>
 
-    <!-- ─── آکاردئون ─── -->
     <ul class="mt-8 flex flex-col gap-2.5">
       <li
         v-for="(id, i) in FAQ_IDS"
@@ -39,7 +36,6 @@ function toggle(i: number) {
         :class="openIndex === i ? 'ring-1 ring-key-active/30 shadow-lg shadow-key-active/10' : ''"
         :style="{ animationDelay: `${i * 70}ms` }"
       >
-        <!-- خط نوری بالای کارتِ باز -->
         <span
           aria-hidden="true"
           class="pointer-events-none absolute inset-x-6 top-0 h-px bg-linear-to-r from-transparent via-key-active/60 to-transparent transition-opacity duration-500"
@@ -55,14 +51,12 @@ function toggle(i: number) {
             :aria-controls="`${uid}-panel-${i}`"
             @click="toggle(i)"
           >
-            <!-- ─── آیکون مینی‌کیبورد پیانو ─── -->
             <svg
               viewBox="0 0 24 28"
               class="h-7 w-6 shrink-0 transition-colors duration-300"
               :class="openIndex === i ? 'text-key-active' : 'text-stone-500 group-hover:text-stone-300'"
               aria-hidden="true"
             >
-              <!-- ۳ کلید سفید -->
               <rect x="1"    y="1" width="7.33" height="26" rx="1"
                     stroke="currentColor" fill="currentColor" stroke-width="1.2"
                     :fill-opacity="openIndex === i ? 0.28 : 0.12" />
@@ -72,7 +66,6 @@ function toggle(i: number) {
               <rect x="15.67" y="1" width="7.33" height="26" rx="1"
                     stroke="currentColor" fill="currentColor" stroke-width="1.2"
                     :fill-opacity="openIndex === i ? 0.28 : 0.12" />
-              <!-- ۲ کلید سیاه -->
               <rect x="6.33"  y="1" width="4" height="15" rx="0.8"
                     fill="currentColor"
                     :fill-opacity="openIndex === i ? 0.95 : 0.85" />
@@ -81,7 +74,6 @@ function toggle(i: number) {
                     :fill-opacity="openIndex === i ? 0.95 : 0.85" />
             </svg>
 
-            <!-- متن سؤال -->
             <span
               class="flex-1 transition-colors duration-300"
               :class="openIndex === i ? 'text-white' : 'text-stone-200 group-hover:text-white'"
@@ -89,7 +81,6 @@ function toggle(i: number) {
               {{ t(`faq.items.${id}.question`) }}
             </span>
 
-            <!-- آیکون chevron داخل دایره -->
             <span
               class="grid size-8 shrink-0 place-items-center rounded-full border transition-all duration-300"
               :class="openIndex === i
@@ -112,7 +103,6 @@ function toggle(i: number) {
           </button>
         </h3>
 
-        <!-- انیمیشن باز و بسته شدن با grid-template-rows -->
         <div
           :id="`${uid}-panel-${i}`"
           role="region"
@@ -122,7 +112,6 @@ function toggle(i: number) {
         >
           <div class="overflow-hidden">
             <div class="relative px-6 pb-6">
-              <!-- خط عمودی از زیر کیبورد تا پاسخ -->
               <span
                 aria-hidden="true"
                 class="absolute bottom-5 top-0 inset-s-9 w-px bg-linear-to-b from-key-active/60 via-key-active/20 to-transparent"

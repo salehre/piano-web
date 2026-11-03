@@ -50,7 +50,6 @@ const WHITE_KEYS = 14
 const BLACK_AFTER = new Set([0, 1, 3, 4, 5])
 const blackKeys = Array.from({ length: WHITE_KEYS - 1 }, (_, i) => i).filter((i) => BLACK_AFTER.has(i % 7))
 
-// آرپژ آروم؛ فقط همین کلیدها «نواخته» می‌شن
 const WHITE_PHRASE = [0, 2, 4, 7, 9, 7, 4, 5, 9, 12, 11, 7, 4, 0]
 const BLACK_PHRASE = [1, 4, 8, 11, 8, 4]
 
@@ -230,7 +229,6 @@ const off = 'border-stone-700/60 bg-stone-950/30 text-stone-200 hover:bg-stone-8
   animation: card-in 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
 }
 
-/* Language buttons */
 .lang-btn {
   transform: translateY(0);
 }
@@ -300,7 +298,6 @@ const off = 'border-stone-700/60 bg-stone-950/30 text-stone-200 hover:bg-stone-8
   animation: lang-check-in 0.35s cubic-bezier(0.2, 1.45, 0.4, 1) both;
 }
 
-/* Theme cards */
 .theme-card::after {
   content: '';
   position: absolute;

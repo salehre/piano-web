@@ -2,11 +2,9 @@
 const { t, n } = useI18n()
 const route = useRoute()
 const { getPost } = useBlog()
-// computed تا با عوض شدن زبان، متن مقاله همون لحظه عوض بشه
 const post = computed(() => getPost(String(route.params.slug)))
 
 if (!post.value) {
-  // statusMessage باید ASCII باشه (هدر HTTP)؛ متن ترجمه‌شده توی message میره
   throw createError({ statusCode: 404, statusMessage: 'Not Found', message: t('blog.notFound'), fatal: true })
 }
 

@@ -1,101 +1,101 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted } from "vue";
 
-const { t, te } = useI18n()
-const HERO_IMAGE = '/images/hero.png'
+const { t, te } = useI18n();
+const HERO_IMAGE = "/images/hero.png";
 
 const highlights = [
   {
-    id: 'touch',
+    id: "touch",
     icon: '<path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V10m0-.5a1.5 1.5 0 0 1 3 0V11m0-.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-.5a6 6 0 0 1-4.7-2.3L4 15.5a1.6 1.6 0 0 1 2.4-2L9 15.5"/>',
   },
   {
-    id: 'keyboard',
+    id: "keyboard",
     icon: '<rect x="2.5" y="6" width="19" height="12" rx="2"/><path d="M6 10h.01M9 10h.01M12 10h.01M15 10h.01M18 10h.01M7 14h10"/>',
   },
   {
-    id: 'midi',
+    id: "midi",
     icon: '<circle cx="12" cy="12" r="9"/><path d="M7.5 12h.01M8.6 8.4h.01M12 7h.01M15.4 8.4h.01M16.5 12h.01M9 16.5h6"/>',
   },
   {
-    id: 'install',
+    id: "install",
     icon: '<rect x="3" y="4" width="18" height="13" rx="2"/><path d="m9 10.5 2.2 2.2L15.5 8.5M8 21h8M12 17v4"/>',
   },
-] as const
+] as const;
 
-const heroSection = ref<HTMLElement | null>(null)
-const highlightsEl = ref<HTMLElement | null>(null)
+const heroSection = ref<HTMLElement | null>(null);
+const highlightsEl = ref<HTMLElement | null>(null);
 
-// reveal on scroll - سبک و بدون dependency
 const vReveal = {
   mounted(el: HTMLElement, binding: any) {
-    el.classList.add('reveal')
+    el.classList.add("reveal");
     if (binding?.value) {
-      el.style.setProperty('--reveal-delay', typeof binding.value === 'number' ? `${binding.value}ms` : binding.value)
+      el.style.setProperty(
+        "--reveal-delay",
+        typeof binding.value === "number"
+          ? `${binding.value}ms`
+          : binding.value,
+      );
     }
-    if (!('IntersectionObserver' in window)) {
-      el.classList.add('is-visible')
-      return
+    if (!("IntersectionObserver" in window)) {
+      el.classList.add("is-visible");
+      return;
     }
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
           if (e.isIntersecting) {
-            e.target.classList.add('is-visible')
-            io.unobserve(e.target)
+            e.target.classList.add("is-visible");
+            io.unobserve(e.target);
           }
-        })
+        });
       },
-      { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }
-    )
-    io.observe(el)
+      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" },
+    );
+    io.observe(el);
   },
-}
+};
 
 onMounted(() => {
-  const el = heroSection.value
-  if (!el || typeof window === 'undefined') return
+  const el = heroSection.value;
+  if (!el || typeof window === "undefined") return;
 
-  // ارتفاع کادر هایلایت‌ها رو اندازه می‌گیریم تا بک‌گراند دقیقاً تا نصف کادر بیاد
-  const card = highlightsEl.value
-  if (card && 'ResizeObserver' in window) {
+  const card = highlightsEl.value;
+  if (card && "ResizeObserver" in window) {
     const ro = new ResizeObserver(() => {
-      el.style.setProperty('--card-h', `${card.offsetHeight}px`)
-    })
-    ro.observe(card)
-    el.style.setProperty('--card-h', `${card.offsetHeight}px`)
+      el.style.setProperty("--card-h", `${card.offsetHeight}px`);
+    });
+    ro.observe(card);
+    el.style.setProperty("--card-h", `${card.offsetHeight}px`);
   }
 
-  // پارالاکس لطیف هیرو با موس
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-  if (!window.matchMedia('(pointer: fine)').matches) return
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (!window.matchMedia("(pointer: fine)").matches) return;
 
-  let raf = 0
+  let raf = 0;
   const onMove = (e: MouseEvent) => {
-    cancelAnimationFrame(raf)
+    cancelAnimationFrame(raf);
     raf = requestAnimationFrame(() => {
-      const r = el.getBoundingClientRect()
-      const x = (e.clientX - r.left) / r.width - 0.5
-      const y = (e.clientY - r.top) / r.height - 0.5
-      el.style.setProperty('--mx', x.toFixed(3))
-      el.style.setProperty('--my', y.toFixed(3))
-    })
-  }
+      const r = el.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      el.style.setProperty("--mx", x.toFixed(3));
+      el.style.setProperty("--my", y.toFixed(3));
+    });
+  };
   const onLeave = () => {
-    el.style.setProperty('--mx', '0')
-    el.style.setProperty('--my', '0')
-  }
-  el.addEventListener('mousemove', onMove)
-  el.addEventListener('mouseleave', onLeave)
-})
+    el.style.setProperty("--mx", "0");
+    el.style.setProperty("--my", "0");
+  };
+  el.addEventListener("mousemove", onMove);
+  el.addEventListener("mouseleave", onLeave);
+});
 </script>
 
 <template>
   <main class="overflow-clip">
     <section ref="heroSection" class="relative isolate">
-      <!-- لایهٔ بک‌گراند: تا نصف کادر هایلایت‌ها میاد و بقیهٔ کادر می‌افته بیرون زیرش -->
       <div class="hero-bg absolute inset-x-0 top-0 -z-10 overflow-hidden">
-        <!-- ادامه‌ی عکس: همون عکس، خیلی بزرگ و تار؛ سمت خالیِ هیرو رنگ و حال‌وهوای عکس رو ادامه می‌ده -->
         <img
           :src="HERO_IMAGE"
           alt=""
@@ -106,8 +106,9 @@ onMounted(() => {
         />
         <div class="absolute inset-0 bg-stone-950/65" aria-hidden="true" />
 
-        <!-- خود عکس: یک طرف هیرو و لبه‌ی سمت متن به‌تدریج محو می‌شه (جهتش با زبان عوض می‌شه) -->
-        <div class="parallax-bg hero-photo absolute inset-y-0 inset-e-0 w-full opacity-60 lg:opacity-100 rtl:-scale-x-100">
+        <div
+          class="parallax-bg hero-photo absolute inset-y-0 inset-e-0 w-full opacity-60 lg:opacity-100 rtl:-scale-x-100"
+        >
           <img
             :src="HERO_IMAGE"
             alt=""
@@ -119,24 +120,48 @@ onMounted(() => {
           />
         </div>
 
-        <!-- محو شدن بالا و پایین؛ پایین هیرو توی رنگ صفحه حل می‌شه -->
         <div
           class="absolute inset-0 bg-linear-to-t from-stone-950 via-transparent to-stone-950/50"
           aria-hidden="true"
         />
-        <!-- glow -->
         <div aria-hidden="true" class="pointer-events-none absolute inset-0">
-          <div class="absolute -top-24 inset-s-[12%] size-72 rounded-full bg-key-active/20 blur-[110px]" />
-          <div class="absolute top-1/3 -inset-e-20 size-80 rounded-full bg-amber-500/10 blur-[120px]" />
+          <div
+            class="absolute -top-24 inset-s-[12%] size-72 rounded-full bg-key-active/20 blur-[110px]"
+          />
+          <div
+            class="absolute top-1/3 -inset-e-20 size-80 rounded-full bg-amber-500/10 blur-[120px]"
+          />
         </div>
 
-        <!-- نت‌های شناور -->
-        <div aria-hidden="true" class="pointer-events-none absolute inset-0 overflow-hidden select-none">
-          <span class="float-note left-[10%] text-2xl text-key-active/40" style="animation-duration: 9s; animation-delay: 0s">♪</span>
-          <span class="float-note left-[26%] text-lg text-white/30" style="animation-duration: 12s; animation-delay: 2.5s">♫</span>
-          <span class="float-note left-[55%] text-xl text-key-active/30" style="animation-duration: 10s; animation-delay: 1.2s">♫</span>
-          <span class="float-note left-[78%] text-3xl text-white/20" style="animation-duration: 13s; animation-delay: 4s">♪</span>
-          <span class="float-note left-[88%] text-lg text-key-active/25" style="animation-duration: 11s; animation-delay: 0.8s">♩</span>
+        <div
+          aria-hidden="true"
+          class="pointer-events-none absolute inset-0 overflow-hidden select-none"
+        >
+          <span
+            class="float-note left-[10%] text-2xl text-key-active/40"
+            style="animation-duration: 9s; animation-delay: 0s"
+            >♪</span
+          >
+          <span
+            class="float-note left-[26%] text-lg text-white/30"
+            style="animation-duration: 12s; animation-delay: 2.5s"
+            >♫</span
+          >
+          <span
+            class="float-note left-[55%] text-xl text-key-active/30"
+            style="animation-duration: 10s; animation-delay: 1.2s"
+            >♫</span
+          >
+          <span
+            class="float-note left-[78%] text-3xl text-white/20"
+            style="animation-duration: 13s; animation-delay: 4s"
+            >♪</span
+          >
+          <span
+            class="float-note left-[88%] text-lg text-key-active/25"
+            style="animation-duration: 11s; animation-delay: 0.8s"
+            >♩</span
+          >
         </div>
       </div>
 
@@ -144,47 +169,77 @@ onMounted(() => {
         class="parallax-content relative z-10 mx-auto flex min-h-112 max-w-5xl flex-col justify-between gap-12 px-6 pt-14 pb-0 sm:pt-20 lg:min-h-[calc(80svh-3.75rem)]"
       >
         <div class="flex max-w-xl flex-col items-start gap-6">
-          <!-- بج اختیاری، اگه ترجمه نداری خودش مخفی میمونه -->
           <div
             v-if="te('home.hero.badge')"
             class="hero-anim inline-flex items-center gap-2.5 rounded-full border border-white/15 bg-white/10 py-1.5 ps-3 pe-3.5 text-xs font-medium text-stone-200 backdrop-blur-md"
             style="--d: 0ms"
           >
             <span class="relative flex size-2">
-              <span class="absolute inline-flex size-full animate-ping rounded-full bg-key-active opacity-70" />
-              <span class="relative inline-flex size-2 rounded-full bg-key-active" />
+              <span
+                class="absolute inline-flex size-full animate-ping rounded-full bg-key-active opacity-70"
+              />
+              <span
+                class="relative inline-flex size-2 rounded-full bg-key-active"
+              />
             </span>
-            {{ t('home.hero.badge') }}
+            {{ t("home.hero.badge") }}
           </div>
 
-          <h1 class="hero-title text-4xl leading-[1.1] font-medium text-balance text-[#f6ead6] drop-shadow-sm sm:text-6xl">
+          <h1
+            class="hero-title text-4xl leading-[1.1] font-medium text-balance text-[#f6ead6] drop-shadow-sm sm:text-6xl"
+          >
             <span class="block overflow-hidden pb-1">
-              <span class="hero-line" style="--d: 100ms">{{ t('home.hero.line1') }}</span>
+              <span class="hero-line" style="--d: 100ms">{{
+                t("home.hero.line1")
+              }}</span>
             </span>
             <span class="block overflow-hidden pb-2">
-              <span class="hero-line" style="--d: 210ms">{{ t('home.hero.line2') }}</span>
+              <span class="hero-line" style="--d: 210ms">{{
+                t("home.hero.line2")
+              }}</span>
             </span>
           </h1>
 
-          <p class="hero-anim max-w-md text-base leading-relaxed text-pretty text-stone-300 sm:text-lg" style="--d: 300ms">
-            {{ t('home.hero.text') }}
+          <p
+            class="hero-anim max-w-md text-base leading-relaxed text-pretty text-stone-300 sm:text-lg"
+            style="--d: 300ms"
+          >
+            {{ t("home.hero.text") }}
           </p>
 
-          <div class="hero-anim flex flex-wrap items-center gap-3" style="--d: 380ms">
+          <div
+            class="hero-anim flex flex-wrap items-center gap-3"
+            style="--d: 380ms"
+          >
             <NuxtLink
               to="/virtual-piano"
               data-cuelume-navigate
               class="btn-shine group inline-flex items-center gap-2.5 rounded-full bg-key-active px-7 py-3.5 font-medium text-stone-950 shadow-[0_10px_28px_-10px_var(--color-key-active)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_40px_-12px_var(--color-key-active)] active:translate-y-0 active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-key-active focus-visible:ring-offset-2 focus-visible:ring-offset-stone-950 focus-visible:outline-none"
             >
-              {{ t('home.hero.cta') }}
-              <svg class="size-4 transition-transform duration-300 group-hover:translate-x-1 rtl:-scale-x-100 rtl:group-hover:-translate-x-1" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-                <path d="M4 10h12m-4.5-4.5L16 10l-4.5 4.5" stroke-linecap="round" stroke-linejoin="round" />
+              {{ t("home.hero.cta") }}
+              <svg
+                class="size-4 transition-transform duration-300 group-hover:translate-x-1 rtl:-scale-x-100 rtl:group-hover:-translate-x-1"
+                viewBox="0 0 20 20"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                aria-hidden="true"
+              >
+                <path
+                  d="M4 10h12m-4.5-4.5L16 10l-4.5 4.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
               </svg>
             </NuxtLink>
           </div>
         </div>
 
-        <ul ref="highlightsEl" class="hidden glass-card hero-fade relative sm:grid grid-cols-2 gap-x-2 gap-y-2 p-3 [--glass-radius:1.5rem] sm:gap-x-4 sm:gap-y-5 sm:p-5 lg:grid-cols-4 lg:p-6" style="--d: 450ms">
+        <ul
+          ref="highlightsEl"
+          class="hidden glass-card hero-fade relative sm:grid grid-cols-2 gap-x-2 gap-y-2 p-3 [--glass-radius:1.5rem] sm:gap-x-4 sm:gap-y-5 sm:p-5 lg:grid-cols-4 lg:p-6"
+          style="--d: 450ms"
+        >
           <li
             v-for="(h, i) in highlights"
             :key="h.id"
@@ -207,8 +262,13 @@ onMounted(() => {
               />
             </span>
             <span class="min-w-0">
-              <span class="block text-sm font-medium text-white">{{ t(`home.highlights.${h.id}.title`) }}</span>
-              <span class="block truncate text-xs text-stone-400 sm:whitespace-normal">{{ t(`home.highlights.${h.id}.text`) }}</span>
+              <span class="block text-sm font-medium text-white">{{
+                t(`home.highlights.${h.id}.title`)
+              }}</span>
+              <span
+                class="block truncate text-xs text-stone-400 sm:whitespace-normal"
+                >{{ t(`home.highlights.${h.id}.text`) }}</span
+              >
             </span>
           </li>
         </ul>
@@ -220,7 +280,10 @@ onMounted(() => {
         <HomePianoFinder />
       </section>
 
-      <div aria-hidden="true" class="h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
+      <div
+        aria-hidden="true"
+        class="h-px bg-linear-to-r from-transparent via-white/10 to-transparent"
+      />
 
       <section v-reveal>
         <HomeFaq />
@@ -234,28 +297,34 @@ onMounted(() => {
 </template>
 
 <style scoped>
-/* بک‌گراند هیرو تا نصف کادر هایلایت‌ها */
 .hero-bg {
   bottom: calc(var(--card-h, 10rem) / 2);
 }
 
-/* عکس هیرو: لبه‌ی سمت متن محو می‌شه (فقط LTR؛ توی RTL سایه حذف شده) */
 .hero-photo {
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, rgb(0 0 0 / 0.5) 22%, #000 58%);
-  mask-image: linear-gradient(to right, transparent 0%, rgb(0 0 0 / 0.5) 22%, #000 58%);
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    rgb(0 0 0 / 0.5) 22%,
+    #000 58%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    rgb(0 0 0 / 0.5) 22%,
+    #000 58%
+  );
 }
 
-/* تیتر هیرو: فونت سریف برای زبان‌های لاتین (فارسی با فونت وزیرمتن می‌مونه) */
 .hero-title {
-  font-family: ui-serif, Georgia, Cambria, 'Times New Roman', serif;
+  font-family: ui-serif, Georgia, Cambria, "Times New Roman", serif;
   letter-spacing: -0.01em;
 }
-:global(html[lang|='fa']) .hero-title {
+:global(html[lang|="fa"]) .hero-title {
   font-family: var(--font-sans);
   letter-spacing: normal;
 }
 
-/* ورود هیرو */
 .hero-anim {
   opacity: 0;
   animation: rise-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
@@ -281,28 +350,39 @@ onMounted(() => {
   will-change: transform;
 }
 
-/* پارالاکس */
 .parallax-bg {
-  transform: translate3d(calc(var(--mx, 0) * 16px), calc(var(--my, 0) * 12px), 0);
+  transform: translate3d(
+    calc(var(--mx, 0) * 16px),
+    calc(var(--my, 0) * 12px),
+    0
+  );
   transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .parallax-content {
-  transform: translate3d(calc(var(--mx, 0) * -8px), calc(var(--my, 0) * -6px), 0);
+  transform: translate3d(
+    calc(var(--mx, 0) * -8px),
+    calc(var(--my, 0) * -6px),
+    0
+  );
   transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* دکمه براق */
 .btn-shine {
   position: relative;
   overflow: hidden;
   isolation: isolate;
 }
 .btn-shine::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, 0.55) 50%, transparent 60%);
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.55) 50%,
+    transparent 60%
+  );
   transform: translateX(-130%);
   transition: transform 0.8s ease;
   pointer-events: none;
@@ -311,7 +391,6 @@ onMounted(() => {
   transform: translateX(130%);
 }
 
-/* نت شناور */
 .float-note {
   position: absolute;
   bottom: 12%;
@@ -321,7 +400,6 @@ onMounted(() => {
   filter: blur(0.2px);
 }
 
-/* اسکرول ریویل */
 .reveal {
   opacity: 0;
   transform: translateY(30px) scale(0.98);
@@ -340,30 +418,69 @@ onMounted(() => {
 }
 
 @keyframes rise-in {
-  from { opacity: 0; transform: translateY(26px); filter: blur(10px); }
-  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+  from {
+    opacity: 0;
+    transform: translateY(26px);
+    filter: blur(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
 }
 @keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 @keyframes line-up {
-  from { opacity: 0; transform: translateY(110%); filter: blur(8px); }
-  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+  from {
+    opacity: 0;
+    transform: translateY(110%);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
 }
 @keyframes hero-zoom {
-  from { transform: scale(1.15); }
-  to { transform: scale(1.05); }
+  from {
+    transform: scale(1.15);
+  }
+  to {
+    transform: scale(1.05);
+  }
 }
 @keyframes float-up {
-  0% { transform: translateY(20px) rotate(-8deg) scale(0.8); opacity: 0; }
-  15% { opacity: 0.7; }
-  70% { opacity: 0.45; }
-  100% { transform: translateY(-340px) rotate(14deg) scale(1.1); opacity: 0; }
+  0% {
+    transform: translateY(20px) rotate(-8deg) scale(0.8);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.7;
+  }
+  70% {
+    opacity: 0.45;
+  }
+  100% {
+    transform: translateY(-340px) rotate(14deg) scale(1.1);
+    opacity: 0;
+  }
 }
 @keyframes nudge {
-  0%, 100% { transform: translateY(-2px); }
-  50% { transform: translateY(2px); }
+  0%,
+  100% {
+    transform: translateY(-2px);
+  }
+  50% {
+    transform: translateY(2px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -387,6 +504,8 @@ onMounted(() => {
     filter: none !important;
     transition: none !important;
   }
-  .btn-shine::after { display: none; }
+  .btn-shine::after {
+    display: none;
+  }
 }
 </style>

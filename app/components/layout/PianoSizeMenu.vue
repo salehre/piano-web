@@ -5,7 +5,6 @@ const { cue } = useUiSounds()
 
 const dialog = ref<HTMLDialogElement | null>(null)
 const open = ref(false)
-// انتخابِ موقت داخل دیالوگ؛ تا زدن «اعمال» روی پیانو اثری نداره
 const pending = ref<number>(piano.value.keys)
 const titleId = useId()
 const descId = useId()
@@ -21,7 +20,6 @@ function closeDialog() {
   if (dialog.value?.open) dialog.value.close()
 }
 
-// Esc، دکمه‌ی انصراف، ضربدر و اعمال، همه از همین‌جا رد می‌شن
 function onNativeClose() {
   open.value = false
 }
@@ -44,7 +42,6 @@ function apply() {
   }
 }
 
-// آیکون کیبورد: عرضش با تعداد کلیدها بیشتر می‌شه (۸۸ کلیدی پهن‌تر)
 function iconWidth(keys: number) {
   const whites = buildKeys(PIANO_TYPES.find((p) => p.keys === keys)!).filter((k) => !k.isBlack).length
   return Math.round(28 + (whites - 15) * 0.9)
@@ -52,7 +49,6 @@ function iconWidth(keys: number) {
 function iconWhites(width: number) {
   return Math.max(5, Math.round(width / 5))
 }
-// بعد از کلیدهای سفیدِ شماره‌ی ۰،۱،۳،۴،۵ (در هر اکتاو) کلید مشکی می‌آد
 const BLACK_AFTER = new Set([0, 1, 3, 4, 5])
 </script>
 
@@ -83,7 +79,6 @@ const BLACK_AFTER = new Set([0, 1, 3, 4, 5])
         @click="onBackdropClick"
       >
         <div class="relative p-6 sm:p-8">
-          <!-- بستن -->
           <button
             type="button"
             class="absolute inset-e-4 top-4 grid size-8 place-items-center rounded-lg text-stone-400 transition-colors hover:text-key-active"
@@ -99,7 +94,6 @@ const BLACK_AFTER = new Set([0, 1, 3, 4, 5])
           <h2 :id="titleId" class="pe-10 text-xl font-semibold">{{ t('piano.sizeDialog.title') }}</h2>
           <p :id="descId" class="mt-2 text-sm text-stone-400">{{ t('piano.sizeDialog.subtitle') }}</p>
 
-          <!-- کارت‌ها -->
           <div role="radiogroup" :aria-labelledby="titleId" class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
             <button
               v-for="p in PIANO_TYPES"
@@ -115,7 +109,6 @@ const BLACK_AFTER = new Set([0, 1, 3, 4, 5])
               data-cuelume-emphasis="subtle"
               @click="pending = p.keys"
             >
-              <!-- تیک انتخاب -->
               <span
                 v-if="pending === p.keys"
                 class="absolute inset-e-2.5 top-2.5 grid size-5 place-items-center rounded-full bg-key-active text-stone-950"
@@ -126,7 +119,6 @@ const BLACK_AFTER = new Set([0, 1, 3, 4, 5])
                 </svg>
               </span>
 
-              <!-- آیکون کیبورد -->
               <svg
                 class="h-6 text-key-active"
                 :style="{ width: iconWidth(p.keys) + 'px' }"
@@ -158,7 +150,6 @@ const BLACK_AFTER = new Set([0, 1, 3, 4, 5])
             </button>
           </div>
 
-          <!-- دکمه‌ها -->
           <div class="mt-8 grid grid-cols-[1fr_1.4fr] gap-3 sm:gap-4">
             <button
               type="button"

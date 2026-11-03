@@ -22,7 +22,6 @@ function moveTo(el: HTMLElement | null) {
     ink.on = false
     return
   }
-  // خط رو کمی از دو طرف داخل‌تر میذاریم تا فقط زیر متن باشه، نه کل دکمه
   const inset = 14
   ink.x = el.offsetLeft + inset
   ink.w = Math.max(el.offsetWidth - inset * 2, 20)
@@ -35,7 +34,6 @@ function syncInk() {
 
 const onEnter = (e: MouseEvent) => moveTo(e.currentTarget as HTMLElement)
 
-// حداکثر یک بار در هر فریم محاسبه می‌شه (scroll خیلی بیشتر از فریم رویداد می‌ده)
 let scrollRaf = 0
 function readScroll() {
   scrollRaf = 0
@@ -100,9 +98,7 @@ watch(() => route.fullPath, () => nextTick(syncInk))
         </span>
       </NuxtLink>
 
-      <!-- Nav -->
       <nav ref="navEl" class="relative flex items-center gap-1" :aria-label="t('nav.main')" @mouseleave="syncInk">
-        <!-- خط شناور -->
         <span
           class="nav-ink text-key-active"
           :style="{ transform: `translateX(${ink.x}px)`, width: `${ink.w}px`, opacity: ink.on ? 1 : 0 }"
@@ -125,7 +121,6 @@ watch(() => route.fullPath, () => nextTick(syncInk))
 
         <span class="mx-2 h-5 w-px bg-linear-to-b from-transparent via-white/15 to-transparent" />
 
-        <!-- وقتی موس میره روی یوزرمنو، خط برمیگرده سرجای اکتیو -->
         <div @mouseenter="syncInk">
           <LayoutUserMenu />
         </div>
@@ -146,7 +141,6 @@ watch(() => route.fullPath, () => nextTick(syncInk))
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* لینک‌ها: فقط رنگ + لیفت، بدون بکگراند */
 .nav-link {
   position: relative;
   z-index: 1;
@@ -180,7 +174,6 @@ watch(() => route.fullPath, () => nextTick(syncInk))
   opacity: 1;
 }
 
-/* وقتی روی ناو هاوری، بقیه کم‌رنگ میشن تا فوکوس بره روی هاور شده */
 nav:hover .nav-link:not(:hover):not(.nav-active) {
   opacity: .55;
 }

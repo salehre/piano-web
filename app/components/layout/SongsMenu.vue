@@ -6,7 +6,6 @@ const { cue } = useUiSounds()
 
 const dialog = ref<HTMLDialogElement | null>(null)
 const open = ref(false)
-// انتخابِ موقت داخل دیالوگ؛ تا زدن «پخش» روی صفحه اثری نداره
 const pending = ref<string | null>(songId.value)
 const titleId = useId()
 const descId = useId()
@@ -22,7 +21,6 @@ function closeDialog() {
   if (dialog.value?.open) dialog.value.close()
 }
 
-// Esc، دکمه‌ی انصراف، ضربدر و پخش، همه از همین‌جا رد می‌شن
 function onNativeClose() {
   open.value = false
 }
@@ -71,7 +69,6 @@ function apply() {
       @click="onBackdropClick"
     >
       <div class="relative p-6 sm:p-8">
-        <!-- بستن -->
         <button
           type="button"
           class="absolute inset-e-4 top-4 grid size-8 place-items-center rounded-lg text-stone-400 transition-colors hover:text-key-active"
@@ -87,7 +84,6 @@ function apply() {
         <h2 :id="titleId" class="pe-10 text-xl font-semibold">{{ ui.dialogTitle }}</h2>
         <p :id="descId" class="mt-2 text-sm text-stone-400">{{ ui.dialogSubtitle }}</p>
 
-        <!-- لیست آهنگ‌ها؛ اگه زیاد بود اسکرول می‌شه -->
         <div
           role="radiogroup"
           :aria-labelledby="titleId"
@@ -123,7 +119,6 @@ function apply() {
               {{ s.level === 1 ? ui.easy : ui.medium }}
             </span>
 
-            <!-- تیک انتخاب -->
             <span
               class="grid size-5 shrink-0 place-items-center rounded-full"
               :class="pending === s.id ? 'bg-key-active text-stone-950' : 'border border-stone-600'"
@@ -136,7 +131,6 @@ function apply() {
           </button>
         </div>
 
-        <!-- دکمه‌ها -->
         <div class="mt-8 grid grid-cols-[1fr_1.4fr] gap-3 sm:gap-4">
           <button
             type="button"
