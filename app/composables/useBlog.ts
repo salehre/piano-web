@@ -6,7 +6,6 @@ export interface BlogPost {
   excerpt: string
   tag: string
   image: string
-  /** تاریخ آماده‌ی نمایش (تقویم و ارقام زبان فعلی) */
   dateLabel: string
   readMinutes: number
   content: BlogBlock[]
@@ -18,10 +17,8 @@ interface RawBlock {
   items?: unknown[]
 }
 
-/** مقاله‌های بلاگ به زبان فعلی؛ صفحه‌ها فقط با این کار دارن و با tm/rt درگیر نمی‌شن */
 export function useBlog() {
   const { t, tm, rt, d, locale } = useI18n()
-  // تا پیش از بارگذاری زبان انتخاب‌شده، tm() ممکن است موقتاً متن نداشته باشد.
   const text = (m: unknown) =>
     typeof m === 'string' ? rt(m as Parameters<typeof rt>[0]) : ''
 
@@ -45,7 +42,6 @@ export function useBlog() {
     }
   }
 
-  // به locale وابسته‌ست، پس با عوض شدن زبان دوباره محاسبه می‌شه
   const posts = computed(() => (locale.value ? BLOG_POSTS.map(localize) : []))
   const getPost = (slug: string) => posts.value.find((p) => p.slug === slug)
 

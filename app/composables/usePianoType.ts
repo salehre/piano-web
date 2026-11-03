@@ -1,8 +1,3 @@
-/**
- * نوع پیانوی فعلی: اول از کوئری (?keys=61)، بعد از آخرین انتخاب ذخیره‌شده (کوکی)،
- * و در غیر این صورت پیش‌فرض. کوکی باعث می‌شه توی صفحه‌هایی مثل تنظیمات هم
- * منوی هدر انتخاب قبلی رو نشون بده.
- */
 export const usePianoType = () => {
   const route = useRoute()
   const saved = useCookie<number | undefined>('piano-keys', {

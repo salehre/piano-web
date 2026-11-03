@@ -1,9 +1,7 @@
-/** نواختن پیانو با کیبورد کامپیوتر بر اساس تنظیمات useKeyBindings */
 export const useKeyboardInput = (canPlay: (note: string) => boolean) => {
   const { noteOn, noteOff } = usePiano()
   const { codeToNote } = useKeyBindings()
 
-  // کلیدهای فعلاً فشرده: code → note (تا موقع رها کردن همون نت قطع بشه)
   const pressed = new Map<string, string>()
 
   function isTyping(target: EventTarget | null) {
@@ -12,7 +10,6 @@ export const useKeyboardInput = (canPlay: (note: string) => boolean) => {
   }
 
   function onKeyDown(e: KeyboardEvent) {
-    // وقتی یک دیالوگ (تنظیمات، اندازه‌ی پیانو، ...) بازه، کلیدها پیانو رو نمی‌زنن
     if (document.querySelector('dialog[open]')) return
     if (e.repeat || e.ctrlKey || e.metaKey || e.altKey || isTyping(e.target)) return
     const note = codeToNote.value.get(e.code)

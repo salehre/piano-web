@@ -43,7 +43,6 @@ export function buildKeys(type: PianoType): PianoKey[] {
   return keys
 }
 
-/** مقدار کوئری (?keys=61) رو به یک نوع پیانو تبدیل می‌کنه؛ اگه نامعتبر بود پیش‌فرض رو برمی‌گردونه */
 export function getPianoType(value: unknown): PianoType {
   const raw = Array.isArray(value) ? value[0] : value
   const n = Number(raw)

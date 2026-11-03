@@ -1,5 +1,3 @@
-// متن‌های بخش آهنگ‌ها (دکمه، دیالوگ و کنترل‌های روی فضای مشکی).
-// برای زبانی که اینجا نیست، انگلیسی نشون داده می‌شه.
 const SONG_TEXT = {
   fa: {
     songs: 'آهنگ‌ها',
@@ -58,7 +56,6 @@ export function useSongText() {
   const lang = computed<SongLang>(() => (locale.value in SONG_TEXT ? (locale.value as SongLang) : 'en'))
   const ui = computed(() => SONG_TEXT[lang.value])
 
-  /** عنوان آهنگ به زبان فعلی */
   const titleOf = (s: { title: Record<SongLang, string> }) => s.title[lang.value]
 
   return { ui, titleOf }

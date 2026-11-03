@@ -19,7 +19,6 @@ export const useUiSounds = () => {
     setTheme(prefs.value.theme)
   }
 
-  /** خوندن تنظیمات ذخیره‌شده؛ فقط سمت کلاینت و بعد از mount صدا زده بشه */
   function load() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY)
@@ -32,7 +31,6 @@ export const useUiSounds = () => {
         }
       }
     } catch {
-      // localStorage در دسترس نیست یا خراب بود؛ با پیش‌فرض‌ها ادامه می‌دیم
     }
     apply()
   }
@@ -43,11 +41,9 @@ export const useUiSounds = () => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs.value))
     } catch {
-      // ذخیره نشد؛ مشکلی نیست
     }
   }
 
-  /** پخش یک صدا از کد (سمت سرور هیچ کاری نمی‌کنه) */
   function cue(name?: SoundName, options?: PlayOptions) {
     if (import.meta.client) play(name, options)
   }

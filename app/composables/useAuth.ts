@@ -3,8 +3,6 @@ import type { AuthUser, StoredUser, UserProfile } from '~/utils/auth'
 type Fail = { ok: false; error: MessageRef }
 type Result<T = object> = ({ ok: true } & T) | Fail
 
-// TODO(backend): کد پیامکی و «تأیید شماره» فعلاً غیرفعاله (بک‌اند نداریم).
-// وقتی بک‌اند اومد، کدهای کامنت‌شده‌ی پایین رو برگردون و به API وصل کن.
 // interface PendingOtp {
 //     phone: string
 //     code: string
@@ -17,7 +15,6 @@ type Result<T = object> = ({ ok: true } & T) | Fail
 
 const fail = (error: MessageRef): Fail => ({ ok: false, error })
 
-/** خطای ناشناخته → پیام ترجمه‌شده؛ فقط خطای «اتصال امن» پیام اختصاصی داره */
 const errorRef = (e: unknown, fallback: string): MessageRef =>
     e instanceof Error && e.message === SECURE_CONTEXT_ERROR ? msgRef('auth.errors.secureContext') : msgRef(fallback)
 
@@ -28,18 +25,15 @@ const errorRef = (e: unknown, fallback: string): MessageRef =>
 
 export function useAuth() {
     const session = useSessionCookie()
-    // حرف اول اسم توی کوکی هم نگه داشته می‌شه تا سرور و کلاینت از همون اول یک چیز رندر کنن (بدون پرش آیکون → حرف)
     const initialCookie = useCookie<string>('piano-initial', { sameSite: 'lax', maxAge: 60 * 60 * 24 * 30, default: () => '' })
     const users = useState<StoredUser[]>('auth:users', () => [])
     const ready = useState('auth:ready', () => false)
 
-    // بعد از hydrate لود می‌شه تا خروجی سرور و کلاینت یکی بمونه
     if (import.meta.client && !ready.value) {
         onNuxtReady(() => {
             if (ready.value) return
             users.value = readUsers()
             ready.value = true
-            // کوکی نشستِ قدیمی که کاربرش دیگه وجود نداره
             if (session.value && !user.value) session.value = null
             syncInitial()
         })
@@ -49,7 +43,6 @@ export function useAuth() {
         const found = users.value.find((u) => u.id === session.value)
         return found ? toAuthUser(found) : null
     })
-    // تا قبل از لود شدن کاربران، به کوکی اعتماد می‌کنیم؛ بعدش به وجود واقعی کاربر
     const isLoggedIn = computed(() => (ready.value ? !!user.value : !!session.value))
     const initial = computed(() =>
         ready.value || user.value
@@ -66,14 +59,12 @@ export function useAuth() {
         users.value = next
     }
 
-    /** شماره قبلاً ثبت شده و رمز داره؟ */
     function lookup(rawPhone: string): { hasPassword: boolean } {
         const phone = normalizePhone(rawPhone)
         const found = readUsers().find((u) => u.phone === phone)
         return { hasPassword: !!found?.passwordHash }
     }
 
-    /** ساخت حساب فقط با موبایل + رمز (بدون تأیید پیامکی). کاربر بعدش مستقیم وارد می‌شه. */
     async function register(rawPhone: string, password: string): Promise<Result<{ isNew: boolean }>> {
         const invalidPhone = validatePhone(rawPhone)
         if (invalidPhone) return fail(invalidPhone)
@@ -88,12 +79,11 @@ export function useAuth() {
             const existing = all.find((u) => u.phone === phone)
             let id: string
             if (existing) {
-                // شماره ثبت شده ولی هنوز رمز نداره
                 existing.salt = salt
                 existing.passwordHash = passwordHash
                 id = existing.id
             } else {
-                id = `u${randomHex(8)}` // پیشوند: useCookie مقدارِ فقط‌عددی/علمی رو به number تبدیل می‌کنه
+                id = `u${randomHex(8)}`
                 all.push({ id, phone, salt, passwordHash, createdAt: new Date().toISOString(), profile: createEmptyProfile() })
             }
             save(all)
@@ -106,8 +96,6 @@ export function useAuth() {
         }
     }
 
-    // ---------- غیرفعال تا وقتی بک‌اند بیاد: ارسال کد، تأیید کد، ثبت رمز بعد از تأیید ----------
-    // /** ارسال کد پیامکی. TODO: اینجا باید به سرویس پیامک وصل بشه. */
     // async function requestCode(rawPhone: string): Promise<Result<{ devCode?: string }>> {
     //     const invalid = validatePhone(rawPhone)
     //     if (invalid) return fail(invalid)
@@ -124,7 +112,6 @@ export function useAuth() {
     //     verified = null
 
     //     if (import.meta.dev) console.info(`[auth] verification code for ${phone}: ${code}`)
-    //     // فقط توی حالت توسعه کد برگردونده می‌شه تا بدون پیامک هم بشه تست کرد
     //     return { ok: true, devCode: import.meta.dev ? code : undefined }
     // }
 
@@ -149,7 +136,6 @@ export function useAuth() {
     //     return { ok: true }
     // }
 
-    // /** بعد از تأیید کد: برای کاربر جدید حساب می‌سازه، برای بقیه رمز رو عوض می‌کنه، و واردش می‌کنه */
     // async function setPassword(rawPhone: string, password: string): Promise<Result<{ isNew: boolean }>> {
     //     const phone = normalizePhone(rawPhone)
     //     if (!verified || verified.phone !== phone || Date.now() > verified.until) {

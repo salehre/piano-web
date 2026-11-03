@@ -1,18 +1,8 @@
-/**
- * فیلتر ورودی فرم‌ها: کاراکتر نامجاز همون لحظه‌ی تایپ/paste حذف می‌شه.
- * - phone    : فقط رقم، حداکثر ۱۱ رقم (+98 و 0098 و 98 اول شماره هم به 0 تبدیل می‌شن)
- * - digits   : فقط رقم (کد ملی، سال‌ها و ...)
- * - email    : فقط کاراکترهای انگلیسی ایمیل (حروف فارسی حذف می‌شن)
- * - password : فقط کاراکترهای قابل‌چاپ انگلیسی (بدون فاصله)
- * - name     : فقط حروف (هر زبانی)، فاصله، خط تیره، نقطه و نیم‌فاصله
- * رقم‌های فارسی/عربی خودکار انگلیسی می‌شن (به‌جز توی پسورد).
- */
+
 export type InputFilterKind = 'phone' | 'digits' | 'email' | 'password' | 'name'
 
 interface Rule {
-  /** کاراکترهای مجاز */
   keep: RegExp
-  /** کاراکترهایی که بی‌صدا حذف می‌شن (برای اینها پیام خطا نشون داده نمی‌شه) */
   silent: RegExp
 }
 
@@ -56,7 +46,6 @@ export function applyFilter(
   return { value: kept, rejected }
 }
 
-/** ایمیل معتبر: فقط حروف/اعداد انگلیسی، بدون نقطه‌ی پشت‌سرهم یا اول/آخر بخش اول */
 export function isEmail(value: string): boolean {
   if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}$/.test(value)) return false
   const [local = '', domain = ''] = value.split('@')

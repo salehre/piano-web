@@ -1,19 +1,7 @@
-// آهنگ‌های دامنه‌ی عمومی (public domain) به‌صورت نت‌نویسی فشرده.
-//
-// قالب هر آهنگ: چند «ترک» (دست راست / دست چپ) که هر کدوم یک رشته از توکن‌هاست:
-//   C4:1        نت C4 به مدت ۱ beat
-//   C4+E4+G4:2  آکورد (چند نت هم‌زمان) به مدت ۲ beat
-//   r:1         سکوت ۱ beat
-//   |           فقط برای خوانایی (خط میزان)؛ نادیده گرفته می‌شه
-// فقط دیِز (#) داریم، بمل نداریم. beat = ۶۰۰۰۰ / bpm میلی‌ثانیه.
-
 export type Hand = 'r' | 'l'
-
 export interface SongNote {
   note: string
-  /** شروع نت (میلی‌ثانیه از ابتدای آهنگ) */
   t: number
-  /** طول نت (میلی‌ثانیه) */
   d: number
   hand: Hand
 }
@@ -179,7 +167,6 @@ const jingle = define(
   },
 )
 
-// beat = یک هشتم؛ فقط تم اصلی (دو بار)
 const FUR_ELISE_A = `
   E5:0.5 D#5:0.5 E5:0.5 D#5:0.5 E5:0.5 B4:0.5 D5:0.5 C5:0.5 |
   A4:1 r:0.5 C4:0.5 E4:0.5 A4:0.5 |
@@ -213,7 +200,6 @@ const furElise = define(
   },
 )
 
-// آکوردهای کانن: D A Bm F#m G D G A (هر کدوم ۲ beat)
 const CANON_BASS = 'D3:2 A2:2 B2:2 F#2:2 G2:2 D2:2 G2:2 A2:2'
 const CANON_MELODY = 'F#5:2 E5:2 D5:2 C#5:2 B4:2 A4:2 B4:2 C#5:2'
 const CANON_ARPEGGIO = `

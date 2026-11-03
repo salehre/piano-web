@@ -1,14 +1,12 @@
 import type * as ToneNS from 'tone'
 
-// این‌ها فقط سمت کلاینت ساخته می‌شن (SSR کاری باهاشون نداره)
 let Tone: typeof ToneNS | null = null
 let sampler: ToneNS.Sampler | null = null
 let recorder: ToneNS.Recorder | null = null
 let analyser: ToneNS.Analyser | null = null
 let master: ToneNS.Volume | null = null
-let streamDest: MediaStreamAudioDestinationNode | null = null // خروجی صدای پیانو برای اسکرین‌ریکورد
+let streamDest: MediaStreamAudioDestinationNode | null = null
 
-// ضبط و پخش: رویدادهای نت با زمان (میلی‌ثانیه از شروع ضبط) + فایل صوتی برای دانلود
 interface RecEvent {
   t: number
   note: string
@@ -24,8 +22,6 @@ let raf = 0
 
 const SAMPLE_BASE_URL = '/samples/salamander/'
 
-// نمونه‌صداهای Salamander برای کل ۸۸ کلید: A0 تا C8
-// (Tone.js بقیه‌ی نت‌ها رو از نزدیک‌ترین نمونه می‌سازه)
 function buildSampleUrls(): Record<string, string> {
   const urls: Record<string, string> = { A0: 'A0.mp3' }
   for (let o = 1; o <= 7; o++) {
@@ -38,12 +34,10 @@ function buildSampleUrls(): Record<string, string> {
   return urls
 }
 
-// اسلایدر ۰ تا ۱ به دسی‌بل (مجذور مقدار، تا حس تغییر صدا یکنواخت‌تر باشه)
 function volumeToDb(v: number) {
   return v <= 0.001 ? -100 : Math.max(-100, 40 * Math.log10(v))
 }
 
-// ضبط‌کننده‌ی مرورگر خروجی webm/ogg می‌ده (کانتینر ویدیویی)؛ برای دانلود، صدا رو به WAV تبدیل می‌کنیم
 function encodeWav(buf: AudioBuffer): Blob {
   const ch = buf.numberOfChannels
   const len = buf.length
@@ -58,13 +52,13 @@ function encodeWav(buf: AudioBuffer): Blob {
   view.setUint32(4, 36 + dataSize, true)
   str(8, 'WAVE')
   str(12, 'fmt ')
-  view.setUint32(16, 16, true) // اندازه‌ی بلوک fmt
-  view.setUint16(20, 1, true) // PCM
+  view.setUint32(16, 16, true)
+  view.setUint16(20, 1, true)
   view.setUint16(22, ch, true)
   view.setUint32(24, rate, true)
   view.setUint32(28, rate * ch * 2, true)
   view.setUint16(32, ch * 2, true)
-  view.setUint16(34, 16, true) // ۱۶ بیت
+  view.setUint16(34, 16, true)
   str(36, 'data')
   view.setUint32(40, dataSize, true)
 
@@ -96,11 +90,11 @@ export const usePiano = () => {
 
   const recording = useState('piano-recording', () => false)
   const playing = useState('piano-playing', () => false)
-  const saving = useState('piano-saving', () => false) // بعد از Stop، تا وقتی فایل صوتی آماده بشه
+  const saving = useState('piano-saving', () => false)
   const canDownload = useState('piano-can-download', () => false)
   const recordedCount = useState('piano-recorded-count', () => 0)
   const recordedMs = useState('piano-recorded-ms', () => 0)
-  const timerMs = useState('piano-timer-ms', () => 0) // زمان زنده‌ی ضبط یا پخش
+  const timerMs = useState('piano-timer-ms', () => 0)
 
   const volume = useCookie<number>('piano-volume', { default: () => 0.8, maxAge: 60 * 60 * 24 * 365 })
   function setVolume(v: number) {
@@ -108,7 +102,6 @@ export const usePiano = () => {
     master?.volume.rampTo(volumeToDb(volume.value), 0.05)
   }
 
-  /** باید از داخل یک کلیک/لمس کاربر صدا زده بشه (محدودیت مرورگر برای صدا) */
   async function init() {
     if (status.value === 'ready' || status.value === 'loading') return
     status.value = 'loading'
@@ -118,7 +111,6 @@ export const usePiano = () => {
 
       if (!master) master = new Tone!.Volume(volumeToDb(volume.value)).toDestination()
 
-      // اگه بار قبل لود شکست خورده و کاربر «تلاش دوباره» زده، نمونه‌ی ناقصِ قبلی رو آزاد می‌کنیم
       sampler?.dispose()
       sampler = null
 
@@ -135,10 +127,9 @@ export const usePiano = () => {
       analyser = new Tone!.Analyser({ type: 'fft', size: 1024, smoothing: 0.5 })
       master?.connect(analyser)
 
-      // خروجی پیانو به ضبط‌کننده هم وصل می‌شه (اگه مرورگر پشتیبانی کنه)
       if (Tone!.Recorder.supported) {
         recorder = new Tone!.Recorder()
-        sampler?.connect(recorder)
+        ;(sampler as ToneNS.Sampler | null)?.connect(recorder)
       }
       status.value = 'ready'
     } catch (err) {
@@ -147,7 +138,6 @@ export const usePiano = () => {
     }
   }
 
-  /** velocity بین ۰ تا ۱ — بعداً از MIDI/سخت‌افزار میاد */
   function noteOn(note: string, velocity = 0.8) {
     if (status.value !== 'ready' || !sampler || !Tone) return
     if (active.value.includes(note)) return
@@ -169,7 +159,6 @@ export const usePiano = () => {
     recordedCount.value = recorded.length
   }
 
-  // تایمر زنده: موقع ضبط زمان سپری‌شده، موقع پخش جای فعلی پخش
   function loop() {
     if (recording.value) timerMs.value = performance.now() - recStart
     else if (playing.value) timerMs.value = Math.min(performance.now() - playStart, recordedMs.value)
@@ -188,7 +177,6 @@ export const usePiano = () => {
     audioBlob = null
     canDownload.value = false
     recStart = performance.now()
-    // نت‌هایی که همین الان نگه داشته شدن هم از ثانیه‌ی صفر ثبت می‌شن
     for (const n of active.value) recorded.push({ t: 0, note: n, on: true, velocity: 0.8 })
     recordedCount.value = recorded.length
     recordedMs.value = 0
@@ -205,7 +193,6 @@ export const usePiano = () => {
   async function stopRecording() {
     if (!recording.value) return
     const t = performance.now() - recStart
-    // نت‌هایی که موقع توقف هنوز نگه داشته شدن، توی پخش همین‌جا رها می‌شن
     for (const n of active.value) recorded.push({ t, note: n, on: false, velocity: 0 })
     recordedMs.value = t
     timerMs.value = t
@@ -215,10 +202,8 @@ export const usePiano = () => {
     if (!recorder) return
     saving.value = true
     try {
-      // کمی صبر می‌کنیم تا ته صدای آخرین نت‌ها (release) هم ضبط بشه
       await new Promise((r) => setTimeout(r, 600))
       audioBlob = await recorder.stop()
-      // تبدیل به WAV؛ اگه نشد، همون فایل اصلی مرورگر می‌مونه
       try {
         audioBlob = await toWav(audioBlob)
       } catch (err) {
@@ -265,32 +250,24 @@ export const usePiano = () => {
     canDownload.value = false
   }
 
-  /** ساعت صوتی (ثانیه)؛ نت‌های آهنگ با همین ساعت زمان‌بندی می‌شن تا صدا و تصویر هم‌زمان باشن */
   function getClock(): number {
     return Tone ? Tone.getContext().currentTime : 0
   }
 
-  /**
-   * نواختن یک نت در زمان مشخص (ساعت صوتی)، بدون اینکه کلید «فشرده‌شده» حساب بشه.
-   * برای پخش آهنگ‌ها؛ ستون‌های بالارونده‌ی نواختن کاربر رو فعال نمی‌کنه.
-   */
   function playNoteAt(note: string, duration: number, time: number, velocity = 0.6) {
     if (status.value !== 'ready' || !sampler) return
     sampler.triggerAttackRelease(note, duration, time, velocity)
   }
 
-  /** همه‌ی نت‌هایی که الان در حال پخش هستن رو رها می‌کنه */
   function releaseAll() {
     sampler?.releaseAll()
   }
 
-  /** طیف فرکانسی لحظه‌ای خروجی پیانو (برای نمایشگر) */
   function getSpectrum() {
     if (!analyser || !Tone) return null
     return { data: analyser.getValue() as Float32Array, sampleRate: Tone.getContext().sampleRate }
   }
 
-  /** استریم صدای پیانو (برای قاطی کردن با ویدیوی اسکرین‌ریکورد) */
   function getAudioStream(): MediaStream | null {
     if (!Tone || !master) return null
     if (!streamDest) {

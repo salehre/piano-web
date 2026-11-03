@@ -1,9 +1,3 @@
-/**
- * گزینه‌های سؤال‌های پیشنهاددهنده‌ی پیانو و منطق انتخاب اندازه.
- * اینجا فقط شناسه و منطق هست؛ برچسب گزینه‌ها، دلیل‌ها و نکته‌ها توی i18n/locales/<زبان>/finder.json
- * هستن و recommendPiano فقط ارجاع به پیام (MessageRef) برمی‌گردونه.
- */
-
 export const FINDER_GOALS = ['songs', 'theory', 'chords', 'scales', 'improvise', 'ear', 'record', 'teach', 'fun'] as const
 export type GoalId = (typeof FINDER_GOALS)[number]
 
@@ -25,7 +19,6 @@ export interface FinderAnswers {
     genres: string[]
     input: FinderInput
     instrument: FinderInstrument
-    /** تعداد کلید کیبورد دیجیتال، اگه کاربر بدونه */
     instrumentKeys?: number
 }
 
@@ -36,35 +29,26 @@ export interface FinderTip {
 
 export interface FinderResult {
     type: PianoType
-    /** اندازه‌ی ایده‌آل بر اساس نیاز، وقتی دستگاه ورودی مجبور به کوچک‌تر کردنش کرده */
     ideal: PianoType | null
     reasons: MessageRef[]
     tips: FinderTip[]
 }
 
-// اندیس هر اندازه توی PIANO_TYPES: ۰=۲۵، ۱=۳۷، ۲=۴۹، ۳=۶۱، ۴=۷۶، ۵=۸۸
 const LEVEL_BASE: Record<PianoLevel, number> = {
     never: 1, beginner: 2, lateBeginner: 2, intermediate: 3, advanced: 4, professional: 5,
 }
-/** سقف اندازه برای سطح‌های پایین */
 const LEVEL_CAP: Partial<Record<PianoLevel, number>> = { never: 2, beginner: 2, lateBeginner: 3 }
-// بیشترین اندازه‌ای که هر دستگاه ورودی راحت جواب می‌ده
 const INPUT_CAP: Record<FinderInput, number> = { keyboard: 1, mouse: 5, tablet: 3, phone: 1 }
 const LIGHT_GOALS: GoalId[] = ['chords', 'ear', 'record', 'fun']
 const COMMON_GENRES = ['pop', 'rock', 'folk']
 const RANGE_GOALS: GoalId[] = ['improvise', 'teach', 'scales']
 
-/**
- * از جواب‌ها اندازه‌ی پیانوی مناسب و چند نکته‌ی کاربردی درمیاره.
- * ترتیب: سطح ← سبک ← هدف‌ها ← سقف سطح ← کیبورد خودش ← دستگاه ورودی.
- */
 export function recommendPiano(a: FinderAnswers): FinderResult {
     const last = PIANO_TYPES.length - 1
     const clamp = (n: number) => Math.min(Math.max(n, 0), last)
     let reasons: MessageRef[] = [msgRef(`finder.reasons.level.${a.level}`)]
     let i = LEVEL_BASE[a.level]
 
-    // سبک موسیقی
     if (a.genres.includes('classical')) {
         i = clamp(i + 1)
         reasons.push(msgRef('finder.reasons.genre.classical'))
@@ -73,7 +57,6 @@ export function recommendPiano(a: FinderAnswers): FinderResult {
         reasons.push(msgRef('finder.reasons.genre.fiveOctaves', { genres: a.genres.map((g) => msgRef(`finder.genres.${g}`)) }))
     }
 
-    // هدف‌ها
     const upper = ['intermediate', 'advanced', 'professional'].includes(a.level)
     const rangeGoal = RANGE_GOALS.find((g) => a.goals.includes(g) && (g !== 'scales' || upper))
     if (rangeGoal && i < 3) {
@@ -84,17 +67,15 @@ export function recommendPiano(a: FinderAnswers): FinderResult {
         reasons.push(msgRef('finder.reasons.goal.light'))
     }
 
-    // سطح‌های پایین سقف دارن
     const levelCap = LEVEL_CAP[a.level]
     if (levelCap !== undefined && i > levelCap) {
         i = levelCap
         reasons.push(msgRef(a.level === 'never' ? 'finder.reasons.cap.never' : 'finder.reasons.cap.early'))
     }
 
-    // هم‌اندازه شدن با کیبورد خودش، تا جای انگشت‌ها آشنا باشه
     if (a.instrument === 'acoustic') {
         i = last
-        reasons = [msgRef('finder.reasons.instrument.acoustic')] // جایگزین دلیل‌های قبلی
+        reasons = [msgRef('finder.reasons.instrument.acoustic')]
     } else if (a.instrument === 'digital' && a.instrumentKeys) {
         const idx = PIANO_TYPES.findIndex((t) => t.keys === a.instrumentKeys)
         if (idx >= 0) {
@@ -103,7 +84,6 @@ export function recommendPiano(a: FinderAnswers): FinderResult {
         }
     }
 
-    // دستگاه ورودی (برای ماوس دلیلی لازم نیست)
     const ideal = i
     if (i > INPUT_CAP[a.input]) {
         i = INPUT_CAP[a.input]

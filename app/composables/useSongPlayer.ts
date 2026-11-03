@@ -1,21 +1,16 @@
 import { SONGS, type Song } from '~/utils/songs'
 
-// پخش‌کننده‌ی آهنگ: نت‌ها رو با ساعت صوتی زمان‌بندی می‌کنه (جلوتر از موعد، با یک پنجره‌ی کوچیک)
-// و موقعیت فعلی آهنگ رو برای کشیدن نت‌های در حال سقوط می‌ده.
-
-/** مدتی که قبل از اولین نت صبر می‌کنیم تا نت‌ها از بالا برسن (میلی‌ثانیه) */
 export const SONG_LEAD_IN = 2500
 export const SONG_SPEEDS = [0.5, 0.75, 1] as const
 
-const LOOKAHEAD = 0.25 // چند ثانیه جلوتر نت‌ها رو برای صدا زمان‌بندی می‌کنیم
-const VELOCITY = 0.6 // کمی آروم‌تر از نواختن خود کاربر
+const LOOKAHEAD = 0.25
+const VELOCITY = 0.6
 
-// حالت داخلی (فقط سمت کلاینت)
 let timer: ReturnType<typeof setInterval> | undefined
 let raf = 0
-let anchorClock = 0 // ساعت صوتی (ثانیه) در لحظه‌ی شروع/ادامه
-let anchorPos = 0 // موقعیت آهنگ (میلی‌ثانیه) در همون لحظه
-let nextIndex = 0 // اولین نتی که هنوز زمان‌بندی نشده
+let anchorClock = 0
+let anchorPos = 0
+let nextIndex = 0
 
 export function useSongPlayer() {
   const { getClock, playNoteAt, releaseAll } = usePiano()
@@ -23,12 +18,10 @@ export function useSongPlayer() {
   const songId = useState<string | null>('song-id', () => null)
   const playing = useState('song-playing', () => false)
   const speed = useState<number>('song-speed', () => 1)
-  /** موقعیت آهنگ (میلی‌ثانیه)؛ قبل از شروع منفیه (صبر برای رسیدن نت‌ها) */
   const positionMs = useState('song-position', () => -SONG_LEAD_IN)
 
   const song = computed<Song | null>(() => SONGS.find((s) => s.id === songId.value) ?? null)
 
-  /** موقعیت دقیق همین لحظه؛ نت‌های در حال سقوط هر فریم از همین می‌خونن */
   function getPosition(): number {
     if (!playing.value) return positionMs.value
     return anchorPos + (getClock() - anchorClock) * 1000 * speed.value
@@ -55,7 +48,6 @@ export function useSongPlayer() {
       nextIndex++
     }
 
-    // بعد از آخرین نت (و کمی صبر برای محو شدن صدا) تموم می‌شه
     if (getPosition() > s.durationMs + 700) stop()
   }
 
@@ -98,7 +90,6 @@ export function useSongPlayer() {
     songId.value = id
   }
 
-  /** سرعت فقط وقتی پخش نمی‌شه عوض می‌شه (نت‌های زمان‌بندی‌شده رو نمی‌شه پس گرفت) */
   function setSpeed(v: number) {
     if (playing.value) return
     speed.value = v

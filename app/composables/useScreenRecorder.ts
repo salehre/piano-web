@@ -1,4 +1,3 @@
-// اسکرین‌ریکورد با MediaRecorder + getDisplayMedia (فقط سمت کلاینت)
 let mediaRecorder: MediaRecorder | null = null
 let displayStream: MediaStream | null = null
 let chunks: Blob[] = []
@@ -26,7 +25,6 @@ export const useScreenRecorder = () => {
   const timerMs = useState('screen-timer-ms', () => 0)
   const error = useState<string | null>('screen-error', () => null)
 
-  /** باید بعد از mount صدا زده بشه (SSR به مرورگر دسترسی نداره) */
   function checkSupport() {
     supported.value =
       typeof navigator !== 'undefined' &&
@@ -45,23 +43,17 @@ export const useScreenRecorder = () => {
     displayStream = null
   }
 
-  /**
-   * @param audio استریم صدای پیانو (اختیاری)؛ اگه بدی توی ویدیو هم صدا هست
-   * باید از داخل یک کلیک کاربر صدا زده بشه
-   */
   async function start(audio?: MediaStream | null) {
     if (recording.value || !supported.value) return
     error.value = null
 
     try {
-      // preferCurrentTab فقط یه پیشنهاده (کروم)؛ بقیه مرورگرها نادیده‌ش می‌گیرن
       displayStream = await navigator.mediaDevices.getDisplayMedia({
         video: { frameRate: 30 },
         audio: false,
         preferCurrentTab: true,
       } as DisplayMediaStreamOptions)
     } catch (err) {
-      // کاربر پنجره‌ی انتخاب رو بسته → خطا نیست
       if ((err as DOMException).name !== 'NotAllowedError') {
         console.error(err)
         error.value = 'failed'
@@ -108,7 +100,6 @@ export const useScreenRecorder = () => {
       mediaRecorder = null
     }
 
-    // وقتی کاربر از دکمه‌ی خود مرورگر («Stop sharing») ضبط رو می‌بنده
     displayStream.getVideoTracks()[0]?.addEventListener('ended', () => stop())
 
     recorder.start(1000)
@@ -123,7 +114,6 @@ export const useScreenRecorder = () => {
     else releaseDisplay()
   }
 
-  /** ضبط جاری (اگه هست) قطع و دور ریخته می‌شه — مثلاً موقع خروج از صفحه */
   function abort() {
     discard = true
     stop()

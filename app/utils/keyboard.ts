@@ -1,9 +1,6 @@
 import { PIANO_TYPES, buildKeys } from './pianoTypes'
 
-/** نت پیانو (مثل C4 یا F#3) → کد کلید کیبورد کامپیوتر؛ null یعنی هنوز تنظیم نشده */
 export type KeyBindings = Record<string, string | null>
-
-/** همه‌ی نت‌های ۸۸ کلید: A0 تا C8 */
 export const ALL_NOTES: string[] = buildKeys(PIANO_TYPES.find((t) => t.keys === 88)!).map((k) => k.note)
 
 export interface NoteGroup {
@@ -11,7 +8,6 @@ export interface NoteGroup {
   notes: string[]
 }
 
-/** نت‌ها گروه‌بندی‌شده بر اساس اکتاو (برای صفحه‌ی تنظیمات) */
 export const NOTE_GROUPS = ALL_NOTES.reduce<NoteGroup[]>((groups, note) => {
   const octave = Number(note.slice(-1))
   const last = groups[groups.length - 1]
@@ -20,7 +16,6 @@ export const NOTE_GROUPS = ALL_NOTES.reduce<NoteGroup[]>((groups, note) => {
   return groups
 }, [])
 
-/** کلیدهایی که به‌تنهایی نباید به نت وصل بشن */
 export const MODIFIER_CODES = new Set([
   'ShiftLeft', 'ShiftRight', 'ControlLeft', 'ControlRight',
   'AltLeft', 'AltRight', 'MetaLeft', 'MetaRight', 'CapsLock', 'Tab',
@@ -33,7 +28,6 @@ const SPECIAL_NAMES: Record<string, string> = {
   ArrowLeft: '←', ArrowRight: '→', ArrowUp: '↑', ArrowDown: '↓',
 }
 
-/** KeyA → A ، Digit1 → 1 ، Semicolon → ; */
 export function formatKeyCode(code: string): string {
   if (SPECIAL_NAMES[code]) return SPECIAL_NAMES[code]
   if (code.startsWith('Key')) return code.slice(3)
@@ -56,10 +50,6 @@ export function createDefaultBindings(): KeyBindings {
   return bindings
 }
 
-/**
- * داده‌ی ذخیره‌شده (نسخه‌ی جدید: آبجکت نت → کد) رو به یک KeyBindings سالم تبدیل می‌کنه.
- * نت‌های ناشناخته، کدهای نامعتبر و کدهای تکراری نادیده گرفته می‌شن.
- */
 export function sanitizeBindings(value: unknown): KeyBindings | null {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return null
   const raw = value as Record<string, unknown>
@@ -75,10 +65,6 @@ export function sanitizeBindings(value: unknown): KeyBindings | null {
   return result
 }
 
-/**
- * مهاجرت از فرمت قدیمی (آرایه‌ای از { id, code, note }).
- * اگه چند شورتکات برای یک نت بود، فقط اولی نگه داشته می‌شه.
- */
 export function migrateLegacyBindings(value: unknown): KeyBindings | null {
   if (!Array.isArray(value)) return null
   const result: KeyBindings = Object.fromEntries(ALL_NOTES.map((note) => [note, null]))

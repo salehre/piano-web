@@ -1,23 +1,15 @@
-/**
- * فقط مشخصات ثابت مقاله‌ها اینجاست. عنوان، خلاصه و متن هر مقاله توی i18n/locales/<زبان>/blog.json
- * زیر blog.posts.<id> نوشته می‌شه و با useBlog() خونده می‌شه.
- * برای مقاله‌ی جدید: یه آبجکت به ابتدای این لیست اضافه کن + متنش رو توی blog.json هر دو زبان بنویس.
- */
 export type BlogBlock =
   | { type: 'p'; text: string }
   | { type: 'h2'; text: string }
   | { type: 'ul'; items: string[] }
 
 export interface BlogPostMeta {
-  /** کلید ترجمه (camelCase)؛ توی blog.json زیر blog.posts.<id> */
   id: string
-  /** بخش آدرس مقاله؛ بین زبان‌ها مشترکه */
   slug: string
-  date: string // YYYY-MM-DD
+  date: string
   readMinutes: number
-  /** کلید برچسب توی blog.tags.<tag> */
   tag: 'beginners' | 'guides' | 'tips' | 'practice'
-  image: string // مسیر عکس داخل public
+  image: string
 }
 
 export const BLOG_POSTS: BlogPostMeta[] = [
