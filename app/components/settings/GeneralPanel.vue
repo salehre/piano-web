@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { toast } from 'vue-sonner'
 
 const { t, n } = useI18n()
 const { bindings, setBinding, clearBinding, resetBindings } = useKeyBindings()
@@ -15,8 +16,6 @@ const showResetConfirm = ref(false)
 const search = ref('')
 const filterMode = ref<'all' | 'assigned' | 'unassigned'>('all')
 const collapsed = ref<Record<number, boolean>>({})
-const showToast = ref(false)
-const toastMsg = ref('')
 const searchInput = ref<HTMLInputElement | null>(null)
 
 const totalKeys = NOTE_GROUPS.reduce((sum, g) => sum + g.notes.length, 0)
@@ -90,20 +89,12 @@ function clear(note: string) {
   clearBinding(note)
 }
 
-let toastTimer: ReturnType<typeof setTimeout> | undefined
-function showToastMsg(msg: string) {
-  toastMsg.value = msg
-  showToast.value = true
-  clearTimeout(toastTimer)
-  toastTimer = setTimeout(() => (showToast.value = false), 2600)
-}
-
 function reset() {
   errors.value = {}
   shakeSeed.value = {}
   resetBindings()
   showResetConfirm.value = false
-  showToastMsg(t('settings.shortcuts.resetSuccess'))
+  toast.success(t('settings.shortcuts.resetSuccess'))
 }
 
 // میانبر `/` برای فوکوس سرچ
@@ -393,16 +384,6 @@ onUnmounted(() => window.removeEventListener('keydown', onGlobalKey))
       @confirm="reset"
     />
 
-    <Teleport to="body">
-      <Transition name="toast">
-        <div v-if="showToast" class="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2.5 rounded-2xl border border-emerald-500/20 bg-stone-900/90 py-3 pe-5 ps-4 shadow-2xl shadow-emerald-500/10 backdrop-blur-xl">
-          <span class="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-emerald-500 text-stone-950 animate-toast-check">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><path d="M20 6 9 17l-5-5" /></svg>
-          </span>
-          <p class="whitespace-nowrap text-sm font-medium text-stone-200">{{ toastMsg }}</p>
-        </div>
-      </Transition>
-    </Teleport>
   </section>
 </template>
 
@@ -703,12 +684,6 @@ onUnmounted(() => window.removeEventListener('keydown', onGlobalKey))
   }
 }
 
-@keyframes toast-check {
-  0% { transform: scale(0) rotate(-180deg); }
-  60% { transform: scale(1.2) rotate(10deg); }
-  100% { transform: scale(1) rotate(0deg); }
-}
-
 @keyframes ripple-out {
   to {
     transform: scale(2.5);
@@ -768,9 +743,6 @@ onUnmounted(() => window.removeEventListener('keydown', onGlobalKey))
 .animate-tip-glow {
   animation: rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both, tip-glow 5s ease-in-out 1s infinite;
 }
-.animate-toast-check {
-  animation: toast-check 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-}
 
 /* Ripple button */
 .btn-ripple {
@@ -822,23 +794,6 @@ onUnmounted(() => window.removeEventListener('keydown', onGlobalKey))
   opacity: 0;
   transform: translateY(8px) scale(0.98);
   filter: blur(2px);
-}
-
-.toast-enter-active {
-  transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-.toast-leave-active {
-  transition: all 0.35s ease-in;
-}
-.toast-enter-from {
-  opacity: 0;
-  transform: translate(-50%, 24px) scale(0.9);
-  filter: blur(6px);
-}
-.toast-leave-to {
-  opacity: 0;
-  transform: translate(-50%, 12px) scale(0.95);
-  filter: blur(3px);
 }
 
 input[type='search']::-webkit-search-cancel-button {

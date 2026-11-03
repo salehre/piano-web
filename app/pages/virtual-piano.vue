@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { toast } from 'vue-sonner'
+
 const {
   status, init,
   recording, playing, saving, canDownload, recordedCount, timerMs,
@@ -8,6 +10,7 @@ const {
 const screen = useScreenRecorder()
 onMounted(screen.checkSupport)
 const { t, n } = useI18n()
+const toastText = useToastText()
 const piano = usePianoType()
 const pianoName = computed(() => t(`piano.names.${piano.value.keys}`))
 
@@ -36,6 +39,34 @@ const screenTimer = computed(() => formatTime(screen.timerMs.value))
 
 function startScreen() {
   screen.start(getAudioStream())
+}
+
+// ---------- نوتیف‌ها (sonner) ----------
+// لود شدن صداها
+watch(status, (next, prev) => {
+  if (next === 'ready' && prev === 'loading') toast.success(toastText.value.pianoReady)
+  else if (next === 'error') toast.error(toastText.value.pianoLoadFailed)
+})
+
+// ضبط صدا آماده شد / دانلود
+watch(canDownload, (ready) => {
+  if (ready) toast.success(toastText.value.recordingReady)
+})
+function onDownloadAudio() {
+  downloadRecording()
+  toast.success(toastText.value.audioDownloaded)
+}
+
+// ضبط صفحه: خطا / آماده شد / دانلود
+watch(() => screen.error.value, (err) => {
+  if (err) toast.error(t('piano.screen.failed'))
+})
+watch(() => screen.hasVideo.value, (has) => {
+  if (has) toast.success(toastText.value.screenReady)
+})
+function onDownloadScreen() {
+  screen.download()
+  toast.success(toastText.value.screenDownloaded)
 }
 
 // موقع رفتن به صفحه‌ی دیگه، ضبط و پخش متوقف می‌شه
@@ -183,7 +214,7 @@ useHead({ title: () => t('piano.title', { name: pianoName.value }) })
             :disabled="saving || !canDownload"
             :aria-label="t('piano.recorder.download')"
             :title="t('piano.recorder.downloadShort')"
-            @click="downloadRecording"
+            @click="onDownloadAudio"
         >
           <svg class="size-3.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
             <path d="M10 3v10m0 0-3.5-3.5M10 13l3.5-3.5M4 16h12" stroke-linecap="round" stroke-linejoin="round" />
@@ -239,7 +270,6 @@ useHead({ title: () => t('piano.title', { name: pianoName.value }) })
             {{ screenTimer }}
           </span>
 
-          <span v-if="screen.error.value" class="text-xs text-red-400">{{ t('piano.screen.failed') }}</span>
         </div>
 
         <div v-if="screen.hasVideo.value && !screen.recording.value" class="flex h-14 flex-col gap-1">
@@ -248,7 +278,7 @@ useHead({ title: () => t('piano.title', { name: pianoName.value }) })
               class="grid w-8 flex-1 place-items-center rounded-lg bg-stone-950/40 text-stone-300 transition-colors hover:text-key-active"
               :aria-label="t('piano.screen.download')"
               :title="t('piano.recorder.downloadShort')"
-              @click="screen.download()"
+              @click="onDownloadScreen"
           >
             <svg class="size-3.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
               <path d="M10 3v10m0 0-3.5-3.5M10 13l3.5-3.5M4 16h12" stroke-linecap="round" stroke-linejoin="round" />

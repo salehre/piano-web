@@ -1,0 +1,71 @@
+// متن‌های تازه‌ی نوتیف‌های sonner (بقیه‌ی متن‌ها از i18n/locales می‌آن).
+// برای زبانی که اینجا نیست، انگلیسی نشون داده می‌شه.
+const TOAST_TEXT = {
+  fa: {
+    loggedIn: 'خوش آمدید! با موفقیت وارد شدید.',
+    registered: 'حساب شما ساخته شد. خوش آمدید!',
+    loggedOut: 'از حساب خود خارج شدید.',
+    pianoReady: 'صداهای پیانو آماده است. بنوازید!',
+    pianoLoadFailed: 'بارگذاری صداهای پیانو انجام نشد. اینترنت را بررسی کنید و دوباره امتحان کنید.',
+    recordingReady: 'ضبط آماده است؛ می‌توانید پخش یا دانلودش کنید.',
+    audioDownloaded: 'دانلود ضبط صدا شروع شد.',
+    screenReady: 'ضبط صفحه آماده است.',
+    screenDownloaded: 'دانلود ضبط صفحه شروع شد.',
+    midiConnected: 'دستگاه MIDI وصل شد: {name}',
+    midiDisconnected: 'دستگاه MIDI جدا شد: {name}',
+    offline: 'اینترنت قطع شد؛ ممکن است بعضی بخش‌ها کار نکنند.',
+    online: 'دوباره به اینترنت وصل شدید.',
+  },
+  en: {
+    loggedIn: 'Welcome back! You’re signed in.',
+    registered: 'Account created. Welcome!',
+    loggedOut: 'You’ve been signed out.',
+    pianoReady: 'Piano sounds are ready. Start playing!',
+    pianoLoadFailed: 'Couldn’t load the piano sounds. Check your connection and try again.',
+    recordingReady: 'Your recording is ready to play or download.',
+    audioDownloaded: 'Audio download started.',
+    screenReady: 'Your screen recording is ready.',
+    screenDownloaded: 'Screen recording download started.',
+    midiConnected: 'MIDI device connected: {name}',
+    midiDisconnected: 'MIDI device disconnected: {name}',
+    offline: 'You’re offline. Some features may not work.',
+    online: 'You’re back online.',
+  },
+  fr: {
+    loggedIn: 'Bon retour ! Vous êtes connecté.',
+    registered: 'Compte créé. Bienvenue !',
+    loggedOut: 'Vous avez été déconnecté.',
+    pianoReady: 'Les sons du piano sont prêts. À vous de jouer !',
+    pianoLoadFailed: 'Impossible de charger les sons du piano. Vérifiez votre connexion et réessayez.',
+    recordingReady: 'Votre enregistrement est prêt à être écouté ou téléchargé.',
+    audioDownloaded: 'Téléchargement audio lancé.',
+    screenReady: 'Votre enregistrement d’écran est prêt.',
+    screenDownloaded: 'Téléchargement de l’enregistrement d’écran lancé.',
+    midiConnected: 'Appareil MIDI connecté : {name}',
+    midiDisconnected: 'Appareil MIDI déconnecté : {name}',
+    offline: 'Vous êtes hors ligne. Certaines fonctions peuvent ne pas marcher.',
+    online: 'Vous êtes de nouveau en ligne.',
+  },
+  tr: {
+    loggedIn: 'Tekrar hoş geldin! Giriş yapıldı.',
+    registered: 'Hesap oluşturuldu. Hoş geldin!',
+    loggedOut: 'Çıkış yapıldı.',
+    pianoReady: 'Piyano sesleri hazır. Çalmaya başla!',
+    pianoLoadFailed: 'Piyano sesleri yüklenemedi. Bağlantını kontrol edip tekrar dene.',
+    recordingReady: 'Kaydın oynatmaya veya indirmeye hazır.',
+    audioDownloaded: 'Ses indirmesi başladı.',
+    screenReady: 'Ekran kaydın hazır.',
+    screenDownloaded: 'Ekran kaydı indirmesi başladı.',
+    midiConnected: 'MIDI cihazı bağlandı: {name}',
+    midiDisconnected: 'MIDI cihazının bağlantısı kesildi: {name}',
+    offline: 'Çevrimdışısın. Bazı özellikler çalışmayabilir.',
+    online: 'Tekrar çevrimiçisin.',
+  },
+} as const
+
+type ToastLang = keyof typeof TOAST_TEXT
+
+export function useToastText() {
+  const { locale } = useI18n()
+  return computed(() => TOAST_TEXT[(locale.value in TOAST_TEXT ? locale.value : 'en') as ToastLang])
+}

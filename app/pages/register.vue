@@ -1,8 +1,11 @@
 <script setup lang="ts">
+import { toast } from 'vue-sonner'
+
 definePageMeta({ middleware: 'guest', layout: false })
 const { t, n } = useI18n()
 const tr = useTr()
 const text = useAuthText()
+const toastText = useToastText()
 useHead({ title: () => text.value.registerTitle })
 
 type Field = 'name' | 'phone' | 'password'
@@ -53,6 +56,7 @@ async function submit() {
     }
     // نام همون لحظه توی پروفایل ذخیره می‌شه
     await updateProfile(createEmptyProfile(form.name.trim()))
+    toast.success(toastText.value.registered)
     await navigateTo('/profile')
   } finally {
     submitting.value = false

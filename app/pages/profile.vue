@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { toast } from 'vue-sonner'
 import type { UserProfile } from '~/utils/auth'
 
 definePageMeta({ middleware: 'auth' })
 const { t, n, d, locale } = useI18n()
 const tr = useTr()
+const toastText = useToastText()
 useHead({ title: () => t('nav.profile') })
 
 const { user, ready, updateProfile, logout } = useAuth()
@@ -48,12 +50,7 @@ const showLogoutConfirm = ref(false)
 const loggingOut = ref(false)
 const saving = ref(false)
 const saved = ref(false)
-const formError = ref<MessageRef | null>(null)
-const avatarError = ref<MessageRef | null>(null)
 let initialised = false
-// برای re-trigger انیمیشن خطا
-const formErrorKey = ref(0)
-watch(formError, (v) => { if (v) formErrorKey.value++ })
 
 // فرم یک بار با اطلاعات کاربر پر می‌شه (بعد از mount که کاربر از حافظه لود شد)
 watch(
@@ -141,30 +138,27 @@ async function onAvatarChange(e: Event) {
   const file = input.files?.[0]
   input.value = '' // تا انتخاب دوباره‌ی همون فایل هم change بده
   if (!file) return
-  avatarError.value = null
   if (!file.type.startsWith('image/')) {
-    avatarError.value = msgRef('auth.profile.avatar.notImage')
+    toast.error(tr(msgRef('auth.profile.avatar.notImage')) ?? '')
     return
   }
   if (file.size > AVATAR_MAX_FILE_BYTES) {
-    avatarError.value = msgRef('auth.profile.avatar.tooLarge', { max: AVATAR_MAX_FILE_BYTES / 1024 / 1024 })
+    toast.error(tr(msgRef('auth.profile.avatar.tooLarge', { max: AVATAR_MAX_FILE_BYTES / 1024 / 1024 })) ?? '')
     return
   }
   try {
     form.avatar = await resizeToAvatar(file)
   } catch {
-    avatarError.value = msgRef('auth.profile.avatar.unreadable')
+    toast.error(tr(msgRef('auth.profile.avatar.unreadable')) ?? '')
   }
 }
 
 function removeAvatar() {
   form.avatar = ''
-  avatarError.value = null
 }
 
 async function save() {
   if (saving.value) return
-  formError.value = null
   errors.displayName = validateDisplayName(form.displayName) ?? undefined
   errors.email = validateEmail(form.email) ?? undefined
   errors.nationalId = validateNationalId(form.nationalId) ?? undefined
@@ -176,12 +170,13 @@ async function save() {
   saving.value = false
 
   if (!result.ok) {
-    formError.value = result.error
+    toast.error(tr(result.error) ?? '')
     return
   }
   // فرم با مقدارهای تمیزشده (trim) هماهنگ می‌شه
   Object.assign(form, toForm(toProfile(form)))
   saved.value = true
+  toast.success(t('auth.profile.actions.saved'))
 }
 
 function revert() {
@@ -191,8 +186,6 @@ function revert() {
   errors.email = undefined
   errors.nationalId = undefined
   errors.yearsPlaying = undefined
-  avatarError.value = null
-  formError.value = null
 }
 
 // اول logout (تا کوکی تا وقتی صفحه mount هست پاک بشه)، بعد رفتن به خانه.
@@ -200,6 +193,7 @@ function revert() {
 function onLogout() {
   loggingOut.value = true
   logout()
+  toast.success(toastText.value.loggedOut)
   navigateTo('/')
 }
 </script>
@@ -297,9 +291,6 @@ function onLogout() {
                   <button v-if="form.avatar" type="button" class="text-xs text-stone-400 transition hover:text-key-active" @click="removeAvatar">
                     {{ t('auth.profile.removePhoto') }}
                   </button>
-                  <Transition name="fade-up" mode="out-in">
-                    <p v-if="avatarError" class="text-xs text-red-400" role="alert">{{ tr(avatarError) }}</p>
-                  </Transition>
                 </div>
               </div>
             </div>
@@ -484,20 +475,6 @@ function onLogout() {
                   </button>
                 </Transition>
 
-                <Transition name="fade-up" mode="out-in">
-                  <span v-if="saved" key="saved" class="inline-flex items-center gap-2 text-sm text-key-active" role="status">
-                    <svg class="check-pop size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                      <path d="m5 12 4 4L19 6" />
-                    </svg>
-                    {{ t('auth.profile.actions.saved') }}
-                  </span>
-                </Transition>
-
-                <Transition name="fade-up" mode="out-in">
-                  <span v-if="formError" :key="formErrorKey" class="text-sm text-red-400" role="alert">
-                    {{ tr(formError) }}
-                  </span>
-                </Transition>
               </div>
             </section>
           </form>

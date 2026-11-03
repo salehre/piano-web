@@ -1,8 +1,11 @@
 <script setup lang="ts">
+import { toast } from 'vue-sonner'
+
 definePageMeta({ middleware: 'guest', layout: false })
 const { t, n } = useI18n()
 const tr = useTr()
 const text = useAuthText()
+const toastText = useToastText()
 useHead({ title: () => t('auth.login.steps.password.button') })
 
 type Step = 'credentials'
@@ -38,6 +41,7 @@ async function submitCredentials() {
 
   const result = await login({ phone: form.phone, password: form.password })
   if (!result.ok) return void (error.value = result.error)
+  toast.success(toastText.value.loggedIn)
   await navigateTo(redirectTo.value)
 }
 

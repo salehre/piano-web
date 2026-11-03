@@ -26,6 +26,7 @@ useHead({
   <!-- لینک manifest وب‌اپ (PWA) رو توی head می‌ذاره -->
   <NuxtPwaManifest />
   <UiRotateToast />
+  <UiAppToaster />
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
