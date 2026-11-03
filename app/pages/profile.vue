@@ -5,7 +5,6 @@ import type { UserProfile } from '~/utils/auth'
 definePageMeta({ middleware: 'auth' })
 const { t, n, d, locale } = useI18n()
 const tr = useTr()
-const toastText = useToastText()
 useHead({ title: () => t('nav.profile') })
 
 const { user, ready, updateProfile, logout } = useAuth()
@@ -193,7 +192,7 @@ function revert() {
 function onLogout() {
   loggingOut.value = true
   logout()
-  toast.success(toastText.value.loggedOut)
+  toast.success(t('toast.loggedOut'))
   navigateTo('/')
 }
 </script>

@@ -12,16 +12,13 @@ const props = defineProps<{
   maxlength?: number
   multiline?: boolean
   rows?: number
-  /** برای شماره‌ی موبایل، ایمیل و عدد: متن همیشه چپ‌به‌راست (حتی توی صفحه‌ی فارسی) */
   ltr?: boolean
-  /** فیلتر ورودی: کاراکتر نامجاز همون لحظه حذف می‌شه (جزئیات توی utils/inputFilters.ts) */
   filter?: 'phone' | 'digits' | 'email' | 'password' | 'name'
 }>()
 
 const model = defineModel<string>({ required: true })
 
 const { t } = useI18n()
-const toastText = useToastText()
 const id = useId()
 
 const REJECT_MESSAGE = {
@@ -38,7 +35,6 @@ function applyClean(el: HTMLInputElement) {
   const raw = el.value
   const { value, rejected } = applyFilter(kind, raw, props.maxlength)
   if (value !== raw) {
-    // جای مکان‌نما بعد از حذف کاراکترها حفظ می‌شه
     const caret = el.selectionStart
     el.value = value
     if (caret !== null) {
@@ -46,11 +42,9 @@ function applyClean(el: HTMLInputElement) {
       try {
         el.setSelectionRange(pos, pos)
       } catch {
-        // بعضی نوع‌ها (مثل email) selection ندارن
       }
     }
-    // با id ثابت، تکرار تایپ کاراکتر اشتباه توست‌های پشت‌سرهم نمی‌سازه
-    if (rejected) toast.error(toastText.value[REJECT_MESSAGE[kind]], { id: `filter-${id}`, duration: 2500 })
+    if (rejected) toast.error(t(`toast.${REJECT_MESSAGE[kind]}`), { id: `filter-${id}`, duration: 2500 })
   }
   model.value = value
 }

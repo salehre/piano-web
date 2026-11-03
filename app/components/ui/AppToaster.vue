@@ -6,7 +6,6 @@ import 'vue-sonner/style.css'
 // رویدادهای عمومی (MIDI، آنلاین/آفلاین) هم همین‌جا گوش داده می‌شن تا به هیچ صفحه‌ای وابسته نباشن.
 const { t, localeProperties } = useI18n()
 const { isLight } = useTheme()
-const text = useToastText()
 const { status, devices } = useMidi()
 
 // ---------- MIDI: وصل و جدا شدن دستگاه ----------
@@ -16,10 +15,10 @@ const deviceName = (name: string) => name || t('settings.midi.unknownDevice')
 watch(devices, (list) => {
   const current = new Map(list.filter((d) => d.connected).map((d) => [d.id, deviceName(d.name)]))
   for (const [id, name] of current) {
-    if (!knownDevices.has(id)) toast.success(text.value.midiConnected.replace('{name}', name), { id: `midi-${id}` })
+    if (!knownDevices.has(id)) toast.success(t('toast.midiConnected', { name }), { id: `midi-${id}` })
   }
   for (const [id, name] of knownDevices) {
-    if (!current.has(id)) toast.info(text.value.midiDisconnected.replace('{name}', name), { id: `midi-${id}` })
+    if (!current.has(id)) toast.info(t('toast.midiDisconnected', { name }), { id: `midi-${id}` })
   }
   knownDevices.clear()
   current.forEach((name, id) => knownDevices.set(id, name))
@@ -34,10 +33,10 @@ watch(status, (next, prev) => {
 
 // ---------- اینترنت ----------
 function onOffline() {
-  toast.error(text.value.offline, { id: 'network', duration: Infinity })
+  toast.error(t('toast.offline'), { id: 'network', duration: Infinity })
 }
 function onOnline() {
-  toast.success(text.value.online, { id: 'network', duration: 3000 })
+  toast.success(t('toast.online'), { id: 'network', duration: 3000 })
 }
 onMounted(() => {
   window.addEventListener('offline', onOffline)

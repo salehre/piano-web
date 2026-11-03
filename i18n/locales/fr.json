@@ -718,5 +718,23 @@
       "title": "Général",
       "description": "Choisissez la touche de l'ordinateur qui joue chaque note du piano."
     }
+  },
+  "toast": {
+  "loggedIn": "Bon retour ! Vous êtes connecté.",
+  "registered": "Compte créé. Bienvenue !",
+  "loggedOut": "Vous avez été déconnecté.",
+  "pianoReady": "Les sons du piano sont prêts. À vous de jouer !",
+  "pianoLoadFailed": "Impossible de charger les sons du piano. Vérifiez votre connexion et réessayez.",
+  "recordingReady": "Votre enregistrement est prêt à être écouté ou téléchargé.",
+  "audioDownloaded": "Téléchargement audio lancé.",
+  "screenReady": "Votre enregistrement d’écran est prêt.",
+  "screenDownloaded": "Téléchargement de l’enregistrement d’écran lancé.",
+  "midiConnected": "Appareil MIDI connecté : {name}",
+  "midiDisconnected": "Appareil MIDI déconnecté : {name}",
+  "offline": "Vous êtes hors ligne. Certaines fonctions peuvent ne pas marcher.",
+  "online": "Vous êtes de nouveau en ligne.",
+  "onlyDigits": "Chiffres uniquement.",
+  "onlyEnglish": "Utilisez uniquement des lettres et chiffres latins.",
+  "onlyLetters": "Le nom ne peut contenir que des lettres."
   }
 }

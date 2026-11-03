@@ -718,5 +718,23 @@
       "title": "General",
       "description": "Choose which computer key plays each piano note."
     }
+  },
+  "toast": {
+  "loggedIn": "Welcome back! You’re signed in.",
+  "registered": "Account created. Welcome!",
+  "loggedOut": "You’ve been signed out.",
+  "pianoReady": "Piano sounds are ready. Start playing!",
+  "pianoLoadFailed": "Couldn’t load the piano sounds. Check your connection and try again.",
+  "recordingReady": "Your recording is ready to play or download.",
+  "audioDownloaded": "Audio download started.",
+  "screenReady": "Your screen recording is ready.",
+  "screenDownloaded": "Screen recording download started.",
+  "midiConnected": "MIDI device connected: {name}",
+  "midiDisconnected": "MIDI device disconnected: {name}",
+  "offline": "You’re offline. Some features may not work.",
+  "online": "You’re back online.",
+  "onlyDigits": "Digits only, please.",
+  "onlyEnglish": "Please use English letters and digits only.",
+  "onlyLetters": "Names can only contain letters."
   }
 }

@@ -2,7 +2,6 @@
 import { toast } from 'vue-sonner'
 
 const { t, n } = useI18n()
-const toastText = useToastText()
 const STORAGE_KEY = 'web-piano-club-emails'
 
 const socials = [
@@ -54,7 +53,7 @@ function onEmailInput(e: Event) {
   const { value, rejected } = applyFilter('email', el.value, EMAIL_MAX)
   if (value !== el.value) {
     el.value = value
-    if (rejected) toast.error(toastText.value.onlyEnglish, { id: 'filter-club-email', duration: 2500 })
+    if (rejected) toast.error(t('toast.onlyEnglish'), { id: 'filter-club-email', duration: 2500 })
   }
   email.value = value
 }

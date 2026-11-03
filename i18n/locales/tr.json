@@ -718,5 +718,23 @@
       "title": "Genel",
       "description": "Her piyano notasını hangi bilgisayar tuşunun çalacağını seçin."
     }
+  },
+  "toast": {
+  "loggedIn": "Tekrar hoş geldin! Giriş yapıldı.",
+  "registered": "Hesap oluşturuldu. Hoş geldin!",
+  "loggedOut": "Çıkış yapıldı.",
+  "pianoReady": "Piyano sesleri hazır. Çalmaya başla!",
+  "pianoLoadFailed": "Piyano sesleri yüklenemedi. Bağlantını kontrol edip tekrar dene.",
+  "recordingReady": "Kaydın oynatmaya veya indirmeye hazır.",
+  "audioDownloaded": "Ses indirmesi başladı.",
+  "screenReady": "Ekran kaydın hazır.",
+  "screenDownloaded": "Ekran kaydı indirmesi başladı.",
+  "midiConnected": "MIDI cihazı bağlandı: {name}",
+  "midiDisconnected": "MIDI cihazının bağlantısı kesildi: {name}",
+  "offline": "Çevrimdışısın. Bazı özellikler çalışmayabilir.",
+  "online": "Tekrar çevrimiçisin.",
+  "onlyDigits": "Yalnızca rakam girin.",
+  "onlyEnglish": "Yalnızca İngilizce harf ve rakam kullanın.",
+  "onlyLetters": "İsim yalnızca harf içerebilir."
   }
 }

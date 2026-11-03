@@ -10,7 +10,6 @@ const {
 const screen = useScreenRecorder()
 onMounted(screen.checkSupport)
 const { t, n } = useI18n()
-const toastText = useToastText()
 const piano = usePianoType()
 const pianoName = computed(() => t(`piano.names.${piano.value.keys}`))
 
@@ -44,17 +43,17 @@ function startScreen() {
 // ---------- نوتیف‌ها (sonner) ----------
 // لود شدن صداها
 watch(status, (next, prev) => {
-  if (next === 'ready' && prev === 'loading') toast.success(toastText.value.pianoReady)
-  else if (next === 'error') toast.error(toastText.value.pianoLoadFailed)
+  if (next === 'ready' && prev === 'loading') toast.success(t('toast.pianoReady'))
+  else if (next === 'error') toast.error(t('toast.pianoLoadFailed'))
 })
 
 // ضبط صدا آماده شد / دانلود
 watch(canDownload, (ready) => {
-  if (ready) toast.success(toastText.value.recordingReady)
+  if (ready) toast.success(t('toast.recordingReady'))
 })
 function onDownloadAudio() {
   downloadRecording()
-  toast.success(toastText.value.audioDownloaded)
+  toast.success(t('toast.audioDownloaded'))
 }
 
 // ضبط صفحه: خطا / آماده شد / دانلود
@@ -62,11 +61,11 @@ watch(() => screen.error.value, (err) => {
   if (err) toast.error(t('piano.screen.failed'))
 })
 watch(() => screen.hasVideo.value, (has) => {
-  if (has) toast.success(toastText.value.screenReady)
+  if (has) toast.success(t('toast.screenReady'))
 })
 function onDownloadScreen() {
   screen.download()
-  toast.success(toastText.value.screenDownloaded)
+  toast.success(t('toast.screenDownloaded'))
 }
 
 // موقع رفتن به صفحه‌ی دیگه، ضبط و پخش متوقف می‌شه
