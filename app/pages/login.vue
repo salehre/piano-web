@@ -4,7 +4,6 @@ import { toast } from 'vue-sonner'
 definePageMeta({ middleware: 'guest', layout: false })
 const { t, n } = useI18n()
 const tr = useTr()
-const text = useAuthText()
 useHead({ title: () => t('auth.login.steps.password.button') })
 
 type Step = 'credentials'
@@ -25,11 +24,13 @@ function focusFirst() {
   formEl.value?.querySelector('input')?.focus()
 }
 
+// لینک «ساخت حساب» redirect اولیه رو حفظ می‌کنه
 const registerTo = computed(() => ({
   path: '/register',
   query: route.query.redirect ? { redirect: route.query.redirect as string } : undefined,
 }))
 
+// ---------- ورود ----------
 async function submitCredentials() {
   const invalid = validatePhone(form.phone)
   if (invalid) return void (error.value = invalid)
@@ -66,7 +67,7 @@ watch(
 
 const copy = computed(() => ({
   title: t('auth.login.steps.password.title'),
-  hint: text.value.loginHint,
+  hint: t('auth.login.hint'),
   button: t('auth.login.steps.password.button'),
 }))
 </script>
@@ -108,16 +109,17 @@ const copy = computed(() => ({
         {{ submitting ? t('ui.pleaseWait') : copy.button }}
       </button>
 
+      <!-- یا: ساخت حساب جدید -->
       <div class="flex items-center gap-3 text-xs text-stone-500" aria-hidden="true">
         <span class="h-px flex-1 bg-stone-800" />
-        {{ text.or }}
+        {{ t('auth.login.or') }}
         <span class="h-px flex-1 bg-stone-800" />
       </div>
       <NuxtLink
           :to="registerTo"
           class="block w-full rounded-lg border border-stone-700 px-5 py-3 text-center text-sm font-medium transition-colors hover:bg-stone-800/60"
       >
-        {{ text.createAccount }}
+        {{ t('auth.login.createAccount') }}
       </NuxtLink>
     </form>
   </AuthShell>

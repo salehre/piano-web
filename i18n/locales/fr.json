@@ -37,7 +37,17 @@
       "codeLabel": "Code de vérification",
       "resendIn": "Renvoyer le code dans {seconds} s",
       "resend": "Renvoyer le code",
-      "differentNumber": "Utiliser un autre numéro"
+      "differentNumber": "Utiliser un autre numéro",
+      "hint": "Connectez-vous avec votre numéro de mobile et votre mot de passe.",
+      "or": "ou",
+      "createAccount": "Créer un compte"
+    },
+    "register": {
+      "title": "Créer un compte",
+      "hint": "Rejoignez Web Piano",
+      "button": "S’inscrire",
+      "backToLogin": "Retour à la connexion",
+      "phoneTaken": "Ce numéro est déjà inscrit. Connectez-vous."
     },
     "profile": {
       "loading": "Chargement de votre profil…",
@@ -720,21 +730,33 @@
     }
   },
   "toast": {
-  "loggedIn": "Bon retour ! Vous êtes connecté.",
-  "registered": "Compte créé. Bienvenue !",
-  "loggedOut": "Vous avez été déconnecté.",
-  "pianoReady": "Les sons du piano sont prêts. À vous de jouer !",
-  "pianoLoadFailed": "Impossible de charger les sons du piano. Vérifiez votre connexion et réessayez.",
-  "recordingReady": "Votre enregistrement est prêt à être écouté ou téléchargé.",
-  "audioDownloaded": "Téléchargement audio lancé.",
-  "screenReady": "Votre enregistrement d’écran est prêt.",
-  "screenDownloaded": "Téléchargement de l’enregistrement d’écran lancé.",
-  "midiConnected": "Appareil MIDI connecté : {name}",
-  "midiDisconnected": "Appareil MIDI déconnecté : {name}",
-  "offline": "Vous êtes hors ligne. Certaines fonctions peuvent ne pas marcher.",
-  "online": "Vous êtes de nouveau en ligne.",
-  "onlyDigits": "Chiffres uniquement.",
-  "onlyEnglish": "Utilisez uniquement des lettres et chiffres latins.",
-  "onlyLetters": "Le nom ne peut contenir que des lettres."
+    "loggedIn": "Bon retour ! Vous êtes connecté.",
+    "registered": "Compte créé. Bienvenue !",
+    "loggedOut": "Vous avez été déconnecté.",
+    "pianoReady": "Les sons du piano sont prêts. À vous de jouer !",
+    "pianoLoadFailed": "Impossible de charger les sons du piano. Vérifiez votre connexion et réessayez.",
+    "recordingReady": "Votre enregistrement est prêt à être écouté ou téléchargé.",
+    "audioDownloaded": "Téléchargement audio lancé.",
+    "screenReady": "Votre enregistrement d’écran est prêt.",
+    "screenDownloaded": "Téléchargement de l’enregistrement d’écran lancé.",
+    "midiConnected": "Appareil MIDI connecté : {name}",
+    "midiDisconnected": "Appareil MIDI déconnecté : {name}",
+    "offline": "Vous êtes hors ligne. Certaines fonctions peuvent ne pas marcher.",
+    "online": "Vous êtes de nouveau en ligne.",
+    "onlyDigits": "Chiffres uniquement.",
+    "onlyEnglish": "Utilisez uniquement des lettres et chiffres latins.",
+    "onlyLetters": "Le nom ne peut contenir que des lettres."
+  },
+  "songs": {
+    "button": "Morceaux",
+    "play": "Lecture",
+    "pause": "Pause",
+    "stop": "Arrêter",
+    "speed": "Vitesse",
+    "easy": "Facile",
+    "medium": "Moyen",
+    "dialogTitle": "Choisir un morceau",
+    "dialogSubtitle": "Choisissez un morceau : il joue et les notes tombent d’en haut, jouez avec",
+    "playNow": "Lire"
   }
 }

@@ -4,8 +4,7 @@ import { toast } from 'vue-sonner'
 definePageMeta({ middleware: 'guest', layout: false })
 const { t, n } = useI18n()
 const tr = useTr()
-const text = useAuthText()
-useHead({ title: () => text.value.registerTitle })
+useHead({ title: () => t('auth.register.title') })
 
 type Field = 'name' | 'phone' | 'password'
 
@@ -20,7 +19,7 @@ const formEl = ref<HTMLFormElement>()
 function errorText(field: Field): string {
   const e = errors.value[field]
   if (!e) return ''
-  return e === 'taken' ? text.value.phoneTaken : (tr(e) ?? '')
+  return e === 'taken' ? t('auth.register.phoneTaken') : (tr(e) ?? '')
 }
 
 const loginTo = computed(() => ({
@@ -53,6 +52,7 @@ async function submit() {
       errors.value = { password: result.error }
       return
     }
+    // نام همون لحظه توی پروفایل ذخیره می‌شه
     await updateProfile(createEmptyProfile(form.name.trim()))
     toast.success(t('toast.registered'))
     await navigateTo('/profile')
@@ -61,13 +61,14 @@ async function submit() {
   }
 }
 
+// تایپ‌کردن توی هر فیلد، خطای همون فیلد رو پاک می‌کنه
 watch(() => form.name, () => delete errors.value.name)
 watch(() => form.phone, () => delete errors.value.phone)
 watch(() => form.password, () => delete errors.value.password)
 </script>
 
 <template>
-  <AuthShell :title="text.registerTitle" :hint="text.registerHint">
+  <AuthShell :title="t('auth.register.title')" :hint="t('auth.register.hint')">
     <form ref="formEl" class="mt-7 space-y-5" novalidate @submit.prevent="submit">
       <UiTextField
           v-model="form.name"
@@ -104,12 +105,12 @@ watch(() => form.password, () => delete errors.value.password)
           class="w-full rounded-lg bg-key-active px-5 py-3 font-medium text-stone-950 transition-opacity hover:opacity-90 disabled:opacity-60"
           :disabled="submitting"
       >
-        {{ submitting ? t('ui.pleaseWait') : text.registerButton }}
+        {{ submitting ? t('ui.pleaseWait') : t('auth.register.button') }}
       </button>
 
       <div class="border-t border-stone-800 pt-5 text-center">
         <NuxtLink :to="loginTo" class="text-sm text-stone-400 transition-colors hover:text-key-active">
-          {{ text.backToLogin }}
+          {{ t('auth.register.backToLogin') }}
         </NuxtLink>
       </div>
     </form>

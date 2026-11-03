@@ -1,11 +1,12 @@
 <script setup lang="ts">
 const { t } = useI18n()
-const { ui, titleOf } = useSongText()
+const { titleOf } = useSongText()
 const { songs, songId, select, play } = useSongPlayer()
 const { cue } = useUiSounds()
 
 const dialog = ref<HTMLDialogElement | null>(null)
 const open = ref(false)
+// انتخابِ موقت داخل دیالوگ؛ تا زدن «پخش» روی صفحه اثری نداره
 const pending = ref<string | null>(songId.value)
 const titleId = useId()
 const descId = useId()
@@ -21,6 +22,7 @@ function closeDialog() {
   if (dialog.value?.open) dialog.value.close()
 }
 
+// Esc، دکمه‌ی انصراف، ضربدر و پخش، همه از همین‌جا رد می‌شن
 function onNativeClose() {
   open.value = false
 }
@@ -56,7 +58,7 @@ function apply() {
       <svg class="size-4 text-stone-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
         <path d="M8 3v9.3A3 3 0 1 0 10 15V6.6l6-1.5V10a3 3 0 1 0 2 2.8V2z" />
       </svg>
-      {{ ui.songs }}
+      {{ t('songs.button') }}
     </button>
 
     <dialog
@@ -69,6 +71,7 @@ function apply() {
       @click="onBackdropClick"
     >
       <div class="relative p-6 sm:p-8">
+        <!-- بستن -->
         <button
           type="button"
           class="absolute inset-e-4 top-4 grid size-8 place-items-center rounded-lg text-stone-400 transition-colors hover:text-key-active"
@@ -81,9 +84,10 @@ function apply() {
           </svg>
         </button>
 
-        <h2 :id="titleId" class="pe-10 text-xl font-semibold">{{ ui.dialogTitle }}</h2>
-        <p :id="descId" class="mt-2 text-sm text-stone-400">{{ ui.dialogSubtitle }}</p>
+        <h2 :id="titleId" class="pe-10 text-xl font-semibold">{{ t('songs.dialogTitle') }}</h2>
+        <p :id="descId" class="mt-2 text-sm text-stone-400">{{ t('songs.dialogSubtitle') }}</p>
 
+        <!-- لیست آهنگ‌ها؛ اگه زیاد بود اسکرول می‌شه -->
         <div
           role="radiogroup"
           :aria-labelledby="titleId"
@@ -116,9 +120,10 @@ function apply() {
             </span>
 
             <span class="shrink-0 rounded-md border border-stone-700/60 px-2 py-0.5 text-[11px] text-stone-300">
-              {{ s.level === 1 ? ui.easy : ui.medium }}
+              {{ s.level === 1 ? t('songs.easy') : t('songs.medium') }}
             </span>
 
+            <!-- تیک انتخاب -->
             <span
               class="grid size-5 shrink-0 place-items-center rounded-full"
               :class="pending === s.id ? 'bg-key-active text-stone-950' : 'border border-stone-600'"
@@ -131,6 +136,7 @@ function apply() {
           </button>
         </div>
 
+        <!-- دکمه‌ها -->
         <div class="mt-8 grid grid-cols-[1fr_1.4fr] gap-3 sm:gap-4">
           <button
             type="button"
@@ -148,7 +154,7 @@ function apply() {
             data-cuelume-emphasis="strong"
             @click="apply"
           >
-            {{ ui.playNow }}
+            {{ t('songs.playNow') }}
           </button>
         </div>
       </div>

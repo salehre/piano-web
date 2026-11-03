@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { SONG_SPEEDS } from '~/composables/useSongPlayer'
 
-const { ui, titleOf } = useSongText()
+const { t } = useI18n()
+const { titleOf } = useSongText()
 const { song, playing, speed, positionMs, play, pause, stop, setSpeed } = useSongPlayer()
 
 const progress = computed(() => {
@@ -9,13 +10,17 @@ const progress = computed(() => {
   if (!s) return 0
   return Math.min(1, Math.max(0, positionMs.value / s.durationMs))
 })
+// قبل از اولین نت (صبر برای رسیدن نت‌ها) نوار کم‌رنگه
 const waiting = computed(() => playing.value && positionMs.value < 0)
 
 onBeforeUnmount(stop)
 </script>
 
 <template>
+  <!-- فقط وقتی آهنگ انتخاب شده -->
+  <!-- mousedown.prevent: دکمه‌ها فوکوس نمی‌گیرن و کلیدهای کیبورد همچنان پیانو رو می‌زنن -->
   <div v-if="song" class="absolute inset-x-0 top-0 z-10 text-neutral-100" @mousedown.prevent>
+    <!-- نوار پیشرفت -->
     <div class="h-0.5 w-full bg-white/10">
       <div
           class="h-full bg-teal-300 transition-[width] duration-100 ease-linear"
@@ -32,8 +37,8 @@ onBeforeUnmount(stop)
       <button
           type="button"
           class="grid size-8 place-items-center rounded-full bg-teal-300 text-neutral-950 transition-colors hover:bg-teal-200"
-          :aria-label="playing ? ui.pause : ui.play"
-          :title="playing ? ui.pause : ui.play"
+          :aria-label="playing ? t('songs.pause') : t('songs.play')"
+          :title="playing ? t('songs.pause') : t('songs.play')"
           @click="playing ? pause() : play()"
       >
         <svg class="size-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -45,14 +50,15 @@ onBeforeUnmount(stop)
       <button
           type="button"
           class="grid size-8 place-items-center rounded-full bg-white/10 transition-colors hover:bg-white/20"
-          :aria-label="ui.stop"
-          :title="ui.stop"
+          :aria-label="t('songs.stop')"
+          :title="t('songs.stop')"
           @click="stop"
       >
         <span class="size-3 rounded-sm bg-neutral-100" />
       </button>
 
-      <div dir="ltr" class="flex items-center overflow-hidden rounded-lg bg-white/10 ring-1 ring-white/10" :title="ui.speed">
+      <!-- سرعت؛ فقط وقتی پخش نمی‌شه قابل تغییره -->
+      <div dir="ltr" class="flex items-center overflow-hidden rounded-lg bg-white/10 ring-1 ring-white/10" :title="t('songs.speed')">
         <button
             v-for="v in SONG_SPEEDS"
             :key="v"

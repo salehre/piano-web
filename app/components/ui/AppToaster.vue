@@ -7,12 +7,6 @@ import 'vue-sonner/style.css'
 const { t, localeProperties } = useI18n()
 const { isLight } = useTheme()
 const { status, devices } = useMidi()
-const isMobileLayout = ref(false)
-let mobileLayoutQuery: MediaQueryList | undefined
-
-function onMobileLayoutChange(event: MediaQueryListEvent) {
-  isMobileLayout.value = event.matches
-}
 
 // ---------- MIDI: وصل و جدا شدن دستگاه ----------
 const knownDevices = new Map<string, string>()
@@ -45,14 +39,10 @@ function onOnline() {
   toast.success(t('toast.online'), { id: 'network', duration: 3000 })
 }
 onMounted(() => {
-  mobileLayoutQuery = window.matchMedia('(max-width: 1023px)')
-  isMobileLayout.value = mobileLayoutQuery.matches
-  mobileLayoutQuery.addEventListener('change', onMobileLayoutChange)
   window.addEventListener('offline', onOffline)
   window.addEventListener('online', onOnline)
 })
 onBeforeUnmount(() => {
-  mobileLayoutQuery?.removeEventListener('change', onMobileLayoutChange)
   window.removeEventListener('offline', onOffline)
   window.removeEventListener('online', onOnline)
 })
@@ -63,9 +53,7 @@ onBeforeUnmount(() => {
     <Toaster
       :theme="isLight ? 'light' : 'dark'"
       :dir="localeProperties.dir ?? 'ltr'"
-      :position="isMobileLayout ? 'bottom-center' : localeProperties.dir === 'rtl' ? 'bottom-left' : 'bottom-right'"
-      :offset="{ bottom: isMobileLayout ? 'calc(5.5rem + env(safe-area-inset-bottom, 0px))' : '24px' }"
-      :mobile-offset="{ bottom: '5.5rem' }"
+      :position="localeProperties.dir === 'rtl' ? 'bottom-left' : 'bottom-right'"
       :duration="3500"
       :visible-toasts="3"
       :toast-options="{ class: 'piano-toast' }"

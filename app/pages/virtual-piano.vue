@@ -13,6 +13,7 @@ const { t, n } = useI18n()
 const piano = usePianoType()
 const pianoName = computed(() => t(`piano.names.${piano.value.keys}`))
 
+// آیکون بلندگو: قطع و وصل کردن صدا
 let lastVolume = 0.8
 function toggleMute() {
   if (volume.value > 0) {
@@ -23,6 +24,7 @@ function toggleMute() {
   }
 }
 
+// تایمر به‌صورت دقیقه:ثانیه.صدم‌ثانیه
 function formatTime(ms: number) {
   const cs = Math.floor(ms / 10)
   const m = Math.floor(cs / 6000)
@@ -38,11 +40,14 @@ function startScreen() {
   screen.start(getAudioStream())
 }
 
+// ---------- نوتیف‌ها (sonner) ----------
+// لود شدن صداها
 watch(status, (next, prev) => {
   if (next === 'ready' && prev === 'loading') toast.success(t('toast.pianoReady'))
   else if (next === 'error') toast.error(t('toast.pianoLoadFailed'))
 })
 
+// ضبط صدا آماده شد / دانلود
 watch(canDownload, (ready) => {
   if (ready) toast.success(t('toast.recordingReady'))
 })
@@ -51,6 +56,7 @@ function onDownloadAudio() {
   toast.success(t('toast.audioDownloaded'))
 }
 
+// ضبط صفحه: خطا / آماده شد / دانلود
 watch(() => screen.error.value, (err) => {
   if (err) toast.error(t('piano.screen.failed'))
 })
@@ -62,6 +68,7 @@ function onDownloadScreen() {
   toast.success(t('toast.screenDownloaded'))
 }
 
+// موقع رفتن به صفحه‌ی دیگه، ضبط و پخش متوقف می‌شه
 onBeforeUnmount(() => {
   screen.abort()
   stopRecording()
@@ -82,8 +89,10 @@ useHead({ title: () => t('piano.title', { name: pianoName.value }) })
       <div class="flex flex-wrap items-center gap-3">
         <LayoutPianoSizeMenu />
 
+        <!-- آهنگ‌ها: کنار سایز پیانو؛ فقط وقتی صداها لود شدن -->
         <LayoutSongsMenu v-if="status === 'ready'" />
 
+        <!-- نوار صدا همیشه چپ‌به‌راست (کم‌صدا → پرصدا) -->
         <div v-if="status === 'ready'" dir="ltr" class="flex items-center gap-2">
           <button
               type="button"
@@ -138,14 +147,18 @@ useHead({ title: () => t('piano.title', { name: pianoName.value }) })
       </div>
     </section>
 
+    <!-- کیبورد پیانو توی صفحه‌ی راست‌به‌چپ هم باید چپ‌به‌راست بمونه (بم ← زیر) -->
+    <!-- flex-1: فضای خالیِ صفحه رو فضای مشکیِ بالای پیانو می‌گیره و پیانو می‌آد پایین -->
     <div dir="ltr" class="flex flex-1 flex-col">
       <ClientOnly>
         <PianoKeyboard :type="piano" />
       </ClientOnly>
     </div>
 
+    <!-- ضبط‌کننده: زیر پیانو -->
     <section v-if="status === 'ready'" dir="ltr" class="mr-auto flex w-fit flex-wrap items-stretch gap-2">
       <div class="glass-card relative flex h-14 items-center gap-2.5 rounded-2xl px-2.5 [--glass-radius:0.95rem]">
+        <!-- ضبط -->
         <button
             type="button"
             class="grid size-9 shrink-0 place-items-center rounded-full bg-stone-800/70 transition-colors hover:bg-stone-800 disabled:opacity-40"
@@ -156,6 +169,7 @@ useHead({ title: () => t('piano.title', { name: pianoName.value }) })
           <span class="size-3 rounded-full bg-red-400" :class="recording ? 'animate-pulse' : ''" />
         </button>
 
+        <!-- موقع ضبط: توقف؛ بعد از توقف: پخش -->
         <button
             v-if="recording"
             type="button"
@@ -179,6 +193,7 @@ useHead({ title: () => t('piano.title', { name: pianoName.value }) })
           </svg>
         </button>
 
+        <!-- تایمر -->
         <span
             class="font-mono text-sm tabular-nums"
             :class="recording ? 'text-red-400' : playing ? 'text-key-active' : recordedCount > 0 ? 'text-stone-200' : 'text-stone-500'"
@@ -186,9 +201,11 @@ useHead({ title: () => t('piano.title', { name: pianoName.value }) })
           {{ timer }}
         </span>
 
+        <!-- نمایشگر طیف صدا -->
         <PianoVisualizer dir="ltr" class="h-9 w-32 shrink-0" />
       </div>
 
+      <!-- دانلود و پاک کردن: فقط آیکون، زیر هم -->
       <div v-if="recordedCount > 0 && !recording" class="flex h-14 flex-col gap-1">
         <button
             type="button"
@@ -216,6 +233,7 @@ useHead({ title: () => t('piano.title', { name: pianoName.value }) })
         </button>
       </div>
 
+      <!-- اسکرین‌ریکورد (ویدیو + صدای پیانو) -->
       <div v-if="screen.supported.value" class="flex items-stretch gap-2">
         <div class="glass-card relative flex h-14 items-center gap-2.5 rounded-2xl px-2.5 [--glass-radius:0.95rem]">
           <button
