@@ -38,16 +38,16 @@
       "resendIn": "Kodu {seconds} sn sonra tekrar gönder",
       "resend": "Kodu tekrar gönder",
       "differentNumber": "Başka bir numara kullan",
-      "hint": "Cep telefonu numaran ve şifrenle giriş yap.",
+      "hint": "Cep telefonu numaranız ve şifrenizle giriş yapın.",
       "or": "veya",
       "createAccount": "Hesap oluştur"
     },
     "register": {
       "title": "Hesap oluştur",
-      "hint": "Web Piano’ya katıl",
+      "hint": "Web Piano’ya katılın",
       "button": "Kayıt ol",
       "backToLogin": "Girişe dön",
-      "phoneTaken": "Bu numara zaten kayıtlı. Lütfen giriş yap."
+      "phoneTaken": "Bu numara zaten kayıtlı. Lütfen giriş yapın."
     },
     "profile": {
       "loading": "Profiliniz yükleniyor…",
@@ -313,6 +313,7 @@
   "footer": {
     "description": "Tarayıcınızda yaşayan bir piyano. Yeni sesler, ipuçları ve güncellemeler için bizi takip edin.",
     "social": "Sosyal medya",
+    "equalizer": "Harmonik rezonans",
     "nav": "Alt bilgi",
     "clubName": "Web Piano Kulübü",
     "clubText": "Yeni özelliklere erken erişim, pratik ipuçları ve yalnızca üyelere özel haberler için kulübe katılın.",
@@ -590,7 +591,7 @@
     "retry": "Yüklemeyi tekrar dene",
     "loadingOverlay": "Sesler yükleniyor",
     "recorder": {
-      "record": "Kaydet",
+      "record": "Kaydı başlat",
       "stopRecording": "Kaydı durdur",
       "play": "Kaydı oynat",
       "stopPlayback": "Oynatmayı durdur",
@@ -707,9 +708,11 @@
       "deviceCount": "cihaz yok | {n} cihaz | {n} cihaz",
       "inputOnly": "Giriş",
       "velocity": "Vuruş şiddeti",
+      "velocityLevel": "Vuruş şiddeti düzeyi",
       "liveInput": "Canlı MIDI girişi",
       "lastNoteLabel": "Son nota",
       "message": "Mesaj",
+      "noteOn": "Nota açık",
       "testTitle": "MIDI cihazınızı test edin",
       "testHint": "Cihazınızın doğru çalıştığından emin olun.",
       "testHintLoad": "Önce piyano seslerini yükleyin, ardından bir test notası çalın.",
@@ -730,19 +733,19 @@
     }
   },
   "toast": {
-    "loggedIn": "Tekrar hoş geldin! Giriş yapıldı.",
-    "registered": "Hesap oluşturuldu. Hoş geldin!",
+    "loggedIn": "Tekrar hoş geldiniz! Giriş yapıldı.",
+    "registered": "Hesap oluşturuldu. Hoş geldiniz!",
     "loggedOut": "Çıkış yapıldı.",
-    "pianoReady": "Piyano sesleri hazır. Çalmaya başla!",
-    "pianoLoadFailed": "Piyano sesleri yüklenemedi. Bağlantını kontrol edip tekrar dene.",
-    "recordingReady": "Kaydın oynatmaya veya indirmeye hazır.",
+    "pianoReady": "Piyano sesleri hazır. Çalmaya başlayın!",
+    "pianoLoadFailed": "Piyano sesleri yüklenemedi. Bağlantınızı kontrol edip tekrar deneyin.",
+    "recordingReady": "Kaydınız oynatmaya veya indirmeye hazır.",
     "audioDownloaded": "Ses indirmesi başladı.",
-    "screenReady": "Ekran kaydın hazır.",
+    "screenReady": "Ekran kaydınız hazır.",
     "screenDownloaded": "Ekran kaydı indirmesi başladı.",
     "midiConnected": "MIDI cihazı bağlandı: {name}",
     "midiDisconnected": "MIDI cihazının bağlantısı kesildi: {name}",
-    "offline": "Çevrimdışısın. Bazı özellikler çalışmayabilir.",
-    "online": "Tekrar çevrimiçisin.",
+    "offline": "Çevrimdışısınız. Bazı özellikler çalışmayabilir.",
+    "online": "Tekrar çevrimiçisiniz.",
     "onlyDigits": "Yalnızca rakam girin.",
     "onlyEnglish": "Yalnızca İngilizce harf ve rakam kullanın.",
     "onlyLetters": "İsim yalnızca harf içerebilir."
@@ -756,7 +759,7 @@
     "easy": "Kolay",
     "medium": "Orta",
     "dialogTitle": "Şarkı seç",
-    "dialogSubtitle": "Bir şarkı seç; çalar ve notalar yukarıdan düşer, sen de eşlik et",
+    "dialogSubtitle": "Bir şarkı seçin; çalar ve notalar yukarıdan düşer, siz de eşlik edin",
     "playNow": "Çal"
   }
 }

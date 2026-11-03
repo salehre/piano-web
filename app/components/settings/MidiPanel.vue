@@ -353,10 +353,10 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
 
         <!-- کلاویه مجازی کوچک که وضعیت فشرده شدن رو شبیه‌سازی می‌کنه -->
         <span 
-          class="text-xs font-mono px-2 py-0.5 rounded transition-all duration-150"
+          class="text-xs font-mono uppercase px-2 py-0.5 rounded transition-all duration-150"
           :class="isNoteTriggered ? 'bg-key-active text-stone-950 font-bold scale-105' : 'bg-stone-900 text-stone-500'"
         >
-          {{ isNoteTriggered ? 'NOTE ON' : 'STANDBY' }}
+          {{ isNoteTriggered ? t('settings.midi.noteOn') : t('settings.midi.state.standby') }}
         </span>
       </div>
 
@@ -387,7 +387,7 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
         <div>
           <dt class="text-xs text-stone-400">{{ t('settings.midi.message') }}</dt>
           <dd class="mt-1 font-semibold font-mono text-xs sm:text-sm text-stone-300" dir="ltr">
-            {{ lastNote ? 'Note On (0x90)' : '—' }}
+            {{ lastNote ? `${t('settings.midi.noteOn')} (0x90)` : '—' }}
           </dd>
         </div>
       </dl>
@@ -395,7 +395,7 @@ onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPoin
       <!-- نوار مدرج لایو Velocity Meter مشابه نرم‌افزارهای موسیقی -->
       <div class="mt-4 pt-3 border-t border-stone-800/40">
         <div class="flex items-center justify-between text-[11px] text-stone-500 mb-1">
-          <span>Velocity Level</span>
+          <span>{{ t('settings.midi.velocityLevel') }}</span>
           <span class="font-mono">{{ velocityPercentage }}%</span>
         </div>
         <div class="h-1.5 w-full bg-stone-900 rounded-full overflow-hidden p-px">

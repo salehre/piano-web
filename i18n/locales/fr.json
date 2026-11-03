@@ -313,6 +313,7 @@
   "footer": {
     "description": "Un piano qui vit dans votre navigateur. Suivez-nous pour découvrir de nouveaux sons, des conseils et des nouveautés.",
     "social": "Réseaux sociaux",
+    "equalizer": "Résonance harmonique",
     "nav": "Pied de page",
     "clubName": "Club Web Piano",
     "clubText": "Rejoignez le club pour accéder en avant-première aux nouvelles fonctionnalités, aux conseils de pratique et aux actualités réservées aux membres.",
@@ -465,7 +466,7 @@
         "improvise": "Improviser demande de la place pour se déplacer sur le clavier.",
         "teach": "Enseigner implique de démontrer sur toute l'étendue.",
         "scales": "Les gammes sur plusieurs octaves demandent un clavier plus large.",
-        "light": "Pour les accords, le travail de l'oreille et le jeu plaisir, cinq octaves suffisent."
+        "light": "Pour les accords, le travail de l'oreille et le jeu pour le plaisir, cinq octaves suffisent."
       },
       "cap": {
         "never": "Puisque vous n'avez jamais joué, un clavier plus petit est moins déroutant.",
@@ -707,9 +708,11 @@
       "deviceCount": "aucun appareil | {n} appareil | {n} appareils",
       "inputOnly": "Entrée",
       "velocity": "Vélocité",
+      "velocityLevel": "Niveau de vélocité",
       "liveInput": "Entrée MIDI en direct",
       "lastNoteLabel": "Dernière note",
       "message": "Message",
+      "noteOn": "Note activée",
       "testTitle": "Testez votre appareil MIDI",
       "testHint": "Assurez-vous que votre appareil fonctionne correctement.",
       "testHintLoad": "Chargez d'abord les sons du piano, puis jouez une note de test.",

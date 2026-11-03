@@ -38,7 +38,7 @@ const links = [
   { label: 'nav.settings', to: '/settings' },
 ]
 
-const year = n(new Date().getFullYear(), 'plain')
+const year = computed(() => n(new Date().getFullYear(), 'plain'))
 
 // ---------- عضویت در باشگاه ----------
 const email = ref('')
@@ -130,7 +130,7 @@ const pianoKeys = [
           </NuxtLink>
 
           <!-- مینی اکولایزر ریتمیک موزیک -->
-          <div class="equalizer flex items-end gap-0.5 h-3.5" title="Harmonic Resonance">
+          <div class="equalizer flex items-end gap-0.5 h-3.5" :title="t('footer.equalizer')">
             <span class="eq-bar bar-1"></span>
             <span class="eq-bar bar-2"></span>
             <span class="eq-bar bar-3"></span>
