@@ -54,10 +54,9 @@ onBeforeUnmount(() => {
     <Toaster
       :theme="isLight ? 'light' : 'dark'"
       :dir="localeProperties.dir ?? 'ltr'"
-      position="top-center"
+      :position="localeProperties.dir === 'rtl' ? 'bottom-left' : 'bottom-right'"
       :duration="3500"
       :visible-toasts="3"
-      close-button
       :toast-options="{ class: 'piano-toast' }"
     />
   </ClientOnly>

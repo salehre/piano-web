@@ -85,7 +85,7 @@ const copy = computed(() => ({
               ltr
               type="tel"
               inputmode="tel"
-              :maxlength="11"
+              filter="phone"
               autocomplete="tel"
               placeholder="09123456789"
               :error="isPhoneError ? tr(error) : ''"
@@ -93,6 +93,7 @@ const copy = computed(() => ({
           <UiTextField
               v-model="form.password"
               :label="t('auth.login.passwordLabel')"
+              ltr
               type="password"
               autocomplete="current-password"
               :hint="t('auth.login.passwordHint', { min: n(PASSWORD_MIN) })"

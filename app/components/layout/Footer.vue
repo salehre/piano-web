@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import { toast } from 'vue-sonner'
+
 const { t, n } = useI18n()
+const toastText = useToastText()
 const STORAGE_KEY = 'web-piano-club-emails'
 
 const socials = [
@@ -44,7 +47,17 @@ const error = ref(false)
 const joined = ref(false)
 const submitting = ref(false)
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+// فیلد ایمیل: حروف فارسی و کاراکتر نامجاز همون لحظه حذف می‌شن
+function onEmailInput(e: Event) {
+  const el = e.target as HTMLInputElement
+  if ((e as InputEvent).isComposing) return
+  const { value, rejected } = applyFilter('email', el.value, EMAIL_MAX)
+  if (value !== el.value) {
+    el.value = value
+    if (rejected) toast.error(toastText.value.onlyEnglish, { id: 'filter-club-email', duration: 2500 })
+  }
+  email.value = value
+}
 
 watch(email, () => {
   error.value = false
@@ -63,7 +76,7 @@ async function saveEmail(value: string) {
 async function join() {
   if (submitting.value) return
   const value = email.value.trim().toLowerCase()
-  if (!EMAIL_RE.test(value)) {
+  if (!isEmail(value)) {
     error.value = true
     return
   }
@@ -226,7 +239,7 @@ const pianoKeys = [
             <div class="relative flex-1">
               <input
                 id="club-email"
-                v-model="email"
+                :value="email"
                 type="email"
                 inputmode="email"
                 autocomplete="email"
@@ -234,6 +247,7 @@ const pianoKeys = [
                 dir="ltr"
                 :aria-invalid="!!error"
                 :aria-describedby="error ? 'club-email-error' : undefined"
+                @input="onEmailInput"
                 :class="[
                   'w-full min-w-0 rounded-lg border bg-stone-900/80 px-3.5 py-2.5 text-sm placeholder:text-stone-500 transition-all duration-300 focus:outline-none focus:ring-2',
                   error

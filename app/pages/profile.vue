@@ -387,10 +387,10 @@ function onLogout() {
               </div>
 
               <div class="grid gap-x-5 gap-y-4 sm:grid-cols-2">
-                <UiTextField v-model="form.displayName" :label="t('auth.profile.fields.name')" autocomplete="nickname" :maxlength="DISPLAY_NAME_MAX" :error="tr(errors.displayName)" />
-                <UiTextField v-model="form.email" :label="t('auth.profile.fields.email')" ltr type="email" inputmode="email" autocomplete="email" :maxlength="EMAIL_MAX" :placeholder="t('auth.profile.fields.emailPlaceholder')" :error="tr(errors.email)" />
-                <UiTextField v-model="form.country" :label="t('auth.profile.fields.country')" autocomplete="country-name" :maxlength="60" />
-                <UiTextField v-model="form.nationalId" :label="t('auth.profile.fields.nationalId')" :ltr="locale !== 'fa'" inputmode="numeric" autocomplete="off" :maxlength="10" :placeholder="t('auth.profile.fields.nationalIdPlaceholder')" :error="tr(errors.nationalId)" />
+                <UiTextField v-model="form.displayName" :label="t('auth.profile.fields.name')" autocomplete="nickname" filter="name" :maxlength="DISPLAY_NAME_MAX" :error="tr(errors.displayName)" />
+                <UiTextField v-model="form.email" :label="t('auth.profile.fields.email')" ltr type="email" inputmode="email" filter="email" autocomplete="email" :maxlength="EMAIL_MAX" :placeholder="t('auth.profile.fields.emailPlaceholder')" :error="tr(errors.email)" />
+                <UiTextField v-model="form.country" :label="t('auth.profile.fields.country')" autocomplete="country-name" filter="name" :maxlength="60" />
+                <UiTextField v-model="form.nationalId" :label="t('auth.profile.fields.nationalId')" :ltr="locale !== 'fa'" inputmode="numeric" filter="digits" autocomplete="off" :maxlength="10" :placeholder="t('auth.profile.fields.nationalIdPlaceholder')" :error="tr(errors.nationalId)" />
                 <UiTextField v-model="form.address" :label="t('auth.profile.fields.address')" multiline :rows="3" autocomplete="street-address" :maxlength="ADDRESS_MAX" :hint="`${n(form.address.length)} / ${n(ADDRESS_MAX)}`" class="sm:col-span-2" />
               </div>
 
@@ -442,7 +442,9 @@ function onLogout() {
                   v-model="form.yearsPlaying"
                   :label="t('auth.profile.fields.yearsPlaying')"
                   ltr
-                  type="number"
+                  inputmode="numeric"
+                  filter="digits"
+                  :maxlength="String(YEARS_PLAYING_MAX).length"
                   :hint="t('auth.profile.fields.yearsHint')"
                   :error="tr(errors.yearsPlaying)"
                 />

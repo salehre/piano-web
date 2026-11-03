@@ -76,6 +76,7 @@ watch(() => form.password, () => delete errors.value.password)
           v-model="form.name"
           :label="t('auth.profile.fields.name')"
           autocomplete="name"
+          filter="name"
           :maxlength="DISPLAY_NAME_MAX"
           :error="errorText('name')"
       />
@@ -85,7 +86,7 @@ watch(() => form.password, () => delete errors.value.password)
           ltr
           type="tel"
           inputmode="tel"
-          :maxlength="11"
+          filter="phone"
           autocomplete="tel"
           placeholder="09123456789"
           :error="errorText('phone')"
@@ -93,7 +94,9 @@ watch(() => form.password, () => delete errors.value.password)
       <UiTextField
           v-model="form.password"
           :label="t('auth.login.passwordLabel')"
+          ltr
           type="password"
+          filter="password"
           autocomplete="new-password"
           :hint="t('auth.login.passwordHint', { min: n(PASSWORD_MIN) })"
           :error="errorText('password')"

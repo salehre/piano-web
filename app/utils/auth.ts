@@ -104,7 +104,8 @@ export function validatePassword(value: string): MessageRef | null {
 export function validateDisplayName(value: string): MessageRef | null {
     const v = value.trim()
     if (!v) return msgRef('auth.validation.nameRequired')
-    if (v.length < DISPLAY_NAME_MIN) return msgRef('auth.validation.nameMin', { min: DISPLAY_NAME_MIN })
+    // طول واقعی نام یعنی تعداد حروف (عدد و علامت حساب نمی‌شن)
+    if (Array.from(v.matchAll(/\p{L}/gu)).length < DISPLAY_NAME_MIN) return msgRef('auth.validation.nameMin', { min: DISPLAY_NAME_MIN })
     if (v.length > DISPLAY_NAME_MAX) return msgRef('auth.validation.nameMax', { max: DISPLAY_NAME_MAX })
     return null
 }
@@ -114,7 +115,7 @@ export function validateEmail(value: string): MessageRef | null {
     const v = value.trim()
     if (!v) return null
     if (v.length > EMAIL_MAX) return msgRef('auth.validation.emailMax', { max: EMAIL_MAX })
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) return msgRef('auth.validation.emailInvalid')
+    if (!isEmail(v)) return msgRef('auth.validation.emailInvalid')
     return null
 }
 

@@ -15,6 +15,9 @@ const TOAST_TEXT = {
     midiDisconnected: 'دستگاه MIDI جدا شد: {name}',
     offline: 'اینترنت قطع شد؛ ممکن است بعضی بخش‌ها کار نکنند.',
     online: 'دوباره به اینترنت وصل شدید.',
+    onlyDigits: 'فقط عدد وارد کنید.',
+    onlyEnglish: 'فقط از حروف و اعداد انگلیسی استفاده کنید.',
+    onlyLetters: 'نام فقط می‌تواند شامل حروف باشد.',
   },
   en: {
     loggedIn: 'Welcome back! You’re signed in.',
@@ -30,6 +33,9 @@ const TOAST_TEXT = {
     midiDisconnected: 'MIDI device disconnected: {name}',
     offline: 'You’re offline. Some features may not work.',
     online: 'You’re back online.',
+    onlyDigits: 'Digits only, please.',
+    onlyEnglish: 'Please use English letters and digits only.',
+    onlyLetters: 'Names can only contain letters.',
   },
   fr: {
     loggedIn: 'Bon retour ! Vous êtes connecté.',
@@ -45,6 +51,9 @@ const TOAST_TEXT = {
     midiDisconnected: 'Appareil MIDI déconnecté : {name}',
     offline: 'Vous êtes hors ligne. Certaines fonctions peuvent ne pas marcher.',
     online: 'Vous êtes de nouveau en ligne.',
+    onlyDigits: 'Chiffres uniquement.',
+    onlyEnglish: 'Utilisez uniquement des lettres et chiffres latins.',
+    onlyLetters: 'Le nom ne peut contenir que des lettres.',
   },
   tr: {
     loggedIn: 'Tekrar hoş geldin! Giriş yapıldı.',
@@ -60,6 +69,9 @@ const TOAST_TEXT = {
     midiDisconnected: 'MIDI cihazının bağlantısı kesildi: {name}',
     offline: 'Çevrimdışısın. Bazı özellikler çalışmayabilir.',
     online: 'Tekrar çevrimiçisin.',
+    onlyDigits: 'Yalnızca rakam girin.',
+    onlyEnglish: 'Yalnızca İngilizce harf ve rakam kullanın.',
+    onlyLetters: 'İsim yalnızca harf içerebilir.',
   },
 } as const
 
